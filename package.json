@@ -1,0 +1,17 @@
+{
+	"name": "cerey",
+	"private": true,
+	"version": "1.0.0",
+	"packageManager": "pnpm@10.15.0",
+	"workspaces": [
+	  "backend",
+	  "prisma",
+	  "frontend"
+	],
+	"scripts": {
+	  "start:backend": "pnpm --filter backend start:dev",
+	  "start:frontend": "pnpm --filter frontend start",
+	  "start:all": "pnpm -r run start"
+	}
+  }
+  

@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./src/*",
+        "./*"
+      ],
+      "@/components/*": ["components/*"],
+      "@Redux/*": ["redux/*"],
+      "@backend-Dtos/*": ["../backend/src/Dtos/*"],
+      "tailwind.config": ["./tailwind.config.js"]
+    }
+  },
+  "extends": "expo/tsconfig.base",
+  "include": [
+    "global.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "nativewind-env.d.ts"
+    
+  ]
+}

@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+:root {
+  --company-gray: #2E2E2E;
+  --company-green: #4CAF50;
+  --company-orange: #FF9800;
+  --company-beige: #FFF7EC;
+  --company-white: #FFFFFF;
+  --company-pink: #FF6F61;
+}

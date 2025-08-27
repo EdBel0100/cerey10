@@ -1,0 +1,83 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              Int               @id @default(autoincrement())
+  cognitoId       String            @unique
+  email           String            @unique
+  favoriteRecipes FavoriteRecipes[]
+  userPreferances UserPreferences?
+}
+
+model UserPreferences {
+  id            Int    @id @default(autoincrement())
+  userCognitoId String @unique
+  user          User   @relation(fields: [userCognitoId], references: [cognitoId])
+
+  // General diets
+  vegetarianOnly Boolean @default(false)
+  vegan          Boolean @default(false)
+  pescatarian    Boolean @default(false)
+  flexitarian    Boolean @default(false)
+  meatOnly       Boolean @default(false)
+
+  // Religious / cultural diets
+  kosher   Boolean @default(false)
+  halal    Boolean @default(false)
+  jain     Boolean @default(false)
+  buddhist Boolean @default(false)
+
+  // Allergies / intolerances
+  glutenFree     Boolean @default(false)
+  lactoseFree    Boolean @default(false)
+  dairyFree      Boolean @default(false)
+  nutFree        Boolean @default(false)
+  peanutFree     Boolean @default(false)
+  shellfishFree  Boolean @default(false)
+  eggFree        Boolean @default(false)
+  soyFree        Boolean @default(false)
+  fishFree       Boolean @default(false)
+  nightshadeFree Boolean @default(false)
+
+  // Health / lifestyle diets
+  lowCarb          Boolean @default(false)
+  keto             Boolean @default(false)
+  paleo            Boolean @default(false)
+  lowSugar         Boolean @default(false)
+  lowSalt          Boolean @default(false)
+  lowFat           Boolean @default(false)
+  highProtein      Boolean @default(false)
+  rawFood          Boolean @default(false)
+  whole30          Boolean @default(false)
+  diabeticFriendly Boolean @default(false)
+
+  // Eating habits
+  intermittentFasting Boolean @default(false)
+  organicOnly         Boolean @default(false)
+  locallySourced      Boolean @default(false)
+  processedFree       Boolean @default(false)
+  fastFoodAvoider     Boolean @default(false)
+
+  customPreferences String
+}
+
+model FavoriteRecipes {
+  id            Int    @id @default(autoincrement())
+  imageUrl      String
+  content       String
+  userCognitoId String
+  user          User   @relation(fields: [userCognitoId], references: [cognitoId])
+}

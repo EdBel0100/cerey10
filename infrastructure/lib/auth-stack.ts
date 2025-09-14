@@ -54,31 +54,38 @@ export class AuthStack extends cdk.Stack {
     });
 
 
-const amplifyApp = new amplify.App(this, 'MyApp', {
-  sourceCodeProvider: new amplify.GitHubSourceCodeProvider({
-    owner: 'EdBel0100',
-    repository: 'cerey/frontend',
-    oauthToken: SecretValue.secretsManager("github-token"),
-  }),
-  buildSpec: codebuild.BuildSpec.fromObjectToYaml({
-    version: '1.0',
-    frontend: {
-      phases: {
-        preBuild: {
-          commands: ['pnpm install'],
+    const amplifyApp = new amplify.App(this, 'CereyFrontend', {
+      sourceCodeProvider: new amplify.GitHubSourceCodeProvider({
+        owner: 'EdBel0100',
+        repository: 'cerey10', // repo name only
+        oauthToken: SecretValue.unsafePlainText('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'), // name of secret in Secrets Manager
+      }), // point to the Expo app folder
+      buildSpec: codebuild.BuildSpec.fromObjectToYaml({
+        version: '1.0',
+        applications:{
+        appRoot: 'frontend',
+        frontend: {
+          phases: {
+            preBuild: {
+              commands: [
+                'cd frontend',
+                'pnpm install',
+              ],
+            },
+            build: {
+              commands: [
+                'cd frontend',
+                'expo build:web', // or your Expo web build command
+              ],
+            },
+          },
+          artifacts: {
+            baseDirectory: 'frontend/web-build', // adjust to where Expo outputs web build
+            files: ['**/*'],
+          },
         },
-        build: {
-          commands: ['pnpm dev'],
-        },
-      },
-      artifacts: {
-        baseDirectory: 'public',
-        files: ['**/*'],
-      },
-    },
-  }),
-});
-
-    
+      }
+      }),
+    });    
   }
 }

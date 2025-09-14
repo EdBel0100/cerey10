@@ -19,10 +19,15 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
  */
 export type User = $Result.DefaultSelection<Prisma.$UserPayload>
 /**
- * Model UserPreferences
+ * Model Location
  * 
  */
-export type UserPreferences = $Result.DefaultSelection<Prisma.$UserPreferencesPayload>
+export type Location = $Result.DefaultSelection<Prisma.$LocationPayload>
+/**
+ * Model Preferences
+ * 
+ */
+export type Preferences = $Result.DefaultSelection<Prisma.$PreferencesPayload>
 /**
  * Model FavoriteRecipes
  * 
@@ -31,7 +36,7 @@ export type FavoriteRecipes = $Result.DefaultSelection<Prisma.$FavoriteRecipesPa
 
 /**
  * ##  Prisma Client ʲˢ
- * 
+ *
  * Type-safe database client for TypeScript & Node.js
  * @example
  * ```
@@ -40,19 +45,19 @@ export type FavoriteRecipes = $Result.DefaultSelection<Prisma.$FavoriteRecipesPa
  * const users = await prisma.user.findMany()
  * ```
  *
- * 
+ *
  * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client).
  */
 export class PrismaClient<
   ClientOptions extends Prisma.PrismaClientOptions = Prisma.PrismaClientOptions,
-  U = 'log' extends keyof ClientOptions ? ClientOptions['log'] extends Array<Prisma.LogLevel | Prisma.LogDefinition> ? Prisma.GetEvents<ClientOptions['log']> : never : never,
+  const U = 'log' extends keyof ClientOptions ? ClientOptions['log'] extends Array<Prisma.LogLevel | Prisma.LogDefinition> ? Prisma.GetEvents<ClientOptions['log']> : never : never,
   ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs
 > {
   [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['other'] }
 
     /**
    * ##  Prisma Client ʲˢ
-   * 
+   *
    * Type-safe database client for TypeScript & Node.js
    * @example
    * ```
@@ -61,12 +66,12 @@ export class PrismaClient<
    * const users = await prisma.user.findMany()
    * ```
    *
-   * 
+   *
    * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client).
    */
 
   constructor(optionsArg ?: Prisma.Subset<ClientOptions, Prisma.PrismaClientOptions>);
-  $on<V extends U>(eventType: V, callback: (event: V extends 'query' ? Prisma.QueryEvent : Prisma.LogEvent) => void): void;
+  $on<V extends U>(eventType: V, callback: (event: V extends 'query' ? Prisma.QueryEvent : Prisma.LogEvent) => void): PrismaClient;
 
   /**
    * Connect with the database
@@ -78,20 +83,13 @@ export class PrismaClient<
    */
   $disconnect(): $Utils.JsPromise<void>;
 
-  /**
-   * Add a middleware
-   * @deprecated since 4.16.0. For new code, prefer client extensions instead.
-   * @see https://pris.ly/d/extensions
-   */
-  $use(cb: Prisma.Middleware): void
-
 /**
    * Executes a prepared raw query and returns the number of affected rows.
    * @example
    * ```
    * const result = await prisma.$executeRaw`UPDATE User SET cool = ${true} WHERE email = ${'user@email.com'};`
    * ```
-   * 
+   *
    * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/raw-database-access).
    */
   $executeRaw<T = unknown>(query: TemplateStringsArray | Prisma.Sql, ...values: any[]): Prisma.PrismaPromise<number>;
@@ -103,7 +101,7 @@ export class PrismaClient<
    * ```
    * const result = await prisma.$executeRawUnsafe('UPDATE User SET cool = $1 WHERE email = $2 ;', true, 'user@email.com')
    * ```
-   * 
+   *
    * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/raw-database-access).
    */
   $executeRawUnsafe<T = unknown>(query: string, ...values: any[]): Prisma.PrismaPromise<number>;
@@ -114,7 +112,7 @@ export class PrismaClient<
    * ```
    * const result = await prisma.$queryRaw`SELECT * FROM User WHERE id = ${1} OR email = ${'user@email.com'};`
    * ```
-   * 
+   *
    * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/raw-database-access).
    */
   $queryRaw<T = unknown>(query: TemplateStringsArray | Prisma.Sql, ...values: any[]): Prisma.PrismaPromise<T>;
@@ -126,10 +124,11 @@ export class PrismaClient<
    * ```
    * const result = await prisma.$queryRawUnsafe('SELECT * FROM User WHERE id = $1 OR email = $2;', 1, 'user@email.com')
    * ```
-   * 
+   *
    * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/raw-database-access).
    */
   $queryRawUnsafe<T = unknown>(query: string, ...values: any[]): Prisma.PrismaPromise<T>;
+
 
   /**
    * Allows the running of a sequence of read/write operations that are guaranteed to either succeed or fail as a whole.
@@ -149,7 +148,9 @@ export class PrismaClient<
   $transaction<R>(fn: (prisma: Omit<PrismaClient, runtime.ITXClientDenyList>) => $Utils.JsPromise<R>, options?: { maxWait?: number, timeout?: number, isolationLevel?: Prisma.TransactionIsolationLevel }): $Utils.JsPromise<R>
 
 
-  $extends: $Extensions.ExtendsHook<"extends", Prisma.TypeMapCb, ExtArgs>
+  $extends: $Extensions.ExtendsHook<"extends", Prisma.TypeMapCb<ClientOptions>, ExtArgs, $Utils.Call<Prisma.TypeMapCb<ClientOptions>, {
+    extArgs: ExtArgs
+  }>>
 
       /**
    * `prisma.user`: Exposes CRUD operations for the **User** model.
@@ -159,17 +160,27 @@ export class PrismaClient<
     * const users = await prisma.user.findMany()
     * ```
     */
-  get user(): Prisma.UserDelegate<ExtArgs>;
+  get user(): Prisma.UserDelegate<ExtArgs, ClientOptions>;
 
   /**
-   * `prisma.userPreferences`: Exposes CRUD operations for the **UserPreferences** model.
+   * `prisma.location`: Exposes CRUD operations for the **Location** model.
     * Example usage:
     * ```ts
-    * // Fetch zero or more UserPreferences
-    * const userPreferences = await prisma.userPreferences.findMany()
+    * // Fetch zero or more Locations
+    * const locations = await prisma.location.findMany()
     * ```
     */
-  get userPreferences(): Prisma.UserPreferencesDelegate<ExtArgs>;
+  get location(): Prisma.LocationDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.preferences`: Exposes CRUD operations for the **Preferences** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Preferences
+    * const preferences = await prisma.preferences.findMany()
+    * ```
+    */
+  get preferences(): Prisma.PreferencesDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.favoriteRecipes`: Exposes CRUD operations for the **FavoriteRecipes** model.
@@ -179,7 +190,7 @@ export class PrismaClient<
     * const favoriteRecipes = await prisma.favoriteRecipes.findMany()
     * ```
     */
-  get favoriteRecipes(): Prisma.FavoriteRecipesDelegate<ExtArgs>;
+  get favoriteRecipes(): Prisma.FavoriteRecipesDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -200,7 +211,6 @@ export namespace Prisma {
   export import PrismaClientRustPanicError = runtime.PrismaClientRustPanicError
   export import PrismaClientInitializationError = runtime.PrismaClientInitializationError
   export import PrismaClientValidationError = runtime.PrismaClientValidationError
-  export import NotFoundError = runtime.NotFoundError
 
   /**
    * Re-export of sql-template-tag
@@ -211,6 +221,8 @@ export namespace Prisma {
   export import raw = runtime.raw
   export import Sql = runtime.Sql
 
+
+
   /**
    * Decimal.js
    */
@@ -219,7 +231,7 @@ export namespace Prisma {
   export type DecimalJsLike = runtime.DecimalJsLike
 
   /**
-   * Metrics 
+   * Metrics
    */
   export type Metrics = runtime.Metrics
   export type Metric<T> = runtime.Metric<T>
@@ -237,76 +249,38 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 5.17.0
-   * Query Engine version: 393aa359c9ad4a4bb28630fb5613f9c281cde053
+   * Prisma Client JS version: 6.14.0
+   * Query Engine version: 717184b7b35ea05dfa71a3236b7af656013e1e49
    */
   export type PrismaVersion = {
     client: string
   }
 
-  export const prismaVersion: PrismaVersion 
+  export const prismaVersion: PrismaVersion
 
   /**
    * Utility Types
    */
 
-  /**
-   * From https://github.com/sindresorhus/type-fest/
-   * Matches a JSON object.
-   * This type can be useful to enforce some input to be JSON-compatible or as a super-type to be extended from. 
-   */
-  export type JsonObject = {[Key in string]?: JsonValue}
 
-  /**
-   * From https://github.com/sindresorhus/type-fest/
-   * Matches a JSON array.
-   */
-  export interface JsonArray extends Array<JsonValue> {}
-
-  /**
-   * From https://github.com/sindresorhus/type-fest/
-   * Matches any valid JSON value.
-   */
-  export type JsonValue = string | number | boolean | JsonObject | JsonArray | null
-
-  /**
-   * Matches a JSON object.
-   * Unlike `JsonObject`, this type allows undefined and read-only properties.
-   */
-  export type InputJsonObject = {readonly [Key in string]?: InputJsonValue | null}
-
-  /**
-   * Matches a JSON array.
-   * Unlike `JsonArray`, readonly arrays are assignable to this type.
-   */
-  export interface InputJsonArray extends ReadonlyArray<InputJsonValue | null> {}
-
-  /**
-   * Matches any valid value that can be used as an input for operations like
-   * create and update as the value of a JSON field. Unlike `JsonValue`, this
-   * type allows read-only arrays and read-only object properties and disallows
-   * `null` at the top level.
-   *
-   * `null` cannot be used as the value of a JSON field because its meaning
-   * would be ambiguous. Use `Prisma.JsonNull` to store the JSON null value or
-   * `Prisma.DbNull` to clear the JSON value and set the field to the database
-   * NULL value instead.
-   *
-   * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-by-null-values
-   */
-  export type InputJsonValue = string | number | boolean | InputJsonObject | InputJsonArray | { toJSON(): unknown }
+  export import JsonObject = runtime.JsonObject
+  export import JsonArray = runtime.JsonArray
+  export import JsonValue = runtime.JsonValue
+  export import InputJsonObject = runtime.InputJsonObject
+  export import InputJsonArray = runtime.InputJsonArray
+  export import InputJsonValue = runtime.InputJsonValue
 
   /**
    * Types of the values used to represent different kinds of `null` values when working with JSON fields.
-   * 
+   *
    * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
    */
   namespace NullTypes {
     /**
     * Type of `Prisma.DbNull`.
-    * 
+    *
     * You cannot use other instances of this class. Please use the `Prisma.DbNull` value.
-    * 
+    *
     * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
     */
     class DbNull {
@@ -316,9 +290,9 @@ export namespace Prisma {
 
     /**
     * Type of `Prisma.JsonNull`.
-    * 
+    *
     * You cannot use other instances of this class. Please use the `Prisma.JsonNull` value.
-    * 
+    *
     * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
     */
     class JsonNull {
@@ -328,9 +302,9 @@ export namespace Prisma {
 
     /**
     * Type of `Prisma.AnyNull`.
-    * 
+    *
     * You cannot use other instances of this class. Please use the `Prisma.AnyNull` value.
-    * 
+    *
     * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
     */
     class AnyNull {
@@ -341,21 +315,21 @@ export namespace Prisma {
 
   /**
    * Helper for filtering JSON entries that have `null` on the database (empty on the db)
-   * 
+   *
    * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
    */
   export const DbNull: NullTypes.DbNull
 
   /**
    * Helper for filtering JSON entries that have JSON `null` values (not empty on the db)
-   * 
+   *
    * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
    */
   export const JsonNull: NullTypes.JsonNull
 
   /**
    * Helper for filtering JSON entries that are `Prisma.DbNull` or `Prisma.JsonNull`
-   * 
+   *
    * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
    */
   export const AnyNull: NullTypes.AnyNull
@@ -543,7 +517,7 @@ export namespace Prisma {
   type AtLeast<O extends object, K extends string> = NoExpand<
     O extends unknown
     ? | (K extends keyof O ? { [P in K]: O[P] } & O : O)
-      | {[P in keyof O as P extends K ? K : never]-?: O[P]} & O
+      | {[P in keyof O as P extends K ? P : never]-?: O[P]} & O
     : never>;
 
   type _Strict<U, _U = U> = U extends unknown ? U & OptionalFlat<_Record<Exclude<Keys<_U>, keyof U>, never>> : never;
@@ -658,7 +632,8 @@ export namespace Prisma {
 
   export const ModelName: {
     User: 'User',
-    UserPreferences: 'UserPreferences',
+    Location: 'Location',
+    Preferences: 'Preferences',
     FavoriteRecipes: 'FavoriteRecipes'
   };
 
@@ -669,13 +644,16 @@ export namespace Prisma {
     db?: Datasource
   }
 
-  interface TypeMapCb extends $Utils.Fn<{extArgs: $Extensions.InternalArgs, clientOptions: PrismaClientOptions }, $Utils.Record<string, any>> {
-    returns: Prisma.TypeMap<this['params']['extArgs'], this['params']['clientOptions']>
+  interface TypeMapCb<ClientOptions = {}> extends $Utils.Fn<{extArgs: $Extensions.InternalArgs }, $Utils.Record<string, any>> {
+    returns: Prisma.TypeMap<this['params']['extArgs'], ClientOptions extends { omit: infer OmitOptions } ? OmitOptions : {}>
   }
 
-  export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
+  export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> = {
+    globalOmitOptions: {
+      omit: GlobalOmitOptions
+    }
     meta: {
-      modelProps: "user" | "userPreferences" | "favoriteRecipes"
+      modelProps: "user" | "location" | "preferences" | "favoriteRecipes"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -731,6 +709,10 @@ export namespace Prisma {
             args: Prisma.UserUpdateManyArgs<ExtArgs>
             result: BatchPayload
           }
+          updateManyAndReturn: {
+            args: Prisma.UserUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPayload>[]
+          }
           upsert: {
             args: Prisma.UserUpsertArgs<ExtArgs>
             result: $Utils.PayloadToResult<Prisma.$UserPayload>
@@ -749,73 +731,151 @@ export namespace Prisma {
           }
         }
       }
-      UserPreferences: {
-        payload: Prisma.$UserPreferencesPayload<ExtArgs>
-        fields: Prisma.UserPreferencesFieldRefs
+      Location: {
+        payload: Prisma.$LocationPayload<ExtArgs>
+        fields: Prisma.LocationFieldRefs
         operations: {
           findUnique: {
-            args: Prisma.UserPreferencesFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserPreferencesPayload> | null
+            args: Prisma.LocationFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LocationPayload> | null
           }
           findUniqueOrThrow: {
-            args: Prisma.UserPreferencesFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserPreferencesPayload>
+            args: Prisma.LocationFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LocationPayload>
           }
           findFirst: {
-            args: Prisma.UserPreferencesFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserPreferencesPayload> | null
+            args: Prisma.LocationFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LocationPayload> | null
           }
           findFirstOrThrow: {
-            args: Prisma.UserPreferencesFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserPreferencesPayload>
+            args: Prisma.LocationFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LocationPayload>
           }
           findMany: {
-            args: Prisma.UserPreferencesFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserPreferencesPayload>[]
+            args: Prisma.LocationFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LocationPayload>[]
           }
           create: {
-            args: Prisma.UserPreferencesCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserPreferencesPayload>
+            args: Prisma.LocationCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LocationPayload>
           }
           createMany: {
-            args: Prisma.UserPreferencesCreateManyArgs<ExtArgs>
+            args: Prisma.LocationCreateManyArgs<ExtArgs>
             result: BatchPayload
           }
           createManyAndReturn: {
-            args: Prisma.UserPreferencesCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserPreferencesPayload>[]
+            args: Prisma.LocationCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LocationPayload>[]
           }
           delete: {
-            args: Prisma.UserPreferencesDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserPreferencesPayload>
+            args: Prisma.LocationDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LocationPayload>
           }
           update: {
-            args: Prisma.UserPreferencesUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserPreferencesPayload>
+            args: Prisma.LocationUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LocationPayload>
           }
           deleteMany: {
-            args: Prisma.UserPreferencesDeleteManyArgs<ExtArgs>
+            args: Prisma.LocationDeleteManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateMany: {
-            args: Prisma.UserPreferencesUpdateManyArgs<ExtArgs>
+            args: Prisma.LocationUpdateManyArgs<ExtArgs>
             result: BatchPayload
           }
+          updateManyAndReturn: {
+            args: Prisma.LocationUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LocationPayload>[]
+          }
           upsert: {
-            args: Prisma.UserPreferencesUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserPreferencesPayload>
+            args: Prisma.LocationUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LocationPayload>
           }
           aggregate: {
-            args: Prisma.UserPreferencesAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateUserPreferences>
+            args: Prisma.LocationAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateLocation>
           }
           groupBy: {
-            args: Prisma.UserPreferencesGroupByArgs<ExtArgs>
-            result: $Utils.Optional<UserPreferencesGroupByOutputType>[]
+            args: Prisma.LocationGroupByArgs<ExtArgs>
+            result: $Utils.Optional<LocationGroupByOutputType>[]
           }
           count: {
-            args: Prisma.UserPreferencesCountArgs<ExtArgs>
-            result: $Utils.Optional<UserPreferencesCountAggregateOutputType> | number
+            args: Prisma.LocationCountArgs<ExtArgs>
+            result: $Utils.Optional<LocationCountAggregateOutputType> | number
+          }
+        }
+      }
+      Preferences: {
+        payload: Prisma.$PreferencesPayload<ExtArgs>
+        fields: Prisma.PreferencesFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PreferencesFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreferencesPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PreferencesFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreferencesPayload>
+          }
+          findFirst: {
+            args: Prisma.PreferencesFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreferencesPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PreferencesFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreferencesPayload>
+          }
+          findMany: {
+            args: Prisma.PreferencesFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreferencesPayload>[]
+          }
+          create: {
+            args: Prisma.PreferencesCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreferencesPayload>
+          }
+          createMany: {
+            args: Prisma.PreferencesCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.PreferencesCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreferencesPayload>[]
+          }
+          delete: {
+            args: Prisma.PreferencesDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreferencesPayload>
+          }
+          update: {
+            args: Prisma.PreferencesUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreferencesPayload>
+          }
+          deleteMany: {
+            args: Prisma.PreferencesDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PreferencesUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.PreferencesUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreferencesPayload>[]
+          }
+          upsert: {
+            args: Prisma.PreferencesUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreferencesPayload>
+          }
+          aggregate: {
+            args: Prisma.PreferencesAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePreferences>
+          }
+          groupBy: {
+            args: Prisma.PreferencesGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PreferencesGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PreferencesCountArgs<ExtArgs>
+            result: $Utils.Optional<PreferencesCountAggregateOutputType> | number
           }
         }
       }
@@ -871,6 +931,10 @@ export namespace Prisma {
             args: Prisma.FavoriteRecipesUpdateManyArgs<ExtArgs>
             result: BatchPayload
           }
+          updateManyAndReturn: {
+            args: Prisma.FavoriteRecipesUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FavoriteRecipesPayload>[]
+          }
           upsert: {
             args: Prisma.FavoriteRecipesUpsertArgs<ExtArgs>
             result: $Utils.PayloadToResult<Prisma.$FavoriteRecipesPayload>
@@ -894,20 +958,20 @@ export namespace Prisma {
     other: {
       payload: any
       operations: {
-        $executeRawUnsafe: {
-          args: [query: string, ...values: any[]],
-          result: any
-        }
         $executeRaw: {
           args: [query: TemplateStringsArray | Prisma.Sql, ...values: any[]],
           result: any
         }
-        $queryRawUnsafe: {
+        $executeRawUnsafe: {
           args: [query: string, ...values: any[]],
           result: any
         }
         $queryRaw: {
           args: [query: TemplateStringsArray | Prisma.Sql, ...values: any[]],
+          result: any
+        }
+        $queryRawUnsafe: {
+          args: [query: string, ...values: any[]],
           result: any
         }
       }
@@ -932,16 +996,24 @@ export namespace Prisma {
     /**
      * @example
      * ```
-     * // Defaults to stdout
+     * // Shorthand for `emit: 'stdout'`
      * log: ['query', 'info', 'warn', 'error']
      * 
-     * // Emit as events
+     * // Emit as events only
      * log: [
-     *   { emit: 'stdout', level: 'query' },
-     *   { emit: 'stdout', level: 'info' },
-     *   { emit: 'stdout', level: 'warn' }
-     *   { emit: 'stdout', level: 'error' }
+     *   { emit: 'event', level: 'query' },
+     *   { emit: 'event', level: 'info' },
+     *   { emit: 'event', level: 'warn' }
+     *   { emit: 'event', level: 'error' }
      * ]
+     * 
+     * / Emit as events and log to stdout
+     * og: [
+     *  { emit: 'stdout', level: 'query' },
+     *  { emit: 'stdout', level: 'info' },
+     *  { emit: 'stdout', level: 'warn' }
+     *  { emit: 'stdout', level: 'error' }
+     * 
      * ```
      * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/logging#the-log-option).
      */
@@ -956,8 +1028,28 @@ export namespace Prisma {
       timeout?: number
       isolationLevel?: Prisma.TransactionIsolationLevel
     }
+    /**
+     * Global configuration for omitting model fields by default.
+     * 
+     * @example
+     * ```
+     * const prisma = new PrismaClient({
+     *   omit: {
+     *     user: {
+     *       password: true
+     *     }
+     *   }
+     * })
+     * ```
+     */
+    omit?: Prisma.GlobalOmitConfig
   }
-
+  export type GlobalOmitConfig = {
+    user?: UserOmit
+    location?: LocationOmit
+    preferences?: PreferencesOmit
+    favoriteRecipes?: FavoriteRecipesOmit
+  }
 
   /* Types for Logging */
   export type LogLevel = 'info' | 'query' | 'warn' | 'error'
@@ -966,10 +1058,15 @@ export namespace Prisma {
     emit: 'stdout' | 'event'
   }
 
-  export type GetLogType<T extends LogLevel | LogDefinition> = T extends LogDefinition ? T['emit'] extends 'event' ? T['level'] : never : never
-  export type GetEvents<T extends any> = T extends Array<LogLevel | LogDefinition> ?
-    GetLogType<T[0]> | GetLogType<T[1]> | GetLogType<T[2]> | GetLogType<T[3]>
-    : never
+  export type CheckIsLogLevel<T> = T extends LogLevel ? T : never;
+
+  export type GetLogType<T> = CheckIsLogLevel<
+    T extends LogDefinition ? T['level'] : T
+  >;
+
+  export type GetEvents<T extends any[]> = T extends Array<LogLevel | LogDefinition>
+    ? GetLogType<T[number]>
+    : never;
 
   export type QueryEvent = {
     timestamp: Date
@@ -998,6 +1095,7 @@ export namespace Prisma {
     | 'createManyAndReturn'
     | 'update'
     | 'updateMany'
+    | 'updateManyAndReturn'
     | 'upsert'
     | 'delete'
     | 'deleteMany'
@@ -1008,25 +1106,6 @@ export namespace Prisma {
     | 'runCommandRaw'
     | 'findRaw'
     | 'groupBy'
-
-  /**
-   * These options are being passed into the middleware as "params"
-   */
-  export type MiddlewareParams = {
-    model?: ModelName
-    action: PrismaAction
-    args: any
-    dataPath: string[]
-    runInTransaction: boolean
-  }
-
-  /**
-   * The `T` type makes sure, that the `return proceed` is not forgotten in the middleware implementation
-   */
-  export type Middleware<T = any> = (
-    params: MiddlewareParams,
-    next: (params: MiddlewareParams) => $Utils.JsPromise<T>,
-  ) => $Utils.JsPromise<T>
 
   // tested in getLogLevel.test.ts
   export function getLogLevel(log: Array<LogLevel | LogDefinition>): LogLevel | undefined;
@@ -1263,11 +1342,18 @@ export namespace Prisma {
     cognitoId?: boolean
     email?: boolean
     favoriteRecipes?: boolean | User$favoriteRecipesArgs<ExtArgs>
-    userPreferances?: boolean | User$userPreferancesArgs<ExtArgs>
+    preferences?: boolean | User$preferencesArgs<ExtArgs>
+    location?: boolean | User$locationArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    cognitoId?: boolean
+    email?: boolean
+  }, ExtArgs["result"]["user"]>
+
+  export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     cognitoId?: boolean
     email?: boolean
@@ -1279,18 +1365,22 @@ export namespace Prisma {
     email?: boolean
   }
 
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "cognitoId" | "email", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     favoriteRecipes?: boolean | User$favoriteRecipesArgs<ExtArgs>
-    userPreferances?: boolean | User$userPreferancesArgs<ExtArgs>
+    preferences?: boolean | User$preferencesArgs<ExtArgs>
+    location?: boolean | User$locationArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type UserIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
 
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "User"
     objects: {
       favoriteRecipes: Prisma.$FavoriteRecipesPayload<ExtArgs>[]
-      userPreferances: Prisma.$UserPreferencesPayload<ExtArgs> | null
+      preferences: Prisma.$PreferencesPayload<ExtArgs> | null
+      location: Prisma.$LocationPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -1302,12 +1392,12 @@ export namespace Prisma {
 
   type UserGetPayload<S extends boolean | null | undefined | UserDefaultArgs> = $Result.GetResult<Prisma.$UserPayload, S>
 
-  type UserCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
-    Omit<UserFindManyArgs, 'select' | 'include' | 'distinct'> & {
+  type UserCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<UserFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
       select?: UserCountAggregateInputType | true
     }
 
-  export interface UserDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+  export interface UserDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
     [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['User'], meta: { name: 'User' } }
     /**
      * Find zero or one User that matches the filter.
@@ -1320,10 +1410,10 @@ export namespace Prisma {
      *   }
      * })
      */
-    findUnique<T extends UserFindUniqueArgs>(args: SelectSubset<T, UserFindUniqueArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+    findUnique<T extends UserFindUniqueArgs>(args: SelectSubset<T, UserFindUniqueArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find one User that matches the filter or throw an error with `error.code='P2025'` 
+     * Find one User that matches the filter or throw an error with `error.code='P2025'`
      * if no matches were found.
      * @param {UserFindUniqueOrThrowArgs} args - Arguments to find a User
      * @example
@@ -1334,7 +1424,7 @@ export namespace Prisma {
      *   }
      * })
      */
-    findUniqueOrThrow<T extends UserFindUniqueOrThrowArgs>(args: SelectSubset<T, UserFindUniqueOrThrowArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+    findUniqueOrThrow<T extends UserFindUniqueOrThrowArgs>(args: SelectSubset<T, UserFindUniqueOrThrowArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
      * Find the first User that matches the filter.
@@ -1349,7 +1439,7 @@ export namespace Prisma {
      *   }
      * })
      */
-    findFirst<T extends UserFindFirstArgs>(args?: SelectSubset<T, UserFindFirstArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+    findFirst<T extends UserFindFirstArgs>(args?: SelectSubset<T, UserFindFirstArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
      * Find the first User that matches the filter or
@@ -1365,7 +1455,7 @@ export namespace Prisma {
      *   }
      * })
      */
-    findFirstOrThrow<T extends UserFindFirstOrThrowArgs>(args?: SelectSubset<T, UserFindFirstOrThrowArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+    findFirstOrThrow<T extends UserFindFirstOrThrowArgs>(args?: SelectSubset<T, UserFindFirstOrThrowArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
      * Find zero or more Users that matches the filter.
@@ -1383,7 +1473,7 @@ export namespace Prisma {
      * const userWithIdOnly = await prisma.user.findMany({ select: { id: true } })
      * 
      */
-    findMany<T extends UserFindManyArgs>(args?: SelectSubset<T, UserFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany">>
+    findMany<T extends UserFindManyArgs>(args?: SelectSubset<T, UserFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
     /**
      * Create a User.
@@ -1397,7 +1487,7 @@ export namespace Prisma {
      * })
      * 
      */
-    create<T extends UserCreateArgs>(args: SelectSubset<T, UserCreateArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "create">, never, ExtArgs>
+    create<T extends UserCreateArgs>(args: SelectSubset<T, UserCreateArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
      * Create many Users.
@@ -1425,7 +1515,7 @@ export namespace Prisma {
      * })
      * 
      * // Create many Users and only return the `id`
-     * const userWithIdOnly = await prisma.user.createManyAndReturn({ 
+     * const userWithIdOnly = await prisma.user.createManyAndReturn({
      *   select: { id: true },
      *   data: [
      *     // ... provide data here
@@ -1435,7 +1525,7 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    createManyAndReturn<T extends UserCreateManyAndReturnArgs>(args?: SelectSubset<T, UserCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "createManyAndReturn">>
+    createManyAndReturn<T extends UserCreateManyAndReturnArgs>(args?: SelectSubset<T, UserCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
     /**
      * Delete a User.
@@ -1449,7 +1539,7 @@ export namespace Prisma {
      * })
      * 
      */
-    delete<T extends UserDeleteArgs>(args: SelectSubset<T, UserDeleteArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+    delete<T extends UserDeleteArgs>(args: SelectSubset<T, UserDeleteArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
      * Update one User.
@@ -1466,7 +1556,7 @@ export namespace Prisma {
      * })
      * 
      */
-    update<T extends UserUpdateArgs>(args: SelectSubset<T, UserUpdateArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "update">, never, ExtArgs>
+    update<T extends UserUpdateArgs>(args: SelectSubset<T, UserUpdateArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
      * Delete zero or more Users.
@@ -1502,6 +1592,36 @@ export namespace Prisma {
     updateMany<T extends UserUpdateManyArgs>(args: SelectSubset<T, UserUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
+     * Update zero or more Users and returns the data updated in the database.
+     * @param {UserUpdateManyAndReturnArgs} args - Arguments to update many Users.
+     * @example
+     * // Update many Users
+     * const user = await prisma.user.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Users and only return the `id`
+     * const userWithIdOnly = await prisma.user.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends UserUpdateManyAndReturnArgs>(args: SelectSubset<T, UserUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
      * Create or update one User.
      * @param {UserUpsertArgs} args - Arguments to update or create a User.
      * @example
@@ -1518,7 +1638,7 @@ export namespace Prisma {
      *   }
      * })
      */
-    upsert<T extends UserUpsertArgs>(args: SelectSubset<T, UserUpsertArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+    upsert<T extends UserUpsertArgs>(args: SelectSubset<T, UserUpsertArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
 
     /**
@@ -1658,10 +1778,11 @@ export namespace Prisma {
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+  export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    favoriteRecipes<T extends User$favoriteRecipesArgs<ExtArgs> = {}>(args?: Subset<T, User$favoriteRecipesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FavoriteRecipesPayload<ExtArgs>, T, "findMany"> | Null>
-    userPreferances<T extends User$userPreferancesArgs<ExtArgs> = {}>(args?: Subset<T, User$userPreferancesArgs<ExtArgs>>): Prisma__UserPreferencesClient<$Result.GetResult<Prisma.$UserPreferencesPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    favoriteRecipes<T extends User$favoriteRecipesArgs<ExtArgs> = {}>(args?: Subset<T, User$favoriteRecipesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FavoriteRecipesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    preferences<T extends User$preferencesArgs<ExtArgs> = {}>(args?: Subset<T, User$preferencesArgs<ExtArgs>>): Prisma__PreferencesClient<$Result.GetResult<Prisma.$PreferencesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    location<T extends User$locationArgs<ExtArgs> = {}>(args?: Subset<T, User$locationArgs<ExtArgs>>): Prisma__LocationClient<$Result.GetResult<Prisma.$LocationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1689,7 +1810,7 @@ export namespace Prisma {
 
   /**
    * Fields of the User model
-   */ 
+   */
   interface UserFieldRefs {
     readonly id: FieldRef<"User", 'Int'>
     readonly cognitoId: FieldRef<"User", 'String'>
@@ -1706,6 +1827,10 @@ export namespace Prisma {
      * Select specific fields to fetch from the User
      */
     select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
@@ -1725,6 +1850,10 @@ export namespace Prisma {
      */
     select?: UserSelect<ExtArgs> | null
     /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
      * Choose, which related nodes to fetch as well
      */
     include?: UserInclude<ExtArgs> | null
@@ -1742,6 +1871,10 @@ export namespace Prisma {
      * Select specific fields to fetch from the User
      */
     select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
@@ -1791,6 +1924,10 @@ export namespace Prisma {
      */
     select?: UserSelect<ExtArgs> | null
     /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
      * Choose, which related nodes to fetch as well
      */
     include?: UserInclude<ExtArgs> | null
@@ -1839,6 +1976,10 @@ export namespace Prisma {
      */
     select?: UserSelect<ExtArgs> | null
     /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
      * Choose, which related nodes to fetch as well
      */
     include?: UserInclude<ExtArgs> | null
@@ -1882,6 +2023,10 @@ export namespace Prisma {
      */
     select?: UserSelect<ExtArgs> | null
     /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
      * Choose, which related nodes to fetch as well
      */
     include?: UserInclude<ExtArgs> | null
@@ -1911,6 +2056,10 @@ export namespace Prisma {
      */
     select?: UserSelectCreateManyAndReturn<ExtArgs> | null
     /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
      * The data used to create many Users.
      */
     data: UserCreateManyInput | UserCreateManyInput[]
@@ -1925,6 +2074,10 @@ export namespace Prisma {
      * Select specific fields to fetch from the User
      */
     select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
@@ -1951,6 +2104,36 @@ export namespace Prisma {
      * Filter which Users to update
      */
     where?: UserWhereInput
+    /**
+     * Limit how many Users to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * User updateManyAndReturn
+   */
+  export type UserUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * The data used to update Users.
+     */
+    data: XOR<UserUpdateManyMutationInput, UserUncheckedUpdateManyInput>
+    /**
+     * Filter which Users to update
+     */
+    where?: UserWhereInput
+    /**
+     * Limit how many Users to update.
+     */
+    limit?: number
   }
 
   /**
@@ -1961,6 +2144,10 @@ export namespace Prisma {
      * Select specific fields to fetch from the User
      */
     select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
@@ -1988,6 +2175,10 @@ export namespace Prisma {
      */
     select?: UserSelect<ExtArgs> | null
     /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
      * Choose, which related nodes to fetch as well
      */
     include?: UserInclude<ExtArgs> | null
@@ -2005,6 +2196,10 @@ export namespace Prisma {
      * Filter which Users to delete
      */
     where?: UserWhereInput
+    /**
+     * Limit how many Users to delete.
+     */
+    limit?: number
   }
 
   /**
@@ -2015,6 +2210,10 @@ export namespace Prisma {
      * Select specific fields to fetch from the FavoriteRecipes
      */
     select?: FavoriteRecipesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FavoriteRecipes
+     */
+    omit?: FavoriteRecipesOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
@@ -2028,18 +2227,41 @@ export namespace Prisma {
   }
 
   /**
-   * User.userPreferances
+   * User.preferences
    */
-  export type User$userPreferancesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type User$preferencesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the UserPreferences
+     * Select specific fields to fetch from the Preferences
      */
-    select?: UserPreferencesSelect<ExtArgs> | null
+    select?: PreferencesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Preferences
+     */
+    omit?: PreferencesOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: UserPreferencesInclude<ExtArgs> | null
-    where?: UserPreferencesWhereInput
+    include?: PreferencesInclude<ExtArgs> | null
+    where?: PreferencesWhereInput
+  }
+
+  /**
+   * User.location
+   */
+  export type User$locationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Location
+     */
+    select?: LocationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Location
+     */
+    omit?: LocationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LocationInclude<ExtArgs> | null
+    where?: LocationWhereInput
   }
 
   /**
@@ -2051,6 +2273,10 @@ export namespace Prisma {
      */
     select?: UserSelect<ExtArgs> | null
     /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
      * Choose, which related nodes to fetch as well
      */
     include?: UserInclude<ExtArgs> | null
@@ -2058,723 +2284,428 @@ export namespace Prisma {
 
 
   /**
-   * Model UserPreferences
+   * Model Location
    */
 
-  export type AggregateUserPreferences = {
-    _count: UserPreferencesCountAggregateOutputType | null
-    _avg: UserPreferencesAvgAggregateOutputType | null
-    _sum: UserPreferencesSumAggregateOutputType | null
-    _min: UserPreferencesMinAggregateOutputType | null
-    _max: UserPreferencesMaxAggregateOutputType | null
+  export type AggregateLocation = {
+    _count: LocationCountAggregateOutputType | null
+    _avg: LocationAvgAggregateOutputType | null
+    _sum: LocationSumAggregateOutputType | null
+    _min: LocationMinAggregateOutputType | null
+    _max: LocationMaxAggregateOutputType | null
   }
 
-  export type UserPreferencesAvgAggregateOutputType = {
+  export type LocationAvgAggregateOutputType = {
     id: number | null
+    latitude: Decimal | null
+    longitude: Decimal | null
   }
 
-  export type UserPreferencesSumAggregateOutputType = {
+  export type LocationSumAggregateOutputType = {
     id: number | null
+    latitude: Decimal | null
+    longitude: Decimal | null
   }
 
-  export type UserPreferencesMinAggregateOutputType = {
-    id: number | null
-    userCognitoId: string | null
-    vegetarianOnly: boolean | null
-    vegan: boolean | null
-    pescatarian: boolean | null
-    flexitarian: boolean | null
-    meatOnly: boolean | null
-    kosher: boolean | null
-    halal: boolean | null
-    jain: boolean | null
-    buddhist: boolean | null
-    glutenFree: boolean | null
-    lactoseFree: boolean | null
-    dairyFree: boolean | null
-    nutFree: boolean | null
-    peanutFree: boolean | null
-    shellfishFree: boolean | null
-    eggFree: boolean | null
-    soyFree: boolean | null
-    fishFree: boolean | null
-    nightshadeFree: boolean | null
-    lowCarb: boolean | null
-    keto: boolean | null
-    paleo: boolean | null
-    lowSugar: boolean | null
-    lowSalt: boolean | null
-    lowFat: boolean | null
-    highProtein: boolean | null
-    rawFood: boolean | null
-    whole30: boolean | null
-    diabeticFriendly: boolean | null
-    intermittentFasting: boolean | null
-    organicOnly: boolean | null
-    locallySourced: boolean | null
-    processedFree: boolean | null
-    fastFoodAvoider: boolean | null
-    customPreferences: string | null
-  }
-
-  export type UserPreferencesMaxAggregateOutputType = {
+  export type LocationMinAggregateOutputType = {
     id: number | null
     userCognitoId: string | null
-    vegetarianOnly: boolean | null
-    vegan: boolean | null
-    pescatarian: boolean | null
-    flexitarian: boolean | null
-    meatOnly: boolean | null
-    kosher: boolean | null
-    halal: boolean | null
-    jain: boolean | null
-    buddhist: boolean | null
-    glutenFree: boolean | null
-    lactoseFree: boolean | null
-    dairyFree: boolean | null
-    nutFree: boolean | null
-    peanutFree: boolean | null
-    shellfishFree: boolean | null
-    eggFree: boolean | null
-    soyFree: boolean | null
-    fishFree: boolean | null
-    nightshadeFree: boolean | null
-    lowCarb: boolean | null
-    keto: boolean | null
-    paleo: boolean | null
-    lowSugar: boolean | null
-    lowSalt: boolean | null
-    lowFat: boolean | null
-    highProtein: boolean | null
-    rawFood: boolean | null
-    whole30: boolean | null
-    diabeticFriendly: boolean | null
-    intermittentFasting: boolean | null
-    organicOnly: boolean | null
-    locallySourced: boolean | null
-    processedFree: boolean | null
-    fastFoodAvoider: boolean | null
-    customPreferences: string | null
+    country: string | null
+    city: string | null
+    address: string | null
+    radius: string | null
+    latitude: Decimal | null
+    longitude: Decimal | null
   }
 
-  export type UserPreferencesCountAggregateOutputType = {
+  export type LocationMaxAggregateOutputType = {
+    id: number | null
+    userCognitoId: string | null
+    country: string | null
+    city: string | null
+    address: string | null
+    radius: string | null
+    latitude: Decimal | null
+    longitude: Decimal | null
+  }
+
+  export type LocationCountAggregateOutputType = {
     id: number
     userCognitoId: number
-    vegetarianOnly: number
-    vegan: number
-    pescatarian: number
-    flexitarian: number
-    meatOnly: number
-    kosher: number
-    halal: number
-    jain: number
-    buddhist: number
-    glutenFree: number
-    lactoseFree: number
-    dairyFree: number
-    nutFree: number
-    peanutFree: number
-    shellfishFree: number
-    eggFree: number
-    soyFree: number
-    fishFree: number
-    nightshadeFree: number
-    lowCarb: number
-    keto: number
-    paleo: number
-    lowSugar: number
-    lowSalt: number
-    lowFat: number
-    highProtein: number
-    rawFood: number
-    whole30: number
-    diabeticFriendly: number
-    intermittentFasting: number
-    organicOnly: number
-    locallySourced: number
-    processedFree: number
-    fastFoodAvoider: number
-    customPreferences: number
+    country: number
+    city: number
+    address: number
+    radius: number
+    latitude: number
+    longitude: number
     _all: number
   }
 
 
-  export type UserPreferencesAvgAggregateInputType = {
+  export type LocationAvgAggregateInputType = {
     id?: true
+    latitude?: true
+    longitude?: true
   }
 
-  export type UserPreferencesSumAggregateInputType = {
+  export type LocationSumAggregateInputType = {
     id?: true
+    latitude?: true
+    longitude?: true
   }
 
-  export type UserPreferencesMinAggregateInputType = {
+  export type LocationMinAggregateInputType = {
     id?: true
     userCognitoId?: true
-    vegetarianOnly?: true
-    vegan?: true
-    pescatarian?: true
-    flexitarian?: true
-    meatOnly?: true
-    kosher?: true
-    halal?: true
-    jain?: true
-    buddhist?: true
-    glutenFree?: true
-    lactoseFree?: true
-    dairyFree?: true
-    nutFree?: true
-    peanutFree?: true
-    shellfishFree?: true
-    eggFree?: true
-    soyFree?: true
-    fishFree?: true
-    nightshadeFree?: true
-    lowCarb?: true
-    keto?: true
-    paleo?: true
-    lowSugar?: true
-    lowSalt?: true
-    lowFat?: true
-    highProtein?: true
-    rawFood?: true
-    whole30?: true
-    diabeticFriendly?: true
-    intermittentFasting?: true
-    organicOnly?: true
-    locallySourced?: true
-    processedFree?: true
-    fastFoodAvoider?: true
-    customPreferences?: true
+    country?: true
+    city?: true
+    address?: true
+    radius?: true
+    latitude?: true
+    longitude?: true
   }
 
-  export type UserPreferencesMaxAggregateInputType = {
+  export type LocationMaxAggregateInputType = {
     id?: true
     userCognitoId?: true
-    vegetarianOnly?: true
-    vegan?: true
-    pescatarian?: true
-    flexitarian?: true
-    meatOnly?: true
-    kosher?: true
-    halal?: true
-    jain?: true
-    buddhist?: true
-    glutenFree?: true
-    lactoseFree?: true
-    dairyFree?: true
-    nutFree?: true
-    peanutFree?: true
-    shellfishFree?: true
-    eggFree?: true
-    soyFree?: true
-    fishFree?: true
-    nightshadeFree?: true
-    lowCarb?: true
-    keto?: true
-    paleo?: true
-    lowSugar?: true
-    lowSalt?: true
-    lowFat?: true
-    highProtein?: true
-    rawFood?: true
-    whole30?: true
-    diabeticFriendly?: true
-    intermittentFasting?: true
-    organicOnly?: true
-    locallySourced?: true
-    processedFree?: true
-    fastFoodAvoider?: true
-    customPreferences?: true
+    country?: true
+    city?: true
+    address?: true
+    radius?: true
+    latitude?: true
+    longitude?: true
   }
 
-  export type UserPreferencesCountAggregateInputType = {
+  export type LocationCountAggregateInputType = {
     id?: true
     userCognitoId?: true
-    vegetarianOnly?: true
-    vegan?: true
-    pescatarian?: true
-    flexitarian?: true
-    meatOnly?: true
-    kosher?: true
-    halal?: true
-    jain?: true
-    buddhist?: true
-    glutenFree?: true
-    lactoseFree?: true
-    dairyFree?: true
-    nutFree?: true
-    peanutFree?: true
-    shellfishFree?: true
-    eggFree?: true
-    soyFree?: true
-    fishFree?: true
-    nightshadeFree?: true
-    lowCarb?: true
-    keto?: true
-    paleo?: true
-    lowSugar?: true
-    lowSalt?: true
-    lowFat?: true
-    highProtein?: true
-    rawFood?: true
-    whole30?: true
-    diabeticFriendly?: true
-    intermittentFasting?: true
-    organicOnly?: true
-    locallySourced?: true
-    processedFree?: true
-    fastFoodAvoider?: true
-    customPreferences?: true
+    country?: true
+    city?: true
+    address?: true
+    radius?: true
+    latitude?: true
+    longitude?: true
     _all?: true
   }
 
-  export type UserPreferencesAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type LocationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which UserPreferences to aggregate.
+     * Filter which Location to aggregate.
      */
-    where?: UserPreferencesWhereInput
+    where?: LocationWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of UserPreferences to fetch.
+     * Determine the order of Locations to fetch.
      */
-    orderBy?: UserPreferencesOrderByWithRelationInput | UserPreferencesOrderByWithRelationInput[]
+    orderBy?: LocationOrderByWithRelationInput | LocationOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the start position
      */
-    cursor?: UserPreferencesWhereUniqueInput
+    cursor?: LocationWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` UserPreferences from the position of the cursor.
+     * Take `±n` Locations from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` UserPreferences.
+     * Skip the first `n` Locations.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Count returned UserPreferences
+     * Count returned Locations
     **/
-    _count?: true | UserPreferencesCountAggregateInputType
+    _count?: true | LocationCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to average
     **/
-    _avg?: UserPreferencesAvgAggregateInputType
+    _avg?: LocationAvgAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to sum
     **/
-    _sum?: UserPreferencesSumAggregateInputType
+    _sum?: LocationSumAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the minimum value
     **/
-    _min?: UserPreferencesMinAggregateInputType
+    _min?: LocationMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the maximum value
     **/
-    _max?: UserPreferencesMaxAggregateInputType
+    _max?: LocationMaxAggregateInputType
   }
 
-  export type GetUserPreferencesAggregateType<T extends UserPreferencesAggregateArgs> = {
-        [P in keyof T & keyof AggregateUserPreferences]: P extends '_count' | 'count'
+  export type GetLocationAggregateType<T extends LocationAggregateArgs> = {
+        [P in keyof T & keyof AggregateLocation]: P extends '_count' | 'count'
       ? T[P] extends true
         ? number
-        : GetScalarType<T[P], AggregateUserPreferences[P]>
-      : GetScalarType<T[P], AggregateUserPreferences[P]>
+        : GetScalarType<T[P], AggregateLocation[P]>
+      : GetScalarType<T[P], AggregateLocation[P]>
   }
 
 
 
 
-  export type UserPreferencesGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: UserPreferencesWhereInput
-    orderBy?: UserPreferencesOrderByWithAggregationInput | UserPreferencesOrderByWithAggregationInput[]
-    by: UserPreferencesScalarFieldEnum[] | UserPreferencesScalarFieldEnum
-    having?: UserPreferencesScalarWhereWithAggregatesInput
+  export type LocationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LocationWhereInput
+    orderBy?: LocationOrderByWithAggregationInput | LocationOrderByWithAggregationInput[]
+    by: LocationScalarFieldEnum[] | LocationScalarFieldEnum
+    having?: LocationScalarWhereWithAggregatesInput
     take?: number
     skip?: number
-    _count?: UserPreferencesCountAggregateInputType | true
-    _avg?: UserPreferencesAvgAggregateInputType
-    _sum?: UserPreferencesSumAggregateInputType
-    _min?: UserPreferencesMinAggregateInputType
-    _max?: UserPreferencesMaxAggregateInputType
+    _count?: LocationCountAggregateInputType | true
+    _avg?: LocationAvgAggregateInputType
+    _sum?: LocationSumAggregateInputType
+    _min?: LocationMinAggregateInputType
+    _max?: LocationMaxAggregateInputType
   }
 
-  export type UserPreferencesGroupByOutputType = {
+  export type LocationGroupByOutputType = {
     id: number
     userCognitoId: string
-    vegetarianOnly: boolean
-    vegan: boolean
-    pescatarian: boolean
-    flexitarian: boolean
-    meatOnly: boolean
-    kosher: boolean
-    halal: boolean
-    jain: boolean
-    buddhist: boolean
-    glutenFree: boolean
-    lactoseFree: boolean
-    dairyFree: boolean
-    nutFree: boolean
-    peanutFree: boolean
-    shellfishFree: boolean
-    eggFree: boolean
-    soyFree: boolean
-    fishFree: boolean
-    nightshadeFree: boolean
-    lowCarb: boolean
-    keto: boolean
-    paleo: boolean
-    lowSugar: boolean
-    lowSalt: boolean
-    lowFat: boolean
-    highProtein: boolean
-    rawFood: boolean
-    whole30: boolean
-    diabeticFriendly: boolean
-    intermittentFasting: boolean
-    organicOnly: boolean
-    locallySourced: boolean
-    processedFree: boolean
-    fastFoodAvoider: boolean
-    customPreferences: string
-    _count: UserPreferencesCountAggregateOutputType | null
-    _avg: UserPreferencesAvgAggregateOutputType | null
-    _sum: UserPreferencesSumAggregateOutputType | null
-    _min: UserPreferencesMinAggregateOutputType | null
-    _max: UserPreferencesMaxAggregateOutputType | null
+    country: string
+    city: string
+    address: string
+    radius: string
+    latitude: Decimal
+    longitude: Decimal
+    _count: LocationCountAggregateOutputType | null
+    _avg: LocationAvgAggregateOutputType | null
+    _sum: LocationSumAggregateOutputType | null
+    _min: LocationMinAggregateOutputType | null
+    _max: LocationMaxAggregateOutputType | null
   }
 
-  type GetUserPreferencesGroupByPayload<T extends UserPreferencesGroupByArgs> = Prisma.PrismaPromise<
+  type GetLocationGroupByPayload<T extends LocationGroupByArgs> = Prisma.PrismaPromise<
     Array<
-      PickEnumerable<UserPreferencesGroupByOutputType, T['by']> &
+      PickEnumerable<LocationGroupByOutputType, T['by']> &
         {
-          [P in ((keyof T) & (keyof UserPreferencesGroupByOutputType))]: P extends '_count'
+          [P in ((keyof T) & (keyof LocationGroupByOutputType))]: P extends '_count'
             ? T[P] extends boolean
               ? number
-              : GetScalarType<T[P], UserPreferencesGroupByOutputType[P]>
-            : GetScalarType<T[P], UserPreferencesGroupByOutputType[P]>
+              : GetScalarType<T[P], LocationGroupByOutputType[P]>
+            : GetScalarType<T[P], LocationGroupByOutputType[P]>
         }
       >
     >
 
 
-  export type UserPreferencesSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type LocationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     userCognitoId?: boolean
-    vegetarianOnly?: boolean
-    vegan?: boolean
-    pescatarian?: boolean
-    flexitarian?: boolean
-    meatOnly?: boolean
-    kosher?: boolean
-    halal?: boolean
-    jain?: boolean
-    buddhist?: boolean
-    glutenFree?: boolean
-    lactoseFree?: boolean
-    dairyFree?: boolean
-    nutFree?: boolean
-    peanutFree?: boolean
-    shellfishFree?: boolean
-    eggFree?: boolean
-    soyFree?: boolean
-    fishFree?: boolean
-    nightshadeFree?: boolean
-    lowCarb?: boolean
-    keto?: boolean
-    paleo?: boolean
-    lowSugar?: boolean
-    lowSalt?: boolean
-    lowFat?: boolean
-    highProtein?: boolean
-    rawFood?: boolean
-    whole30?: boolean
-    diabeticFriendly?: boolean
-    intermittentFasting?: boolean
-    organicOnly?: boolean
-    locallySourced?: boolean
-    processedFree?: boolean
-    fastFoodAvoider?: boolean
-    customPreferences?: boolean
+    country?: boolean
+    city?: boolean
+    address?: boolean
+    radius?: boolean
+    latitude?: boolean
+    longitude?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["userPreferences"]>
+  }, ExtArgs["result"]["location"]>
 
-  export type UserPreferencesSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type LocationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     userCognitoId?: boolean
-    vegetarianOnly?: boolean
-    vegan?: boolean
-    pescatarian?: boolean
-    flexitarian?: boolean
-    meatOnly?: boolean
-    kosher?: boolean
-    halal?: boolean
-    jain?: boolean
-    buddhist?: boolean
-    glutenFree?: boolean
-    lactoseFree?: boolean
-    dairyFree?: boolean
-    nutFree?: boolean
-    peanutFree?: boolean
-    shellfishFree?: boolean
-    eggFree?: boolean
-    soyFree?: boolean
-    fishFree?: boolean
-    nightshadeFree?: boolean
-    lowCarb?: boolean
-    keto?: boolean
-    paleo?: boolean
-    lowSugar?: boolean
-    lowSalt?: boolean
-    lowFat?: boolean
-    highProtein?: boolean
-    rawFood?: boolean
-    whole30?: boolean
-    diabeticFriendly?: boolean
-    intermittentFasting?: boolean
-    organicOnly?: boolean
-    locallySourced?: boolean
-    processedFree?: boolean
-    fastFoodAvoider?: boolean
-    customPreferences?: boolean
+    country?: boolean
+    city?: boolean
+    address?: boolean
+    radius?: boolean
+    latitude?: boolean
+    longitude?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["userPreferences"]>
+  }, ExtArgs["result"]["location"]>
 
-  export type UserPreferencesSelectScalar = {
+  export type LocationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     userCognitoId?: boolean
-    vegetarianOnly?: boolean
-    vegan?: boolean
-    pescatarian?: boolean
-    flexitarian?: boolean
-    meatOnly?: boolean
-    kosher?: boolean
-    halal?: boolean
-    jain?: boolean
-    buddhist?: boolean
-    glutenFree?: boolean
-    lactoseFree?: boolean
-    dairyFree?: boolean
-    nutFree?: boolean
-    peanutFree?: boolean
-    shellfishFree?: boolean
-    eggFree?: boolean
-    soyFree?: boolean
-    fishFree?: boolean
-    nightshadeFree?: boolean
-    lowCarb?: boolean
-    keto?: boolean
-    paleo?: boolean
-    lowSugar?: boolean
-    lowSalt?: boolean
-    lowFat?: boolean
-    highProtein?: boolean
-    rawFood?: boolean
-    whole30?: boolean
-    diabeticFriendly?: boolean
-    intermittentFasting?: boolean
-    organicOnly?: boolean
-    locallySourced?: boolean
-    processedFree?: boolean
-    fastFoodAvoider?: boolean
-    customPreferences?: boolean
+    country?: boolean
+    city?: boolean
+    address?: boolean
+    radius?: boolean
+    latitude?: boolean
+    longitude?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["location"]>
+
+  export type LocationSelectScalar = {
+    id?: boolean
+    userCognitoId?: boolean
+    country?: boolean
+    city?: boolean
+    address?: boolean
+    radius?: boolean
+    latitude?: boolean
+    longitude?: boolean
   }
 
-  export type UserPreferencesInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type LocationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userCognitoId" | "country" | "city" | "address" | "radius" | "latitude" | "longitude", ExtArgs["result"]["location"]>
+  export type LocationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
-  export type UserPreferencesIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type LocationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type LocationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
 
-  export type $UserPreferencesPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "UserPreferences"
+  export type $LocationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Location"
     objects: {
       user: Prisma.$UserPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
       userCognitoId: string
-      vegetarianOnly: boolean
-      vegan: boolean
-      pescatarian: boolean
-      flexitarian: boolean
-      meatOnly: boolean
-      kosher: boolean
-      halal: boolean
-      jain: boolean
-      buddhist: boolean
-      glutenFree: boolean
-      lactoseFree: boolean
-      dairyFree: boolean
-      nutFree: boolean
-      peanutFree: boolean
-      shellfishFree: boolean
-      eggFree: boolean
-      soyFree: boolean
-      fishFree: boolean
-      nightshadeFree: boolean
-      lowCarb: boolean
-      keto: boolean
-      paleo: boolean
-      lowSugar: boolean
-      lowSalt: boolean
-      lowFat: boolean
-      highProtein: boolean
-      rawFood: boolean
-      whole30: boolean
-      diabeticFriendly: boolean
-      intermittentFasting: boolean
-      organicOnly: boolean
-      locallySourced: boolean
-      processedFree: boolean
-      fastFoodAvoider: boolean
-      customPreferences: string
-    }, ExtArgs["result"]["userPreferences"]>
+      country: string
+      city: string
+      address: string
+      radius: string
+      latitude: Prisma.Decimal
+      longitude: Prisma.Decimal
+    }, ExtArgs["result"]["location"]>
     composites: {}
   }
 
-  type UserPreferencesGetPayload<S extends boolean | null | undefined | UserPreferencesDefaultArgs> = $Result.GetResult<Prisma.$UserPreferencesPayload, S>
+  type LocationGetPayload<S extends boolean | null | undefined | LocationDefaultArgs> = $Result.GetResult<Prisma.$LocationPayload, S>
 
-  type UserPreferencesCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
-    Omit<UserPreferencesFindManyArgs, 'select' | 'include' | 'distinct'> & {
-      select?: UserPreferencesCountAggregateInputType | true
+  type LocationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<LocationFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: LocationCountAggregateInputType | true
     }
 
-  export interface UserPreferencesDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['UserPreferences'], meta: { name: 'UserPreferences' } }
+  export interface LocationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Location'], meta: { name: 'Location' } }
     /**
-     * Find zero or one UserPreferences that matches the filter.
-     * @param {UserPreferencesFindUniqueArgs} args - Arguments to find a UserPreferences
+     * Find zero or one Location that matches the filter.
+     * @param {LocationFindUniqueArgs} args - Arguments to find a Location
      * @example
-     * // Get one UserPreferences
-     * const userPreferences = await prisma.userPreferences.findUnique({
+     * // Get one Location
+     * const location = await prisma.location.findUnique({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUnique<T extends UserPreferencesFindUniqueArgs>(args: SelectSubset<T, UserPreferencesFindUniqueArgs<ExtArgs>>): Prisma__UserPreferencesClient<$Result.GetResult<Prisma.$UserPreferencesPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+    findUnique<T extends LocationFindUniqueArgs>(args: SelectSubset<T, LocationFindUniqueArgs<ExtArgs>>): Prisma__LocationClient<$Result.GetResult<Prisma.$LocationPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find one UserPreferences that matches the filter or throw an error with `error.code='P2025'` 
+     * Find one Location that matches the filter or throw an error with `error.code='P2025'`
      * if no matches were found.
-     * @param {UserPreferencesFindUniqueOrThrowArgs} args - Arguments to find a UserPreferences
+     * @param {LocationFindUniqueOrThrowArgs} args - Arguments to find a Location
      * @example
-     * // Get one UserPreferences
-     * const userPreferences = await prisma.userPreferences.findUniqueOrThrow({
+     * // Get one Location
+     * const location = await prisma.location.findUniqueOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUniqueOrThrow<T extends UserPreferencesFindUniqueOrThrowArgs>(args: SelectSubset<T, UserPreferencesFindUniqueOrThrowArgs<ExtArgs>>): Prisma__UserPreferencesClient<$Result.GetResult<Prisma.$UserPreferencesPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+    findUniqueOrThrow<T extends LocationFindUniqueOrThrowArgs>(args: SelectSubset<T, LocationFindUniqueOrThrowArgs<ExtArgs>>): Prisma__LocationClient<$Result.GetResult<Prisma.$LocationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first UserPreferences that matches the filter.
+     * Find the first Location that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserPreferencesFindFirstArgs} args - Arguments to find a UserPreferences
+     * @param {LocationFindFirstArgs} args - Arguments to find a Location
      * @example
-     * // Get one UserPreferences
-     * const userPreferences = await prisma.userPreferences.findFirst({
+     * // Get one Location
+     * const location = await prisma.location.findFirst({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirst<T extends UserPreferencesFindFirstArgs>(args?: SelectSubset<T, UserPreferencesFindFirstArgs<ExtArgs>>): Prisma__UserPreferencesClient<$Result.GetResult<Prisma.$UserPreferencesPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+    findFirst<T extends LocationFindFirstArgs>(args?: SelectSubset<T, LocationFindFirstArgs<ExtArgs>>): Prisma__LocationClient<$Result.GetResult<Prisma.$LocationPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first UserPreferences that matches the filter or
+     * Find the first Location that matches the filter or
      * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserPreferencesFindFirstOrThrowArgs} args - Arguments to find a UserPreferences
+     * @param {LocationFindFirstOrThrowArgs} args - Arguments to find a Location
      * @example
-     * // Get one UserPreferences
-     * const userPreferences = await prisma.userPreferences.findFirstOrThrow({
+     * // Get one Location
+     * const location = await prisma.location.findFirstOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirstOrThrow<T extends UserPreferencesFindFirstOrThrowArgs>(args?: SelectSubset<T, UserPreferencesFindFirstOrThrowArgs<ExtArgs>>): Prisma__UserPreferencesClient<$Result.GetResult<Prisma.$UserPreferencesPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+    findFirstOrThrow<T extends LocationFindFirstOrThrowArgs>(args?: SelectSubset<T, LocationFindFirstOrThrowArgs<ExtArgs>>): Prisma__LocationClient<$Result.GetResult<Prisma.$LocationPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find zero or more UserPreferences that matches the filter.
+     * Find zero or more Locations that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserPreferencesFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @param {LocationFindManyArgs} args - Arguments to filter and select certain fields only.
      * @example
-     * // Get all UserPreferences
-     * const userPreferences = await prisma.userPreferences.findMany()
+     * // Get all Locations
+     * const locations = await prisma.location.findMany()
      * 
-     * // Get first 10 UserPreferences
-     * const userPreferences = await prisma.userPreferences.findMany({ take: 10 })
+     * // Get first 10 Locations
+     * const locations = await prisma.location.findMany({ take: 10 })
      * 
      * // Only select the `id`
-     * const userPreferencesWithIdOnly = await prisma.userPreferences.findMany({ select: { id: true } })
+     * const locationWithIdOnly = await prisma.location.findMany({ select: { id: true } })
      * 
      */
-    findMany<T extends UserPreferencesFindManyArgs>(args?: SelectSubset<T, UserPreferencesFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPreferencesPayload<ExtArgs>, T, "findMany">>
+    findMany<T extends LocationFindManyArgs>(args?: SelectSubset<T, LocationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LocationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
     /**
-     * Create a UserPreferences.
-     * @param {UserPreferencesCreateArgs} args - Arguments to create a UserPreferences.
+     * Create a Location.
+     * @param {LocationCreateArgs} args - Arguments to create a Location.
      * @example
-     * // Create one UserPreferences
-     * const UserPreferences = await prisma.userPreferences.create({
+     * // Create one Location
+     * const Location = await prisma.location.create({
      *   data: {
-     *     // ... data to create a UserPreferences
+     *     // ... data to create a Location
      *   }
      * })
      * 
      */
-    create<T extends UserPreferencesCreateArgs>(args: SelectSubset<T, UserPreferencesCreateArgs<ExtArgs>>): Prisma__UserPreferencesClient<$Result.GetResult<Prisma.$UserPreferencesPayload<ExtArgs>, T, "create">, never, ExtArgs>
+    create<T extends LocationCreateArgs>(args: SelectSubset<T, LocationCreateArgs<ExtArgs>>): Prisma__LocationClient<$Result.GetResult<Prisma.$LocationPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Create many UserPreferences.
-     * @param {UserPreferencesCreateManyArgs} args - Arguments to create many UserPreferences.
+     * Create many Locations.
+     * @param {LocationCreateManyArgs} args - Arguments to create many Locations.
      * @example
-     * // Create many UserPreferences
-     * const userPreferences = await prisma.userPreferences.createMany({
+     * // Create many Locations
+     * const location = await prisma.location.createMany({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      *     
      */
-    createMany<T extends UserPreferencesCreateManyArgs>(args?: SelectSubset<T, UserPreferencesCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    createMany<T extends LocationCreateManyArgs>(args?: SelectSubset<T, LocationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Create many UserPreferences and returns the data saved in the database.
-     * @param {UserPreferencesCreateManyAndReturnArgs} args - Arguments to create many UserPreferences.
+     * Create many Locations and returns the data saved in the database.
+     * @param {LocationCreateManyAndReturnArgs} args - Arguments to create many Locations.
      * @example
-     * // Create many UserPreferences
-     * const userPreferences = await prisma.userPreferences.createManyAndReturn({
+     * // Create many Locations
+     * const location = await prisma.location.createManyAndReturn({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      * 
-     * // Create many UserPreferences and only return the `id`
-     * const userPreferencesWithIdOnly = await prisma.userPreferences.createManyAndReturn({ 
+     * // Create many Locations and only return the `id`
+     * const locationWithIdOnly = await prisma.location.createManyAndReturn({
      *   select: { id: true },
      *   data: [
      *     // ... provide data here
@@ -2784,28 +2715,28 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    createManyAndReturn<T extends UserPreferencesCreateManyAndReturnArgs>(args?: SelectSubset<T, UserPreferencesCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPreferencesPayload<ExtArgs>, T, "createManyAndReturn">>
+    createManyAndReturn<T extends LocationCreateManyAndReturnArgs>(args?: SelectSubset<T, LocationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LocationPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
     /**
-     * Delete a UserPreferences.
-     * @param {UserPreferencesDeleteArgs} args - Arguments to delete one UserPreferences.
+     * Delete a Location.
+     * @param {LocationDeleteArgs} args - Arguments to delete one Location.
      * @example
-     * // Delete one UserPreferences
-     * const UserPreferences = await prisma.userPreferences.delete({
+     * // Delete one Location
+     * const Location = await prisma.location.delete({
      *   where: {
-     *     // ... filter to delete one UserPreferences
+     *     // ... filter to delete one Location
      *   }
      * })
      * 
      */
-    delete<T extends UserPreferencesDeleteArgs>(args: SelectSubset<T, UserPreferencesDeleteArgs<ExtArgs>>): Prisma__UserPreferencesClient<$Result.GetResult<Prisma.$UserPreferencesPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+    delete<T extends LocationDeleteArgs>(args: SelectSubset<T, LocationDeleteArgs<ExtArgs>>): Prisma__LocationClient<$Result.GetResult<Prisma.$LocationPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Update one UserPreferences.
-     * @param {UserPreferencesUpdateArgs} args - Arguments to update one UserPreferences.
+     * Update one Location.
+     * @param {LocationUpdateArgs} args - Arguments to update one Location.
      * @example
-     * // Update one UserPreferences
-     * const userPreferences = await prisma.userPreferences.update({
+     * // Update one Location
+     * const location = await prisma.location.update({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -2815,30 +2746,30 @@ export namespace Prisma {
      * })
      * 
      */
-    update<T extends UserPreferencesUpdateArgs>(args: SelectSubset<T, UserPreferencesUpdateArgs<ExtArgs>>): Prisma__UserPreferencesClient<$Result.GetResult<Prisma.$UserPreferencesPayload<ExtArgs>, T, "update">, never, ExtArgs>
+    update<T extends LocationUpdateArgs>(args: SelectSubset<T, LocationUpdateArgs<ExtArgs>>): Prisma__LocationClient<$Result.GetResult<Prisma.$LocationPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Delete zero or more UserPreferences.
-     * @param {UserPreferencesDeleteManyArgs} args - Arguments to filter UserPreferences to delete.
+     * Delete zero or more Locations.
+     * @param {LocationDeleteManyArgs} args - Arguments to filter Locations to delete.
      * @example
-     * // Delete a few UserPreferences
-     * const { count } = await prisma.userPreferences.deleteMany({
+     * // Delete a few Locations
+     * const { count } = await prisma.location.deleteMany({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      * 
      */
-    deleteMany<T extends UserPreferencesDeleteManyArgs>(args?: SelectSubset<T, UserPreferencesDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    deleteMany<T extends LocationDeleteManyArgs>(args?: SelectSubset<T, LocationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more UserPreferences.
+     * Update zero or more Locations.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserPreferencesUpdateManyArgs} args - Arguments to update one or more rows.
+     * @param {LocationUpdateManyArgs} args - Arguments to update one or more rows.
      * @example
-     * // Update many UserPreferences
-     * const userPreferences = await prisma.userPreferences.updateMany({
+     * // Update many Locations
+     * const location = await prisma.location.updateMany({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -2848,56 +2779,86 @@ export namespace Prisma {
      * })
      * 
      */
-    updateMany<T extends UserPreferencesUpdateManyArgs>(args: SelectSubset<T, UserPreferencesUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    updateMany<T extends LocationUpdateManyArgs>(args: SelectSubset<T, LocationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Create or update one UserPreferences.
-     * @param {UserPreferencesUpsertArgs} args - Arguments to update or create a UserPreferences.
+     * Update zero or more Locations and returns the data updated in the database.
+     * @param {LocationUpdateManyAndReturnArgs} args - Arguments to update many Locations.
      * @example
-     * // Update or create a UserPreferences
-     * const userPreferences = await prisma.userPreferences.upsert({
+     * // Update many Locations
+     * const location = await prisma.location.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Locations and only return the `id`
+     * const locationWithIdOnly = await prisma.location.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends LocationUpdateManyAndReturnArgs>(args: SelectSubset<T, LocationUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LocationPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Location.
+     * @param {LocationUpsertArgs} args - Arguments to update or create a Location.
+     * @example
+     * // Update or create a Location
+     * const location = await prisma.location.upsert({
      *   create: {
-     *     // ... data to create a UserPreferences
+     *     // ... data to create a Location
      *   },
      *   update: {
      *     // ... in case it already exists, update
      *   },
      *   where: {
-     *     // ... the filter for the UserPreferences we want to update
+     *     // ... the filter for the Location we want to update
      *   }
      * })
      */
-    upsert<T extends UserPreferencesUpsertArgs>(args: SelectSubset<T, UserPreferencesUpsertArgs<ExtArgs>>): Prisma__UserPreferencesClient<$Result.GetResult<Prisma.$UserPreferencesPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+    upsert<T extends LocationUpsertArgs>(args: SelectSubset<T, LocationUpsertArgs<ExtArgs>>): Prisma__LocationClient<$Result.GetResult<Prisma.$LocationPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
 
     /**
-     * Count the number of UserPreferences.
+     * Count the number of Locations.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserPreferencesCountArgs} args - Arguments to filter UserPreferences to count.
+     * @param {LocationCountArgs} args - Arguments to filter Locations to count.
      * @example
-     * // Count the number of UserPreferences
-     * const count = await prisma.userPreferences.count({
+     * // Count the number of Locations
+     * const count = await prisma.location.count({
      *   where: {
-     *     // ... the filter for the UserPreferences we want to count
+     *     // ... the filter for the Locations we want to count
      *   }
      * })
     **/
-    count<T extends UserPreferencesCountArgs>(
-      args?: Subset<T, UserPreferencesCountArgs>,
+    count<T extends LocationCountArgs>(
+      args?: Subset<T, LocationCountArgs>,
     ): Prisma.PrismaPromise<
       T extends $Utils.Record<'select', any>
         ? T['select'] extends true
           ? number
-          : GetScalarType<T['select'], UserPreferencesCountAggregateOutputType>
+          : GetScalarType<T['select'], LocationCountAggregateOutputType>
         : number
     >
 
     /**
-     * Allows you to perform aggregations operations on a UserPreferences.
+     * Allows you to perform aggregations operations on a Location.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserPreferencesAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @param {LocationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
      * @example
      * // Ordered by age ascending
      * // Where email contains prisma.io
@@ -2917,13 +2878,13 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
-    aggregate<T extends UserPreferencesAggregateArgs>(args: Subset<T, UserPreferencesAggregateArgs>): Prisma.PrismaPromise<GetUserPreferencesAggregateType<T>>
+    aggregate<T extends LocationAggregateArgs>(args: Subset<T, LocationAggregateArgs>): Prisma.PrismaPromise<GetLocationAggregateType<T>>
 
     /**
-     * Group by UserPreferences.
+     * Group by Location.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserPreferencesGroupByArgs} args - Group by arguments.
+     * @param {LocationGroupByArgs} args - Group by arguments.
      * @example
      * // Group by city, order by createdAt, get count
      * const result = await prisma.user.groupBy({
@@ -2938,14 +2899,14 @@ export namespace Prisma {
      * 
     **/
     groupBy<
-      T extends UserPreferencesGroupByArgs,
+      T extends LocationGroupByArgs,
       HasSelectOrTake extends Or<
         Extends<'skip', Keys<T>>,
         Extends<'take', Keys<T>>
       >,
       OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: UserPreferencesGroupByArgs['orderBy'] }
-        : { orderBy?: UserPreferencesGroupByArgs['orderBy'] },
+        ? { orderBy: LocationGroupByArgs['orderBy'] }
+        : { orderBy?: LocationGroupByArgs['orderBy'] },
       OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
       ByFields extends MaybeTupleToUnion<T['by']>,
       ByValid extends Has<ByFields, OrderFields>,
@@ -2994,22 +2955,22 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, UserPreferencesGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserPreferencesGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, LocationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetLocationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
   /**
-   * Fields of the UserPreferences model
+   * Fields of the Location model
    */
-  readonly fields: UserPreferencesFieldRefs;
+  readonly fields: LocationFieldRefs;
   }
 
   /**
-   * The delegate class that acts as a "Promise-like" for UserPreferences.
+   * The delegate class that acts as a "Promise-like" for Location.
    * Why is this prefixed with `Prisma__`?
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export interface Prisma__UserPreferencesClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+  export interface Prisma__LocationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3036,375 +2997,1819 @@ export namespace Prisma {
 
 
   /**
-   * Fields of the UserPreferences model
-   */ 
-  interface UserPreferencesFieldRefs {
-    readonly id: FieldRef<"UserPreferences", 'Int'>
-    readonly userCognitoId: FieldRef<"UserPreferences", 'String'>
-    readonly vegetarianOnly: FieldRef<"UserPreferences", 'Boolean'>
-    readonly vegan: FieldRef<"UserPreferences", 'Boolean'>
-    readonly pescatarian: FieldRef<"UserPreferences", 'Boolean'>
-    readonly flexitarian: FieldRef<"UserPreferences", 'Boolean'>
-    readonly meatOnly: FieldRef<"UserPreferences", 'Boolean'>
-    readonly kosher: FieldRef<"UserPreferences", 'Boolean'>
-    readonly halal: FieldRef<"UserPreferences", 'Boolean'>
-    readonly jain: FieldRef<"UserPreferences", 'Boolean'>
-    readonly buddhist: FieldRef<"UserPreferences", 'Boolean'>
-    readonly glutenFree: FieldRef<"UserPreferences", 'Boolean'>
-    readonly lactoseFree: FieldRef<"UserPreferences", 'Boolean'>
-    readonly dairyFree: FieldRef<"UserPreferences", 'Boolean'>
-    readonly nutFree: FieldRef<"UserPreferences", 'Boolean'>
-    readonly peanutFree: FieldRef<"UserPreferences", 'Boolean'>
-    readonly shellfishFree: FieldRef<"UserPreferences", 'Boolean'>
-    readonly eggFree: FieldRef<"UserPreferences", 'Boolean'>
-    readonly soyFree: FieldRef<"UserPreferences", 'Boolean'>
-    readonly fishFree: FieldRef<"UserPreferences", 'Boolean'>
-    readonly nightshadeFree: FieldRef<"UserPreferences", 'Boolean'>
-    readonly lowCarb: FieldRef<"UserPreferences", 'Boolean'>
-    readonly keto: FieldRef<"UserPreferences", 'Boolean'>
-    readonly paleo: FieldRef<"UserPreferences", 'Boolean'>
-    readonly lowSugar: FieldRef<"UserPreferences", 'Boolean'>
-    readonly lowSalt: FieldRef<"UserPreferences", 'Boolean'>
-    readonly lowFat: FieldRef<"UserPreferences", 'Boolean'>
-    readonly highProtein: FieldRef<"UserPreferences", 'Boolean'>
-    readonly rawFood: FieldRef<"UserPreferences", 'Boolean'>
-    readonly whole30: FieldRef<"UserPreferences", 'Boolean'>
-    readonly diabeticFriendly: FieldRef<"UserPreferences", 'Boolean'>
-    readonly intermittentFasting: FieldRef<"UserPreferences", 'Boolean'>
-    readonly organicOnly: FieldRef<"UserPreferences", 'Boolean'>
-    readonly locallySourced: FieldRef<"UserPreferences", 'Boolean'>
-    readonly processedFree: FieldRef<"UserPreferences", 'Boolean'>
-    readonly fastFoodAvoider: FieldRef<"UserPreferences", 'Boolean'>
-    readonly customPreferences: FieldRef<"UserPreferences", 'String'>
+   * Fields of the Location model
+   */
+  interface LocationFieldRefs {
+    readonly id: FieldRef<"Location", 'Int'>
+    readonly userCognitoId: FieldRef<"Location", 'String'>
+    readonly country: FieldRef<"Location", 'String'>
+    readonly city: FieldRef<"Location", 'String'>
+    readonly address: FieldRef<"Location", 'String'>
+    readonly radius: FieldRef<"Location", 'String'>
+    readonly latitude: FieldRef<"Location", 'Decimal'>
+    readonly longitude: FieldRef<"Location", 'Decimal'>
   }
     
 
   // Custom InputTypes
   /**
-   * UserPreferences findUnique
+   * Location findUnique
    */
-  export type UserPreferencesFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type LocationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the UserPreferences
+     * Select specific fields to fetch from the Location
      */
-    select?: UserPreferencesSelect<ExtArgs> | null
+    select?: LocationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Location
+     */
+    omit?: LocationOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: UserPreferencesInclude<ExtArgs> | null
+    include?: LocationInclude<ExtArgs> | null
     /**
-     * Filter, which UserPreferences to fetch.
+     * Filter, which Location to fetch.
      */
-    where: UserPreferencesWhereUniqueInput
+    where: LocationWhereUniqueInput
   }
 
   /**
-   * UserPreferences findUniqueOrThrow
+   * Location findUniqueOrThrow
    */
-  export type UserPreferencesFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type LocationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the UserPreferences
+     * Select specific fields to fetch from the Location
      */
-    select?: UserPreferencesSelect<ExtArgs> | null
+    select?: LocationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Location
+     */
+    omit?: LocationOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: UserPreferencesInclude<ExtArgs> | null
+    include?: LocationInclude<ExtArgs> | null
     /**
-     * Filter, which UserPreferences to fetch.
+     * Filter, which Location to fetch.
      */
-    where: UserPreferencesWhereUniqueInput
+    where: LocationWhereUniqueInput
   }
 
   /**
-   * UserPreferences findFirst
+   * Location findFirst
    */
-  export type UserPreferencesFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type LocationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the UserPreferences
+     * Select specific fields to fetch from the Location
      */
-    select?: UserPreferencesSelect<ExtArgs> | null
+    select?: LocationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Location
+     */
+    omit?: LocationOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: UserPreferencesInclude<ExtArgs> | null
+    include?: LocationInclude<ExtArgs> | null
     /**
-     * Filter, which UserPreferences to fetch.
+     * Filter, which Location to fetch.
      */
-    where?: UserPreferencesWhereInput
+    where?: LocationWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of UserPreferences to fetch.
+     * Determine the order of Locations to fetch.
      */
-    orderBy?: UserPreferencesOrderByWithRelationInput | UserPreferencesOrderByWithRelationInput[]
+    orderBy?: LocationOrderByWithRelationInput | LocationOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for UserPreferences.
+     * Sets the position for searching for Locations.
      */
-    cursor?: UserPreferencesWhereUniqueInput
+    cursor?: LocationWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` UserPreferences from the position of the cursor.
+     * Take `±n` Locations from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` UserPreferences.
+     * Skip the first `n` Locations.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of UserPreferences.
+     * Filter by unique combinations of Locations.
      */
-    distinct?: UserPreferencesScalarFieldEnum | UserPreferencesScalarFieldEnum[]
+    distinct?: LocationScalarFieldEnum | LocationScalarFieldEnum[]
   }
 
   /**
-   * UserPreferences findFirstOrThrow
+   * Location findFirstOrThrow
    */
-  export type UserPreferencesFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type LocationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the UserPreferences
+     * Select specific fields to fetch from the Location
      */
-    select?: UserPreferencesSelect<ExtArgs> | null
+    select?: LocationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Location
+     */
+    omit?: LocationOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: UserPreferencesInclude<ExtArgs> | null
+    include?: LocationInclude<ExtArgs> | null
     /**
-     * Filter, which UserPreferences to fetch.
+     * Filter, which Location to fetch.
      */
-    where?: UserPreferencesWhereInput
+    where?: LocationWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of UserPreferences to fetch.
+     * Determine the order of Locations to fetch.
      */
-    orderBy?: UserPreferencesOrderByWithRelationInput | UserPreferencesOrderByWithRelationInput[]
+    orderBy?: LocationOrderByWithRelationInput | LocationOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for UserPreferences.
+     * Sets the position for searching for Locations.
      */
-    cursor?: UserPreferencesWhereUniqueInput
+    cursor?: LocationWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` UserPreferences from the position of the cursor.
+     * Take `±n` Locations from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` UserPreferences.
+     * Skip the first `n` Locations.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of UserPreferences.
+     * Filter by unique combinations of Locations.
      */
-    distinct?: UserPreferencesScalarFieldEnum | UserPreferencesScalarFieldEnum[]
+    distinct?: LocationScalarFieldEnum | LocationScalarFieldEnum[]
   }
 
   /**
-   * UserPreferences findMany
+   * Location findMany
    */
-  export type UserPreferencesFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type LocationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the UserPreferences
+     * Select specific fields to fetch from the Location
      */
-    select?: UserPreferencesSelect<ExtArgs> | null
+    select?: LocationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Location
+     */
+    omit?: LocationOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: UserPreferencesInclude<ExtArgs> | null
+    include?: LocationInclude<ExtArgs> | null
     /**
-     * Filter, which UserPreferences to fetch.
+     * Filter, which Locations to fetch.
      */
-    where?: UserPreferencesWhereInput
+    where?: LocationWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of UserPreferences to fetch.
+     * Determine the order of Locations to fetch.
      */
-    orderBy?: UserPreferencesOrderByWithRelationInput | UserPreferencesOrderByWithRelationInput[]
+    orderBy?: LocationOrderByWithRelationInput | LocationOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for listing UserPreferences.
+     * Sets the position for listing Locations.
      */
-    cursor?: UserPreferencesWhereUniqueInput
+    cursor?: LocationWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` UserPreferences from the position of the cursor.
+     * Take `±n` Locations from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` UserPreferences.
+     * Skip the first `n` Locations.
      */
     skip?: number
-    distinct?: UserPreferencesScalarFieldEnum | UserPreferencesScalarFieldEnum[]
+    distinct?: LocationScalarFieldEnum | LocationScalarFieldEnum[]
   }
 
   /**
-   * UserPreferences create
+   * Location create
    */
-  export type UserPreferencesCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type LocationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the UserPreferences
+     * Select specific fields to fetch from the Location
      */
-    select?: UserPreferencesSelect<ExtArgs> | null
+    select?: LocationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Location
+     */
+    omit?: LocationOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: UserPreferencesInclude<ExtArgs> | null
+    include?: LocationInclude<ExtArgs> | null
     /**
-     * The data needed to create a UserPreferences.
+     * The data needed to create a Location.
      */
-    data: XOR<UserPreferencesCreateInput, UserPreferencesUncheckedCreateInput>
+    data: XOR<LocationCreateInput, LocationUncheckedCreateInput>
   }
 
   /**
-   * UserPreferences createMany
+   * Location createMany
    */
-  export type UserPreferencesCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type LocationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to create many UserPreferences.
+     * The data used to create many Locations.
      */
-    data: UserPreferencesCreateManyInput | UserPreferencesCreateManyInput[]
+    data: LocationCreateManyInput | LocationCreateManyInput[]
     skipDuplicates?: boolean
   }
 
   /**
-   * UserPreferences createManyAndReturn
+   * Location createManyAndReturn
    */
-  export type UserPreferencesCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type LocationCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the UserPreferences
+     * Select specific fields to fetch from the Location
      */
-    select?: UserPreferencesSelectCreateManyAndReturn<ExtArgs> | null
+    select?: LocationSelectCreateManyAndReturn<ExtArgs> | null
     /**
-     * The data used to create many UserPreferences.
+     * Omit specific fields from the Location
      */
-    data: UserPreferencesCreateManyInput | UserPreferencesCreateManyInput[]
+    omit?: LocationOmit<ExtArgs> | null
+    /**
+     * The data used to create many Locations.
+     */
+    data: LocationCreateManyInput | LocationCreateManyInput[]
     skipDuplicates?: boolean
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: UserPreferencesIncludeCreateManyAndReturn<ExtArgs> | null
+    include?: LocationIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
-   * UserPreferences update
+   * Location update
    */
-  export type UserPreferencesUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type LocationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the UserPreferences
+     * Select specific fields to fetch from the Location
      */
-    select?: UserPreferencesSelect<ExtArgs> | null
+    select?: LocationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Location
+     */
+    omit?: LocationOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: UserPreferencesInclude<ExtArgs> | null
+    include?: LocationInclude<ExtArgs> | null
     /**
-     * The data needed to update a UserPreferences.
+     * The data needed to update a Location.
      */
-    data: XOR<UserPreferencesUpdateInput, UserPreferencesUncheckedUpdateInput>
+    data: XOR<LocationUpdateInput, LocationUncheckedUpdateInput>
     /**
-     * Choose, which UserPreferences to update.
+     * Choose, which Location to update.
      */
-    where: UserPreferencesWhereUniqueInput
+    where: LocationWhereUniqueInput
   }
 
   /**
-   * UserPreferences updateMany
+   * Location updateMany
    */
-  export type UserPreferencesUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type LocationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to update UserPreferences.
+     * The data used to update Locations.
      */
-    data: XOR<UserPreferencesUpdateManyMutationInput, UserPreferencesUncheckedUpdateManyInput>
+    data: XOR<LocationUpdateManyMutationInput, LocationUncheckedUpdateManyInput>
     /**
-     * Filter which UserPreferences to update
+     * Filter which Locations to update
      */
-    where?: UserPreferencesWhereInput
+    where?: LocationWhereInput
+    /**
+     * Limit how many Locations to update.
+     */
+    limit?: number
   }
 
   /**
-   * UserPreferences upsert
+   * Location updateManyAndReturn
    */
-  export type UserPreferencesUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type LocationUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the UserPreferences
+     * Select specific fields to fetch from the Location
      */
-    select?: UserPreferencesSelect<ExtArgs> | null
+    select?: LocationSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Location
+     */
+    omit?: LocationOmit<ExtArgs> | null
+    /**
+     * The data used to update Locations.
+     */
+    data: XOR<LocationUpdateManyMutationInput, LocationUncheckedUpdateManyInput>
+    /**
+     * Filter which Locations to update
+     */
+    where?: LocationWhereInput
+    /**
+     * Limit how many Locations to update.
+     */
+    limit?: number
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: UserPreferencesInclude<ExtArgs> | null
-    /**
-     * The filter to search for the UserPreferences to update in case it exists.
-     */
-    where: UserPreferencesWhereUniqueInput
-    /**
-     * In case the UserPreferences found by the `where` argument doesn't exist, create a new UserPreferences with this data.
-     */
-    create: XOR<UserPreferencesCreateInput, UserPreferencesUncheckedCreateInput>
-    /**
-     * In case the UserPreferences was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<UserPreferencesUpdateInput, UserPreferencesUncheckedUpdateInput>
+    include?: LocationIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
-   * UserPreferences delete
+   * Location upsert
    */
-  export type UserPreferencesDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type LocationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the UserPreferences
+     * Select specific fields to fetch from the Location
      */
-    select?: UserPreferencesSelect<ExtArgs> | null
+    select?: LocationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Location
+     */
+    omit?: LocationOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: UserPreferencesInclude<ExtArgs> | null
+    include?: LocationInclude<ExtArgs> | null
     /**
-     * Filter which UserPreferences to delete.
+     * The filter to search for the Location to update in case it exists.
      */
-    where: UserPreferencesWhereUniqueInput
+    where: LocationWhereUniqueInput
+    /**
+     * In case the Location found by the `where` argument doesn't exist, create a new Location with this data.
+     */
+    create: XOR<LocationCreateInput, LocationUncheckedCreateInput>
+    /**
+     * In case the Location was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<LocationUpdateInput, LocationUncheckedUpdateInput>
   }
 
   /**
-   * UserPreferences deleteMany
+   * Location delete
    */
-  export type UserPreferencesDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type LocationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which UserPreferences to delete
+     * Select specific fields to fetch from the Location
      */
-    where?: UserPreferencesWhereInput
-  }
-
-  /**
-   * UserPreferences without action
-   */
-  export type UserPreferencesDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    select?: LocationSelect<ExtArgs> | null
     /**
-     * Select specific fields to fetch from the UserPreferences
+     * Omit specific fields from the Location
      */
-    select?: UserPreferencesSelect<ExtArgs> | null
+    omit?: LocationOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: UserPreferencesInclude<ExtArgs> | null
+    include?: LocationInclude<ExtArgs> | null
+    /**
+     * Filter which Location to delete.
+     */
+    where: LocationWhereUniqueInput
+  }
+
+  /**
+   * Location deleteMany
+   */
+  export type LocationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Locations to delete
+     */
+    where?: LocationWhereInput
+    /**
+     * Limit how many Locations to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Location without action
+   */
+  export type LocationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Location
+     */
+    select?: LocationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Location
+     */
+    omit?: LocationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LocationInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Preferences
+   */
+
+  export type AggregatePreferences = {
+    _count: PreferencesCountAggregateOutputType | null
+    _avg: PreferencesAvgAggregateOutputType | null
+    _sum: PreferencesSumAggregateOutputType | null
+    _min: PreferencesMinAggregateOutputType | null
+    _max: PreferencesMaxAggregateOutputType | null
+  }
+
+  export type PreferencesAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type PreferencesSumAggregateOutputType = {
+    id: number | null
+  }
+
+  export type PreferencesMinAggregateOutputType = {
+    id: number | null
+    userCognitoId: string | null
+    vegetarianOnly: boolean | null
+    vegan: boolean | null
+    pescatarian: boolean | null
+    flexitarian: boolean | null
+    meatOnly: boolean | null
+    glutenFree: boolean | null
+    lactoseFree: boolean | null
+    dairyFree: boolean | null
+    nutFree: boolean | null
+    peanutFree: boolean | null
+    shellfishFree: boolean | null
+    eggFree: boolean | null
+    soyFree: boolean | null
+    fishFree: boolean | null
+    nightshadeFree: boolean | null
+    lowCarb: boolean | null
+    keto: boolean | null
+    paleo: boolean | null
+    lowSugar: boolean | null
+    lowSalt: boolean | null
+    lowFat: boolean | null
+    highProtein: boolean | null
+    rawFood: boolean | null
+    whole30: boolean | null
+    diabeticFriendly: boolean | null
+    customPreferences: string | null
+  }
+
+  export type PreferencesMaxAggregateOutputType = {
+    id: number | null
+    userCognitoId: string | null
+    vegetarianOnly: boolean | null
+    vegan: boolean | null
+    pescatarian: boolean | null
+    flexitarian: boolean | null
+    meatOnly: boolean | null
+    glutenFree: boolean | null
+    lactoseFree: boolean | null
+    dairyFree: boolean | null
+    nutFree: boolean | null
+    peanutFree: boolean | null
+    shellfishFree: boolean | null
+    eggFree: boolean | null
+    soyFree: boolean | null
+    fishFree: boolean | null
+    nightshadeFree: boolean | null
+    lowCarb: boolean | null
+    keto: boolean | null
+    paleo: boolean | null
+    lowSugar: boolean | null
+    lowSalt: boolean | null
+    lowFat: boolean | null
+    highProtein: boolean | null
+    rawFood: boolean | null
+    whole30: boolean | null
+    diabeticFriendly: boolean | null
+    customPreferences: string | null
+  }
+
+  export type PreferencesCountAggregateOutputType = {
+    id: number
+    userCognitoId: number
+    vegetarianOnly: number
+    vegan: number
+    pescatarian: number
+    flexitarian: number
+    meatOnly: number
+    glutenFree: number
+    lactoseFree: number
+    dairyFree: number
+    nutFree: number
+    peanutFree: number
+    shellfishFree: number
+    eggFree: number
+    soyFree: number
+    fishFree: number
+    nightshadeFree: number
+    lowCarb: number
+    keto: number
+    paleo: number
+    lowSugar: number
+    lowSalt: number
+    lowFat: number
+    highProtein: number
+    rawFood: number
+    whole30: number
+    diabeticFriendly: number
+    customPreferences: number
+    _all: number
+  }
+
+
+  export type PreferencesAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type PreferencesSumAggregateInputType = {
+    id?: true
+  }
+
+  export type PreferencesMinAggregateInputType = {
+    id?: true
+    userCognitoId?: true
+    vegetarianOnly?: true
+    vegan?: true
+    pescatarian?: true
+    flexitarian?: true
+    meatOnly?: true
+    glutenFree?: true
+    lactoseFree?: true
+    dairyFree?: true
+    nutFree?: true
+    peanutFree?: true
+    shellfishFree?: true
+    eggFree?: true
+    soyFree?: true
+    fishFree?: true
+    nightshadeFree?: true
+    lowCarb?: true
+    keto?: true
+    paleo?: true
+    lowSugar?: true
+    lowSalt?: true
+    lowFat?: true
+    highProtein?: true
+    rawFood?: true
+    whole30?: true
+    diabeticFriendly?: true
+    customPreferences?: true
+  }
+
+  export type PreferencesMaxAggregateInputType = {
+    id?: true
+    userCognitoId?: true
+    vegetarianOnly?: true
+    vegan?: true
+    pescatarian?: true
+    flexitarian?: true
+    meatOnly?: true
+    glutenFree?: true
+    lactoseFree?: true
+    dairyFree?: true
+    nutFree?: true
+    peanutFree?: true
+    shellfishFree?: true
+    eggFree?: true
+    soyFree?: true
+    fishFree?: true
+    nightshadeFree?: true
+    lowCarb?: true
+    keto?: true
+    paleo?: true
+    lowSugar?: true
+    lowSalt?: true
+    lowFat?: true
+    highProtein?: true
+    rawFood?: true
+    whole30?: true
+    diabeticFriendly?: true
+    customPreferences?: true
+  }
+
+  export type PreferencesCountAggregateInputType = {
+    id?: true
+    userCognitoId?: true
+    vegetarianOnly?: true
+    vegan?: true
+    pescatarian?: true
+    flexitarian?: true
+    meatOnly?: true
+    glutenFree?: true
+    lactoseFree?: true
+    dairyFree?: true
+    nutFree?: true
+    peanutFree?: true
+    shellfishFree?: true
+    eggFree?: true
+    soyFree?: true
+    fishFree?: true
+    nightshadeFree?: true
+    lowCarb?: true
+    keto?: true
+    paleo?: true
+    lowSugar?: true
+    lowSalt?: true
+    lowFat?: true
+    highProtein?: true
+    rawFood?: true
+    whole30?: true
+    diabeticFriendly?: true
+    customPreferences?: true
+    _all?: true
+  }
+
+  export type PreferencesAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Preferences to aggregate.
+     */
+    where?: PreferencesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Preferences to fetch.
+     */
+    orderBy?: PreferencesOrderByWithRelationInput | PreferencesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PreferencesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Preferences from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Preferences.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Preferences
+    **/
+    _count?: true | PreferencesCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PreferencesAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PreferencesSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PreferencesMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PreferencesMaxAggregateInputType
+  }
+
+  export type GetPreferencesAggregateType<T extends PreferencesAggregateArgs> = {
+        [P in keyof T & keyof AggregatePreferences]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePreferences[P]>
+      : GetScalarType<T[P], AggregatePreferences[P]>
+  }
+
+
+
+
+  export type PreferencesGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PreferencesWhereInput
+    orderBy?: PreferencesOrderByWithAggregationInput | PreferencesOrderByWithAggregationInput[]
+    by: PreferencesScalarFieldEnum[] | PreferencesScalarFieldEnum
+    having?: PreferencesScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PreferencesCountAggregateInputType | true
+    _avg?: PreferencesAvgAggregateInputType
+    _sum?: PreferencesSumAggregateInputType
+    _min?: PreferencesMinAggregateInputType
+    _max?: PreferencesMaxAggregateInputType
+  }
+
+  export type PreferencesGroupByOutputType = {
+    id: number
+    userCognitoId: string
+    vegetarianOnly: boolean
+    vegan: boolean
+    pescatarian: boolean
+    flexitarian: boolean
+    meatOnly: boolean
+    glutenFree: boolean
+    lactoseFree: boolean
+    dairyFree: boolean
+    nutFree: boolean
+    peanutFree: boolean
+    shellfishFree: boolean
+    eggFree: boolean
+    soyFree: boolean
+    fishFree: boolean
+    nightshadeFree: boolean
+    lowCarb: boolean
+    keto: boolean
+    paleo: boolean
+    lowSugar: boolean
+    lowSalt: boolean
+    lowFat: boolean
+    highProtein: boolean
+    rawFood: boolean
+    whole30: boolean
+    diabeticFriendly: boolean
+    customPreferences: string
+    _count: PreferencesCountAggregateOutputType | null
+    _avg: PreferencesAvgAggregateOutputType | null
+    _sum: PreferencesSumAggregateOutputType | null
+    _min: PreferencesMinAggregateOutputType | null
+    _max: PreferencesMaxAggregateOutputType | null
+  }
+
+  type GetPreferencesGroupByPayload<T extends PreferencesGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PreferencesGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PreferencesGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PreferencesGroupByOutputType[P]>
+            : GetScalarType<T[P], PreferencesGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PreferencesSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userCognitoId?: boolean
+    vegetarianOnly?: boolean
+    vegan?: boolean
+    pescatarian?: boolean
+    flexitarian?: boolean
+    meatOnly?: boolean
+    glutenFree?: boolean
+    lactoseFree?: boolean
+    dairyFree?: boolean
+    nutFree?: boolean
+    peanutFree?: boolean
+    shellfishFree?: boolean
+    eggFree?: boolean
+    soyFree?: boolean
+    fishFree?: boolean
+    nightshadeFree?: boolean
+    lowCarb?: boolean
+    keto?: boolean
+    paleo?: boolean
+    lowSugar?: boolean
+    lowSalt?: boolean
+    lowFat?: boolean
+    highProtein?: boolean
+    rawFood?: boolean
+    whole30?: boolean
+    diabeticFriendly?: boolean
+    customPreferences?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["preferences"]>
+
+  export type PreferencesSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userCognitoId?: boolean
+    vegetarianOnly?: boolean
+    vegan?: boolean
+    pescatarian?: boolean
+    flexitarian?: boolean
+    meatOnly?: boolean
+    glutenFree?: boolean
+    lactoseFree?: boolean
+    dairyFree?: boolean
+    nutFree?: boolean
+    peanutFree?: boolean
+    shellfishFree?: boolean
+    eggFree?: boolean
+    soyFree?: boolean
+    fishFree?: boolean
+    nightshadeFree?: boolean
+    lowCarb?: boolean
+    keto?: boolean
+    paleo?: boolean
+    lowSugar?: boolean
+    lowSalt?: boolean
+    lowFat?: boolean
+    highProtein?: boolean
+    rawFood?: boolean
+    whole30?: boolean
+    diabeticFriendly?: boolean
+    customPreferences?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["preferences"]>
+
+  export type PreferencesSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userCognitoId?: boolean
+    vegetarianOnly?: boolean
+    vegan?: boolean
+    pescatarian?: boolean
+    flexitarian?: boolean
+    meatOnly?: boolean
+    glutenFree?: boolean
+    lactoseFree?: boolean
+    dairyFree?: boolean
+    nutFree?: boolean
+    peanutFree?: boolean
+    shellfishFree?: boolean
+    eggFree?: boolean
+    soyFree?: boolean
+    fishFree?: boolean
+    nightshadeFree?: boolean
+    lowCarb?: boolean
+    keto?: boolean
+    paleo?: boolean
+    lowSugar?: boolean
+    lowSalt?: boolean
+    lowFat?: boolean
+    highProtein?: boolean
+    rawFood?: boolean
+    whole30?: boolean
+    diabeticFriendly?: boolean
+    customPreferences?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["preferences"]>
+
+  export type PreferencesSelectScalar = {
+    id?: boolean
+    userCognitoId?: boolean
+    vegetarianOnly?: boolean
+    vegan?: boolean
+    pescatarian?: boolean
+    flexitarian?: boolean
+    meatOnly?: boolean
+    glutenFree?: boolean
+    lactoseFree?: boolean
+    dairyFree?: boolean
+    nutFree?: boolean
+    peanutFree?: boolean
+    shellfishFree?: boolean
+    eggFree?: boolean
+    soyFree?: boolean
+    fishFree?: boolean
+    nightshadeFree?: boolean
+    lowCarb?: boolean
+    keto?: boolean
+    paleo?: boolean
+    lowSugar?: boolean
+    lowSalt?: boolean
+    lowFat?: boolean
+    highProtein?: boolean
+    rawFood?: boolean
+    whole30?: boolean
+    diabeticFriendly?: boolean
+    customPreferences?: boolean
+  }
+
+  export type PreferencesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userCognitoId" | "vegetarianOnly" | "vegan" | "pescatarian" | "flexitarian" | "meatOnly" | "glutenFree" | "lactoseFree" | "dairyFree" | "nutFree" | "peanutFree" | "shellfishFree" | "eggFree" | "soyFree" | "fishFree" | "nightshadeFree" | "lowCarb" | "keto" | "paleo" | "lowSugar" | "lowSalt" | "lowFat" | "highProtein" | "rawFood" | "whole30" | "diabeticFriendly" | "customPreferences", ExtArgs["result"]["preferences"]>
+  export type PreferencesInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type PreferencesIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type PreferencesIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $PreferencesPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Preferences"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      userCognitoId: string
+      vegetarianOnly: boolean
+      vegan: boolean
+      pescatarian: boolean
+      flexitarian: boolean
+      meatOnly: boolean
+      glutenFree: boolean
+      lactoseFree: boolean
+      dairyFree: boolean
+      nutFree: boolean
+      peanutFree: boolean
+      shellfishFree: boolean
+      eggFree: boolean
+      soyFree: boolean
+      fishFree: boolean
+      nightshadeFree: boolean
+      lowCarb: boolean
+      keto: boolean
+      paleo: boolean
+      lowSugar: boolean
+      lowSalt: boolean
+      lowFat: boolean
+      highProtein: boolean
+      rawFood: boolean
+      whole30: boolean
+      diabeticFriendly: boolean
+      customPreferences: string
+    }, ExtArgs["result"]["preferences"]>
+    composites: {}
+  }
+
+  type PreferencesGetPayload<S extends boolean | null | undefined | PreferencesDefaultArgs> = $Result.GetResult<Prisma.$PreferencesPayload, S>
+
+  type PreferencesCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PreferencesFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PreferencesCountAggregateInputType | true
+    }
+
+  export interface PreferencesDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Preferences'], meta: { name: 'Preferences' } }
+    /**
+     * Find zero or one Preferences that matches the filter.
+     * @param {PreferencesFindUniqueArgs} args - Arguments to find a Preferences
+     * @example
+     * // Get one Preferences
+     * const preferences = await prisma.preferences.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PreferencesFindUniqueArgs>(args: SelectSubset<T, PreferencesFindUniqueArgs<ExtArgs>>): Prisma__PreferencesClient<$Result.GetResult<Prisma.$PreferencesPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Preferences that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PreferencesFindUniqueOrThrowArgs} args - Arguments to find a Preferences
+     * @example
+     * // Get one Preferences
+     * const preferences = await prisma.preferences.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PreferencesFindUniqueOrThrowArgs>(args: SelectSubset<T, PreferencesFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PreferencesClient<$Result.GetResult<Prisma.$PreferencesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Preferences that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PreferencesFindFirstArgs} args - Arguments to find a Preferences
+     * @example
+     * // Get one Preferences
+     * const preferences = await prisma.preferences.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PreferencesFindFirstArgs>(args?: SelectSubset<T, PreferencesFindFirstArgs<ExtArgs>>): Prisma__PreferencesClient<$Result.GetResult<Prisma.$PreferencesPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Preferences that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PreferencesFindFirstOrThrowArgs} args - Arguments to find a Preferences
+     * @example
+     * // Get one Preferences
+     * const preferences = await prisma.preferences.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PreferencesFindFirstOrThrowArgs>(args?: SelectSubset<T, PreferencesFindFirstOrThrowArgs<ExtArgs>>): Prisma__PreferencesClient<$Result.GetResult<Prisma.$PreferencesPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Preferences that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PreferencesFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Preferences
+     * const preferences = await prisma.preferences.findMany()
+     * 
+     * // Get first 10 Preferences
+     * const preferences = await prisma.preferences.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const preferencesWithIdOnly = await prisma.preferences.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PreferencesFindManyArgs>(args?: SelectSubset<T, PreferencesFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PreferencesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Preferences.
+     * @param {PreferencesCreateArgs} args - Arguments to create a Preferences.
+     * @example
+     * // Create one Preferences
+     * const Preferences = await prisma.preferences.create({
+     *   data: {
+     *     // ... data to create a Preferences
+     *   }
+     * })
+     * 
+     */
+    create<T extends PreferencesCreateArgs>(args: SelectSubset<T, PreferencesCreateArgs<ExtArgs>>): Prisma__PreferencesClient<$Result.GetResult<Prisma.$PreferencesPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Preferences.
+     * @param {PreferencesCreateManyArgs} args - Arguments to create many Preferences.
+     * @example
+     * // Create many Preferences
+     * const preferences = await prisma.preferences.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PreferencesCreateManyArgs>(args?: SelectSubset<T, PreferencesCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Preferences and returns the data saved in the database.
+     * @param {PreferencesCreateManyAndReturnArgs} args - Arguments to create many Preferences.
+     * @example
+     * // Create many Preferences
+     * const preferences = await prisma.preferences.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Preferences and only return the `id`
+     * const preferencesWithIdOnly = await prisma.preferences.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends PreferencesCreateManyAndReturnArgs>(args?: SelectSubset<T, PreferencesCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PreferencesPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Preferences.
+     * @param {PreferencesDeleteArgs} args - Arguments to delete one Preferences.
+     * @example
+     * // Delete one Preferences
+     * const Preferences = await prisma.preferences.delete({
+     *   where: {
+     *     // ... filter to delete one Preferences
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PreferencesDeleteArgs>(args: SelectSubset<T, PreferencesDeleteArgs<ExtArgs>>): Prisma__PreferencesClient<$Result.GetResult<Prisma.$PreferencesPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Preferences.
+     * @param {PreferencesUpdateArgs} args - Arguments to update one Preferences.
+     * @example
+     * // Update one Preferences
+     * const preferences = await prisma.preferences.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PreferencesUpdateArgs>(args: SelectSubset<T, PreferencesUpdateArgs<ExtArgs>>): Prisma__PreferencesClient<$Result.GetResult<Prisma.$PreferencesPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Preferences.
+     * @param {PreferencesDeleteManyArgs} args - Arguments to filter Preferences to delete.
+     * @example
+     * // Delete a few Preferences
+     * const { count } = await prisma.preferences.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PreferencesDeleteManyArgs>(args?: SelectSubset<T, PreferencesDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Preferences.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PreferencesUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Preferences
+     * const preferences = await prisma.preferences.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PreferencesUpdateManyArgs>(args: SelectSubset<T, PreferencesUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Preferences and returns the data updated in the database.
+     * @param {PreferencesUpdateManyAndReturnArgs} args - Arguments to update many Preferences.
+     * @example
+     * // Update many Preferences
+     * const preferences = await prisma.preferences.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Preferences and only return the `id`
+     * const preferencesWithIdOnly = await prisma.preferences.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends PreferencesUpdateManyAndReturnArgs>(args: SelectSubset<T, PreferencesUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PreferencesPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Preferences.
+     * @param {PreferencesUpsertArgs} args - Arguments to update or create a Preferences.
+     * @example
+     * // Update or create a Preferences
+     * const preferences = await prisma.preferences.upsert({
+     *   create: {
+     *     // ... data to create a Preferences
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Preferences we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PreferencesUpsertArgs>(args: SelectSubset<T, PreferencesUpsertArgs<ExtArgs>>): Prisma__PreferencesClient<$Result.GetResult<Prisma.$PreferencesPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Preferences.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PreferencesCountArgs} args - Arguments to filter Preferences to count.
+     * @example
+     * // Count the number of Preferences
+     * const count = await prisma.preferences.count({
+     *   where: {
+     *     // ... the filter for the Preferences we want to count
+     *   }
+     * })
+    **/
+    count<T extends PreferencesCountArgs>(
+      args?: Subset<T, PreferencesCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PreferencesCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Preferences.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PreferencesAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PreferencesAggregateArgs>(args: Subset<T, PreferencesAggregateArgs>): Prisma.PrismaPromise<GetPreferencesAggregateType<T>>
+
+    /**
+     * Group by Preferences.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PreferencesGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PreferencesGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PreferencesGroupByArgs['orderBy'] }
+        : { orderBy?: PreferencesGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PreferencesGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPreferencesGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Preferences model
+   */
+  readonly fields: PreferencesFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Preferences.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PreferencesClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Preferences model
+   */
+  interface PreferencesFieldRefs {
+    readonly id: FieldRef<"Preferences", 'Int'>
+    readonly userCognitoId: FieldRef<"Preferences", 'String'>
+    readonly vegetarianOnly: FieldRef<"Preferences", 'Boolean'>
+    readonly vegan: FieldRef<"Preferences", 'Boolean'>
+    readonly pescatarian: FieldRef<"Preferences", 'Boolean'>
+    readonly flexitarian: FieldRef<"Preferences", 'Boolean'>
+    readonly meatOnly: FieldRef<"Preferences", 'Boolean'>
+    readonly glutenFree: FieldRef<"Preferences", 'Boolean'>
+    readonly lactoseFree: FieldRef<"Preferences", 'Boolean'>
+    readonly dairyFree: FieldRef<"Preferences", 'Boolean'>
+    readonly nutFree: FieldRef<"Preferences", 'Boolean'>
+    readonly peanutFree: FieldRef<"Preferences", 'Boolean'>
+    readonly shellfishFree: FieldRef<"Preferences", 'Boolean'>
+    readonly eggFree: FieldRef<"Preferences", 'Boolean'>
+    readonly soyFree: FieldRef<"Preferences", 'Boolean'>
+    readonly fishFree: FieldRef<"Preferences", 'Boolean'>
+    readonly nightshadeFree: FieldRef<"Preferences", 'Boolean'>
+    readonly lowCarb: FieldRef<"Preferences", 'Boolean'>
+    readonly keto: FieldRef<"Preferences", 'Boolean'>
+    readonly paleo: FieldRef<"Preferences", 'Boolean'>
+    readonly lowSugar: FieldRef<"Preferences", 'Boolean'>
+    readonly lowSalt: FieldRef<"Preferences", 'Boolean'>
+    readonly lowFat: FieldRef<"Preferences", 'Boolean'>
+    readonly highProtein: FieldRef<"Preferences", 'Boolean'>
+    readonly rawFood: FieldRef<"Preferences", 'Boolean'>
+    readonly whole30: FieldRef<"Preferences", 'Boolean'>
+    readonly diabeticFriendly: FieldRef<"Preferences", 'Boolean'>
+    readonly customPreferences: FieldRef<"Preferences", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Preferences findUnique
+   */
+  export type PreferencesFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Preferences
+     */
+    select?: PreferencesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Preferences
+     */
+    omit?: PreferencesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreferencesInclude<ExtArgs> | null
+    /**
+     * Filter, which Preferences to fetch.
+     */
+    where: PreferencesWhereUniqueInput
+  }
+
+  /**
+   * Preferences findUniqueOrThrow
+   */
+  export type PreferencesFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Preferences
+     */
+    select?: PreferencesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Preferences
+     */
+    omit?: PreferencesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreferencesInclude<ExtArgs> | null
+    /**
+     * Filter, which Preferences to fetch.
+     */
+    where: PreferencesWhereUniqueInput
+  }
+
+  /**
+   * Preferences findFirst
+   */
+  export type PreferencesFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Preferences
+     */
+    select?: PreferencesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Preferences
+     */
+    omit?: PreferencesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreferencesInclude<ExtArgs> | null
+    /**
+     * Filter, which Preferences to fetch.
+     */
+    where?: PreferencesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Preferences to fetch.
+     */
+    orderBy?: PreferencesOrderByWithRelationInput | PreferencesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Preferences.
+     */
+    cursor?: PreferencesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Preferences from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Preferences.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Preferences.
+     */
+    distinct?: PreferencesScalarFieldEnum | PreferencesScalarFieldEnum[]
+  }
+
+  /**
+   * Preferences findFirstOrThrow
+   */
+  export type PreferencesFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Preferences
+     */
+    select?: PreferencesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Preferences
+     */
+    omit?: PreferencesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreferencesInclude<ExtArgs> | null
+    /**
+     * Filter, which Preferences to fetch.
+     */
+    where?: PreferencesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Preferences to fetch.
+     */
+    orderBy?: PreferencesOrderByWithRelationInput | PreferencesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Preferences.
+     */
+    cursor?: PreferencesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Preferences from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Preferences.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Preferences.
+     */
+    distinct?: PreferencesScalarFieldEnum | PreferencesScalarFieldEnum[]
+  }
+
+  /**
+   * Preferences findMany
+   */
+  export type PreferencesFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Preferences
+     */
+    select?: PreferencesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Preferences
+     */
+    omit?: PreferencesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreferencesInclude<ExtArgs> | null
+    /**
+     * Filter, which Preferences to fetch.
+     */
+    where?: PreferencesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Preferences to fetch.
+     */
+    orderBy?: PreferencesOrderByWithRelationInput | PreferencesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Preferences.
+     */
+    cursor?: PreferencesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Preferences from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Preferences.
+     */
+    skip?: number
+    distinct?: PreferencesScalarFieldEnum | PreferencesScalarFieldEnum[]
+  }
+
+  /**
+   * Preferences create
+   */
+  export type PreferencesCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Preferences
+     */
+    select?: PreferencesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Preferences
+     */
+    omit?: PreferencesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreferencesInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Preferences.
+     */
+    data: XOR<PreferencesCreateInput, PreferencesUncheckedCreateInput>
+  }
+
+  /**
+   * Preferences createMany
+   */
+  export type PreferencesCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Preferences.
+     */
+    data: PreferencesCreateManyInput | PreferencesCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Preferences createManyAndReturn
+   */
+  export type PreferencesCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Preferences
+     */
+    select?: PreferencesSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Preferences
+     */
+    omit?: PreferencesOmit<ExtArgs> | null
+    /**
+     * The data used to create many Preferences.
+     */
+    data: PreferencesCreateManyInput | PreferencesCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreferencesIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Preferences update
+   */
+  export type PreferencesUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Preferences
+     */
+    select?: PreferencesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Preferences
+     */
+    omit?: PreferencesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreferencesInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Preferences.
+     */
+    data: XOR<PreferencesUpdateInput, PreferencesUncheckedUpdateInput>
+    /**
+     * Choose, which Preferences to update.
+     */
+    where: PreferencesWhereUniqueInput
+  }
+
+  /**
+   * Preferences updateMany
+   */
+  export type PreferencesUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Preferences.
+     */
+    data: XOR<PreferencesUpdateManyMutationInput, PreferencesUncheckedUpdateManyInput>
+    /**
+     * Filter which Preferences to update
+     */
+    where?: PreferencesWhereInput
+    /**
+     * Limit how many Preferences to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Preferences updateManyAndReturn
+   */
+  export type PreferencesUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Preferences
+     */
+    select?: PreferencesSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Preferences
+     */
+    omit?: PreferencesOmit<ExtArgs> | null
+    /**
+     * The data used to update Preferences.
+     */
+    data: XOR<PreferencesUpdateManyMutationInput, PreferencesUncheckedUpdateManyInput>
+    /**
+     * Filter which Preferences to update
+     */
+    where?: PreferencesWhereInput
+    /**
+     * Limit how many Preferences to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreferencesIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Preferences upsert
+   */
+  export type PreferencesUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Preferences
+     */
+    select?: PreferencesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Preferences
+     */
+    omit?: PreferencesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreferencesInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Preferences to update in case it exists.
+     */
+    where: PreferencesWhereUniqueInput
+    /**
+     * In case the Preferences found by the `where` argument doesn't exist, create a new Preferences with this data.
+     */
+    create: XOR<PreferencesCreateInput, PreferencesUncheckedCreateInput>
+    /**
+     * In case the Preferences was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PreferencesUpdateInput, PreferencesUncheckedUpdateInput>
+  }
+
+  /**
+   * Preferences delete
+   */
+  export type PreferencesDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Preferences
+     */
+    select?: PreferencesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Preferences
+     */
+    omit?: PreferencesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreferencesInclude<ExtArgs> | null
+    /**
+     * Filter which Preferences to delete.
+     */
+    where: PreferencesWhereUniqueInput
+  }
+
+  /**
+   * Preferences deleteMany
+   */
+  export type PreferencesDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Preferences to delete
+     */
+    where?: PreferencesWhereInput
+    /**
+     * Limit how many Preferences to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Preferences without action
+   */
+  export type PreferencesDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Preferences
+     */
+    select?: PreferencesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Preferences
+     */
+    omit?: PreferencesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreferencesInclude<ExtArgs> | null
   }
 
 
@@ -3609,6 +5014,14 @@ export namespace Prisma {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["favoriteRecipes"]>
 
+  export type FavoriteRecipesSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    imageUrl?: boolean
+    content?: boolean
+    userCognitoId?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["favoriteRecipes"]>
+
   export type FavoriteRecipesSelectScalar = {
     id?: boolean
     imageUrl?: boolean
@@ -3616,10 +5029,14 @@ export namespace Prisma {
     userCognitoId?: boolean
   }
 
+  export type FavoriteRecipesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "imageUrl" | "content" | "userCognitoId", ExtArgs["result"]["favoriteRecipes"]>
   export type FavoriteRecipesInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
   export type FavoriteRecipesIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type FavoriteRecipesIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
 
@@ -3639,12 +5056,12 @@ export namespace Prisma {
 
   type FavoriteRecipesGetPayload<S extends boolean | null | undefined | FavoriteRecipesDefaultArgs> = $Result.GetResult<Prisma.$FavoriteRecipesPayload, S>
 
-  type FavoriteRecipesCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
-    Omit<FavoriteRecipesFindManyArgs, 'select' | 'include' | 'distinct'> & {
+  type FavoriteRecipesCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<FavoriteRecipesFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
       select?: FavoriteRecipesCountAggregateInputType | true
     }
 
-  export interface FavoriteRecipesDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+  export interface FavoriteRecipesDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
     [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['FavoriteRecipes'], meta: { name: 'FavoriteRecipes' } }
     /**
      * Find zero or one FavoriteRecipes that matches the filter.
@@ -3657,10 +5074,10 @@ export namespace Prisma {
      *   }
      * })
      */
-    findUnique<T extends FavoriteRecipesFindUniqueArgs>(args: SelectSubset<T, FavoriteRecipesFindUniqueArgs<ExtArgs>>): Prisma__FavoriteRecipesClient<$Result.GetResult<Prisma.$FavoriteRecipesPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+    findUnique<T extends FavoriteRecipesFindUniqueArgs>(args: SelectSubset<T, FavoriteRecipesFindUniqueArgs<ExtArgs>>): Prisma__FavoriteRecipesClient<$Result.GetResult<Prisma.$FavoriteRecipesPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find one FavoriteRecipes that matches the filter or throw an error with `error.code='P2025'` 
+     * Find one FavoriteRecipes that matches the filter or throw an error with `error.code='P2025'`
      * if no matches were found.
      * @param {FavoriteRecipesFindUniqueOrThrowArgs} args - Arguments to find a FavoriteRecipes
      * @example
@@ -3671,7 +5088,7 @@ export namespace Prisma {
      *   }
      * })
      */
-    findUniqueOrThrow<T extends FavoriteRecipesFindUniqueOrThrowArgs>(args: SelectSubset<T, FavoriteRecipesFindUniqueOrThrowArgs<ExtArgs>>): Prisma__FavoriteRecipesClient<$Result.GetResult<Prisma.$FavoriteRecipesPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+    findUniqueOrThrow<T extends FavoriteRecipesFindUniqueOrThrowArgs>(args: SelectSubset<T, FavoriteRecipesFindUniqueOrThrowArgs<ExtArgs>>): Prisma__FavoriteRecipesClient<$Result.GetResult<Prisma.$FavoriteRecipesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
      * Find the first FavoriteRecipes that matches the filter.
@@ -3686,7 +5103,7 @@ export namespace Prisma {
      *   }
      * })
      */
-    findFirst<T extends FavoriteRecipesFindFirstArgs>(args?: SelectSubset<T, FavoriteRecipesFindFirstArgs<ExtArgs>>): Prisma__FavoriteRecipesClient<$Result.GetResult<Prisma.$FavoriteRecipesPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+    findFirst<T extends FavoriteRecipesFindFirstArgs>(args?: SelectSubset<T, FavoriteRecipesFindFirstArgs<ExtArgs>>): Prisma__FavoriteRecipesClient<$Result.GetResult<Prisma.$FavoriteRecipesPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
      * Find the first FavoriteRecipes that matches the filter or
@@ -3702,7 +5119,7 @@ export namespace Prisma {
      *   }
      * })
      */
-    findFirstOrThrow<T extends FavoriteRecipesFindFirstOrThrowArgs>(args?: SelectSubset<T, FavoriteRecipesFindFirstOrThrowArgs<ExtArgs>>): Prisma__FavoriteRecipesClient<$Result.GetResult<Prisma.$FavoriteRecipesPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+    findFirstOrThrow<T extends FavoriteRecipesFindFirstOrThrowArgs>(args?: SelectSubset<T, FavoriteRecipesFindFirstOrThrowArgs<ExtArgs>>): Prisma__FavoriteRecipesClient<$Result.GetResult<Prisma.$FavoriteRecipesPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
      * Find zero or more FavoriteRecipes that matches the filter.
@@ -3720,7 +5137,7 @@ export namespace Prisma {
      * const favoriteRecipesWithIdOnly = await prisma.favoriteRecipes.findMany({ select: { id: true } })
      * 
      */
-    findMany<T extends FavoriteRecipesFindManyArgs>(args?: SelectSubset<T, FavoriteRecipesFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FavoriteRecipesPayload<ExtArgs>, T, "findMany">>
+    findMany<T extends FavoriteRecipesFindManyArgs>(args?: SelectSubset<T, FavoriteRecipesFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FavoriteRecipesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
     /**
      * Create a FavoriteRecipes.
@@ -3734,7 +5151,7 @@ export namespace Prisma {
      * })
      * 
      */
-    create<T extends FavoriteRecipesCreateArgs>(args: SelectSubset<T, FavoriteRecipesCreateArgs<ExtArgs>>): Prisma__FavoriteRecipesClient<$Result.GetResult<Prisma.$FavoriteRecipesPayload<ExtArgs>, T, "create">, never, ExtArgs>
+    create<T extends FavoriteRecipesCreateArgs>(args: SelectSubset<T, FavoriteRecipesCreateArgs<ExtArgs>>): Prisma__FavoriteRecipesClient<$Result.GetResult<Prisma.$FavoriteRecipesPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
      * Create many FavoriteRecipes.
@@ -3762,7 +5179,7 @@ export namespace Prisma {
      * })
      * 
      * // Create many FavoriteRecipes and only return the `id`
-     * const favoriteRecipesWithIdOnly = await prisma.favoriteRecipes.createManyAndReturn({ 
+     * const favoriteRecipesWithIdOnly = await prisma.favoriteRecipes.createManyAndReturn({
      *   select: { id: true },
      *   data: [
      *     // ... provide data here
@@ -3772,7 +5189,7 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    createManyAndReturn<T extends FavoriteRecipesCreateManyAndReturnArgs>(args?: SelectSubset<T, FavoriteRecipesCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FavoriteRecipesPayload<ExtArgs>, T, "createManyAndReturn">>
+    createManyAndReturn<T extends FavoriteRecipesCreateManyAndReturnArgs>(args?: SelectSubset<T, FavoriteRecipesCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FavoriteRecipesPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
     /**
      * Delete a FavoriteRecipes.
@@ -3786,7 +5203,7 @@ export namespace Prisma {
      * })
      * 
      */
-    delete<T extends FavoriteRecipesDeleteArgs>(args: SelectSubset<T, FavoriteRecipesDeleteArgs<ExtArgs>>): Prisma__FavoriteRecipesClient<$Result.GetResult<Prisma.$FavoriteRecipesPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+    delete<T extends FavoriteRecipesDeleteArgs>(args: SelectSubset<T, FavoriteRecipesDeleteArgs<ExtArgs>>): Prisma__FavoriteRecipesClient<$Result.GetResult<Prisma.$FavoriteRecipesPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
      * Update one FavoriteRecipes.
@@ -3803,7 +5220,7 @@ export namespace Prisma {
      * })
      * 
      */
-    update<T extends FavoriteRecipesUpdateArgs>(args: SelectSubset<T, FavoriteRecipesUpdateArgs<ExtArgs>>): Prisma__FavoriteRecipesClient<$Result.GetResult<Prisma.$FavoriteRecipesPayload<ExtArgs>, T, "update">, never, ExtArgs>
+    update<T extends FavoriteRecipesUpdateArgs>(args: SelectSubset<T, FavoriteRecipesUpdateArgs<ExtArgs>>): Prisma__FavoriteRecipesClient<$Result.GetResult<Prisma.$FavoriteRecipesPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
      * Delete zero or more FavoriteRecipes.
@@ -3839,6 +5256,36 @@ export namespace Prisma {
     updateMany<T extends FavoriteRecipesUpdateManyArgs>(args: SelectSubset<T, FavoriteRecipesUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
+     * Update zero or more FavoriteRecipes and returns the data updated in the database.
+     * @param {FavoriteRecipesUpdateManyAndReturnArgs} args - Arguments to update many FavoriteRecipes.
+     * @example
+     * // Update many FavoriteRecipes
+     * const favoriteRecipes = await prisma.favoriteRecipes.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more FavoriteRecipes and only return the `id`
+     * const favoriteRecipesWithIdOnly = await prisma.favoriteRecipes.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends FavoriteRecipesUpdateManyAndReturnArgs>(args: SelectSubset<T, FavoriteRecipesUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FavoriteRecipesPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
      * Create or update one FavoriteRecipes.
      * @param {FavoriteRecipesUpsertArgs} args - Arguments to update or create a FavoriteRecipes.
      * @example
@@ -3855,7 +5302,7 @@ export namespace Prisma {
      *   }
      * })
      */
-    upsert<T extends FavoriteRecipesUpsertArgs>(args: SelectSubset<T, FavoriteRecipesUpsertArgs<ExtArgs>>): Prisma__FavoriteRecipesClient<$Result.GetResult<Prisma.$FavoriteRecipesPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+    upsert<T extends FavoriteRecipesUpsertArgs>(args: SelectSubset<T, FavoriteRecipesUpsertArgs<ExtArgs>>): Prisma__FavoriteRecipesClient<$Result.GetResult<Prisma.$FavoriteRecipesPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
 
     /**
@@ -3995,9 +5442,9 @@ export namespace Prisma {
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export interface Prisma__FavoriteRecipesClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+  export interface Prisma__FavoriteRecipesClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4025,7 +5472,7 @@ export namespace Prisma {
 
   /**
    * Fields of the FavoriteRecipes model
-   */ 
+   */
   interface FavoriteRecipesFieldRefs {
     readonly id: FieldRef<"FavoriteRecipes", 'Int'>
     readonly imageUrl: FieldRef<"FavoriteRecipes", 'String'>
@@ -4043,6 +5490,10 @@ export namespace Prisma {
      * Select specific fields to fetch from the FavoriteRecipes
      */
     select?: FavoriteRecipesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FavoriteRecipes
+     */
+    omit?: FavoriteRecipesOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
@@ -4062,6 +5513,10 @@ export namespace Prisma {
      */
     select?: FavoriteRecipesSelect<ExtArgs> | null
     /**
+     * Omit specific fields from the FavoriteRecipes
+     */
+    omit?: FavoriteRecipesOmit<ExtArgs> | null
+    /**
      * Choose, which related nodes to fetch as well
      */
     include?: FavoriteRecipesInclude<ExtArgs> | null
@@ -4079,6 +5534,10 @@ export namespace Prisma {
      * Select specific fields to fetch from the FavoriteRecipes
      */
     select?: FavoriteRecipesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FavoriteRecipes
+     */
+    omit?: FavoriteRecipesOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
@@ -4128,6 +5587,10 @@ export namespace Prisma {
      */
     select?: FavoriteRecipesSelect<ExtArgs> | null
     /**
+     * Omit specific fields from the FavoriteRecipes
+     */
+    omit?: FavoriteRecipesOmit<ExtArgs> | null
+    /**
      * Choose, which related nodes to fetch as well
      */
     include?: FavoriteRecipesInclude<ExtArgs> | null
@@ -4176,6 +5639,10 @@ export namespace Prisma {
      */
     select?: FavoriteRecipesSelect<ExtArgs> | null
     /**
+     * Omit specific fields from the FavoriteRecipes
+     */
+    omit?: FavoriteRecipesOmit<ExtArgs> | null
+    /**
      * Choose, which related nodes to fetch as well
      */
     include?: FavoriteRecipesInclude<ExtArgs> | null
@@ -4219,6 +5686,10 @@ export namespace Prisma {
      */
     select?: FavoriteRecipesSelect<ExtArgs> | null
     /**
+     * Omit specific fields from the FavoriteRecipes
+     */
+    omit?: FavoriteRecipesOmit<ExtArgs> | null
+    /**
      * Choose, which related nodes to fetch as well
      */
     include?: FavoriteRecipesInclude<ExtArgs> | null
@@ -4248,6 +5719,10 @@ export namespace Prisma {
      */
     select?: FavoriteRecipesSelectCreateManyAndReturn<ExtArgs> | null
     /**
+     * Omit specific fields from the FavoriteRecipes
+     */
+    omit?: FavoriteRecipesOmit<ExtArgs> | null
+    /**
      * The data used to create many FavoriteRecipes.
      */
     data: FavoriteRecipesCreateManyInput | FavoriteRecipesCreateManyInput[]
@@ -4266,6 +5741,10 @@ export namespace Prisma {
      * Select specific fields to fetch from the FavoriteRecipes
      */
     select?: FavoriteRecipesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FavoriteRecipes
+     */
+    omit?: FavoriteRecipesOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
@@ -4292,6 +5771,40 @@ export namespace Prisma {
      * Filter which FavoriteRecipes to update
      */
     where?: FavoriteRecipesWhereInput
+    /**
+     * Limit how many FavoriteRecipes to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * FavoriteRecipes updateManyAndReturn
+   */
+  export type FavoriteRecipesUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FavoriteRecipes
+     */
+    select?: FavoriteRecipesSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FavoriteRecipes
+     */
+    omit?: FavoriteRecipesOmit<ExtArgs> | null
+    /**
+     * The data used to update FavoriteRecipes.
+     */
+    data: XOR<FavoriteRecipesUpdateManyMutationInput, FavoriteRecipesUncheckedUpdateManyInput>
+    /**
+     * Filter which FavoriteRecipes to update
+     */
+    where?: FavoriteRecipesWhereInput
+    /**
+     * Limit how many FavoriteRecipes to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FavoriteRecipesIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -4302,6 +5815,10 @@ export namespace Prisma {
      * Select specific fields to fetch from the FavoriteRecipes
      */
     select?: FavoriteRecipesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FavoriteRecipes
+     */
+    omit?: FavoriteRecipesOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
@@ -4329,6 +5846,10 @@ export namespace Prisma {
      */
     select?: FavoriteRecipesSelect<ExtArgs> | null
     /**
+     * Omit specific fields from the FavoriteRecipes
+     */
+    omit?: FavoriteRecipesOmit<ExtArgs> | null
+    /**
      * Choose, which related nodes to fetch as well
      */
     include?: FavoriteRecipesInclude<ExtArgs> | null
@@ -4346,6 +5867,10 @@ export namespace Prisma {
      * Filter which FavoriteRecipes to delete
      */
     where?: FavoriteRecipesWhereInput
+    /**
+     * Limit how many FavoriteRecipes to delete.
+     */
+    limit?: number
   }
 
   /**
@@ -4356,6 +5881,10 @@ export namespace Prisma {
      * Select specific fields to fetch from the FavoriteRecipes
      */
     select?: FavoriteRecipesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FavoriteRecipes
+     */
+    omit?: FavoriteRecipesOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
@@ -4386,7 +5915,21 @@ export namespace Prisma {
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
-  export const UserPreferencesScalarFieldEnum: {
+  export const LocationScalarFieldEnum: {
+    id: 'id',
+    userCognitoId: 'userCognitoId',
+    country: 'country',
+    city: 'city',
+    address: 'address',
+    radius: 'radius',
+    latitude: 'latitude',
+    longitude: 'longitude'
+  };
+
+  export type LocationScalarFieldEnum = (typeof LocationScalarFieldEnum)[keyof typeof LocationScalarFieldEnum]
+
+
+  export const PreferencesScalarFieldEnum: {
     id: 'id',
     userCognitoId: 'userCognitoId',
     vegetarianOnly: 'vegetarianOnly',
@@ -4394,10 +5937,6 @@ export namespace Prisma {
     pescatarian: 'pescatarian',
     flexitarian: 'flexitarian',
     meatOnly: 'meatOnly',
-    kosher: 'kosher',
-    halal: 'halal',
-    jain: 'jain',
-    buddhist: 'buddhist',
     glutenFree: 'glutenFree',
     lactoseFree: 'lactoseFree',
     dairyFree: 'dairyFree',
@@ -4418,15 +5957,10 @@ export namespace Prisma {
     rawFood: 'rawFood',
     whole30: 'whole30',
     diabeticFriendly: 'diabeticFriendly',
-    intermittentFasting: 'intermittentFasting',
-    organicOnly: 'organicOnly',
-    locallySourced: 'locallySourced',
-    processedFree: 'processedFree',
-    fastFoodAvoider: 'fastFoodAvoider',
     customPreferences: 'customPreferences'
   };
 
-  export type UserPreferencesScalarFieldEnum = (typeof UserPreferencesScalarFieldEnum)[keyof typeof UserPreferencesScalarFieldEnum]
+  export type PreferencesScalarFieldEnum = (typeof PreferencesScalarFieldEnum)[keyof typeof PreferencesScalarFieldEnum]
 
 
   export const FavoriteRecipesScalarFieldEnum: {
@@ -4456,7 +5990,7 @@ export namespace Prisma {
 
 
   /**
-   * Field references 
+   * Field references
    */
 
 
@@ -4485,6 +6019,20 @@ export namespace Prisma {
    * Reference to a field of type 'String[]'
    */
   export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Decimal'
+   */
+  export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
+    
+
+
+  /**
+   * Reference to a field of type 'Decimal[]'
+   */
+  export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
     
 
 
@@ -4520,7 +6068,8 @@ export namespace Prisma {
     cognitoId?: StringFilter<"User"> | string
     email?: StringFilter<"User"> | string
     favoriteRecipes?: FavoriteRecipesListRelationFilter
-    userPreferances?: XOR<UserPreferencesNullableRelationFilter, UserPreferencesWhereInput> | null
+    preferences?: XOR<PreferencesNullableScalarRelationFilter, PreferencesWhereInput> | null
+    location?: XOR<LocationNullableScalarRelationFilter, LocationWhereInput> | null
   }
 
   export type UserOrderByWithRelationInput = {
@@ -4528,7 +6077,8 @@ export namespace Prisma {
     cognitoId?: SortOrder
     email?: SortOrder
     favoriteRecipes?: FavoriteRecipesOrderByRelationAggregateInput
-    userPreferances?: UserPreferencesOrderByWithRelationInput
+    preferences?: PreferencesOrderByWithRelationInput
+    location?: LocationOrderByWithRelationInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -4539,7 +6089,8 @@ export namespace Prisma {
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
     favoriteRecipes?: FavoriteRecipesListRelationFilter
-    userPreferances?: XOR<UserPreferencesNullableRelationFilter, UserPreferencesWhereInput> | null
+    preferences?: XOR<PreferencesNullableScalarRelationFilter, PreferencesWhereInput> | null
+    location?: XOR<LocationNullableScalarRelationFilter, LocationWhereInput> | null
   }, "id" | "cognitoId" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -4562,51 +6113,114 @@ export namespace Prisma {
     email?: StringWithAggregatesFilter<"User"> | string
   }
 
-  export type UserPreferencesWhereInput = {
-    AND?: UserPreferencesWhereInput | UserPreferencesWhereInput[]
-    OR?: UserPreferencesWhereInput[]
-    NOT?: UserPreferencesWhereInput | UserPreferencesWhereInput[]
-    id?: IntFilter<"UserPreferences"> | number
-    userCognitoId?: StringFilter<"UserPreferences"> | string
-    vegetarianOnly?: BoolFilter<"UserPreferences"> | boolean
-    vegan?: BoolFilter<"UserPreferences"> | boolean
-    pescatarian?: BoolFilter<"UserPreferences"> | boolean
-    flexitarian?: BoolFilter<"UserPreferences"> | boolean
-    meatOnly?: BoolFilter<"UserPreferences"> | boolean
-    kosher?: BoolFilter<"UserPreferences"> | boolean
-    halal?: BoolFilter<"UserPreferences"> | boolean
-    jain?: BoolFilter<"UserPreferences"> | boolean
-    buddhist?: BoolFilter<"UserPreferences"> | boolean
-    glutenFree?: BoolFilter<"UserPreferences"> | boolean
-    lactoseFree?: BoolFilter<"UserPreferences"> | boolean
-    dairyFree?: BoolFilter<"UserPreferences"> | boolean
-    nutFree?: BoolFilter<"UserPreferences"> | boolean
-    peanutFree?: BoolFilter<"UserPreferences"> | boolean
-    shellfishFree?: BoolFilter<"UserPreferences"> | boolean
-    eggFree?: BoolFilter<"UserPreferences"> | boolean
-    soyFree?: BoolFilter<"UserPreferences"> | boolean
-    fishFree?: BoolFilter<"UserPreferences"> | boolean
-    nightshadeFree?: BoolFilter<"UserPreferences"> | boolean
-    lowCarb?: BoolFilter<"UserPreferences"> | boolean
-    keto?: BoolFilter<"UserPreferences"> | boolean
-    paleo?: BoolFilter<"UserPreferences"> | boolean
-    lowSugar?: BoolFilter<"UserPreferences"> | boolean
-    lowSalt?: BoolFilter<"UserPreferences"> | boolean
-    lowFat?: BoolFilter<"UserPreferences"> | boolean
-    highProtein?: BoolFilter<"UserPreferences"> | boolean
-    rawFood?: BoolFilter<"UserPreferences"> | boolean
-    whole30?: BoolFilter<"UserPreferences"> | boolean
-    diabeticFriendly?: BoolFilter<"UserPreferences"> | boolean
-    intermittentFasting?: BoolFilter<"UserPreferences"> | boolean
-    organicOnly?: BoolFilter<"UserPreferences"> | boolean
-    locallySourced?: BoolFilter<"UserPreferences"> | boolean
-    processedFree?: BoolFilter<"UserPreferences"> | boolean
-    fastFoodAvoider?: BoolFilter<"UserPreferences"> | boolean
-    customPreferences?: StringFilter<"UserPreferences"> | string
-    user?: XOR<UserRelationFilter, UserWhereInput>
+  export type LocationWhereInput = {
+    AND?: LocationWhereInput | LocationWhereInput[]
+    OR?: LocationWhereInput[]
+    NOT?: LocationWhereInput | LocationWhereInput[]
+    id?: IntFilter<"Location"> | number
+    userCognitoId?: StringFilter<"Location"> | string
+    country?: StringFilter<"Location"> | string
+    city?: StringFilter<"Location"> | string
+    address?: StringFilter<"Location"> | string
+    radius?: StringFilter<"Location"> | string
+    latitude?: DecimalFilter<"Location"> | Decimal | DecimalJsLike | number | string
+    longitude?: DecimalFilter<"Location"> | Decimal | DecimalJsLike | number | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
 
-  export type UserPreferencesOrderByWithRelationInput = {
+  export type LocationOrderByWithRelationInput = {
+    id?: SortOrder
+    userCognitoId?: SortOrder
+    country?: SortOrder
+    city?: SortOrder
+    address?: SortOrder
+    radius?: SortOrder
+    latitude?: SortOrder
+    longitude?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type LocationWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    userCognitoId?: string
+    AND?: LocationWhereInput | LocationWhereInput[]
+    OR?: LocationWhereInput[]
+    NOT?: LocationWhereInput | LocationWhereInput[]
+    country?: StringFilter<"Location"> | string
+    city?: StringFilter<"Location"> | string
+    address?: StringFilter<"Location"> | string
+    radius?: StringFilter<"Location"> | string
+    latitude?: DecimalFilter<"Location"> | Decimal | DecimalJsLike | number | string
+    longitude?: DecimalFilter<"Location"> | Decimal | DecimalJsLike | number | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "userCognitoId">
+
+  export type LocationOrderByWithAggregationInput = {
+    id?: SortOrder
+    userCognitoId?: SortOrder
+    country?: SortOrder
+    city?: SortOrder
+    address?: SortOrder
+    radius?: SortOrder
+    latitude?: SortOrder
+    longitude?: SortOrder
+    _count?: LocationCountOrderByAggregateInput
+    _avg?: LocationAvgOrderByAggregateInput
+    _max?: LocationMaxOrderByAggregateInput
+    _min?: LocationMinOrderByAggregateInput
+    _sum?: LocationSumOrderByAggregateInput
+  }
+
+  export type LocationScalarWhereWithAggregatesInput = {
+    AND?: LocationScalarWhereWithAggregatesInput | LocationScalarWhereWithAggregatesInput[]
+    OR?: LocationScalarWhereWithAggregatesInput[]
+    NOT?: LocationScalarWhereWithAggregatesInput | LocationScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"Location"> | number
+    userCognitoId?: StringWithAggregatesFilter<"Location"> | string
+    country?: StringWithAggregatesFilter<"Location"> | string
+    city?: StringWithAggregatesFilter<"Location"> | string
+    address?: StringWithAggregatesFilter<"Location"> | string
+    radius?: StringWithAggregatesFilter<"Location"> | string
+    latitude?: DecimalWithAggregatesFilter<"Location"> | Decimal | DecimalJsLike | number | string
+    longitude?: DecimalWithAggregatesFilter<"Location"> | Decimal | DecimalJsLike | number | string
+  }
+
+  export type PreferencesWhereInput = {
+    AND?: PreferencesWhereInput | PreferencesWhereInput[]
+    OR?: PreferencesWhereInput[]
+    NOT?: PreferencesWhereInput | PreferencesWhereInput[]
+    id?: IntFilter<"Preferences"> | number
+    userCognitoId?: StringFilter<"Preferences"> | string
+    vegetarianOnly?: BoolFilter<"Preferences"> | boolean
+    vegan?: BoolFilter<"Preferences"> | boolean
+    pescatarian?: BoolFilter<"Preferences"> | boolean
+    flexitarian?: BoolFilter<"Preferences"> | boolean
+    meatOnly?: BoolFilter<"Preferences"> | boolean
+    glutenFree?: BoolFilter<"Preferences"> | boolean
+    lactoseFree?: BoolFilter<"Preferences"> | boolean
+    dairyFree?: BoolFilter<"Preferences"> | boolean
+    nutFree?: BoolFilter<"Preferences"> | boolean
+    peanutFree?: BoolFilter<"Preferences"> | boolean
+    shellfishFree?: BoolFilter<"Preferences"> | boolean
+    eggFree?: BoolFilter<"Preferences"> | boolean
+    soyFree?: BoolFilter<"Preferences"> | boolean
+    fishFree?: BoolFilter<"Preferences"> | boolean
+    nightshadeFree?: BoolFilter<"Preferences"> | boolean
+    lowCarb?: BoolFilter<"Preferences"> | boolean
+    keto?: BoolFilter<"Preferences"> | boolean
+    paleo?: BoolFilter<"Preferences"> | boolean
+    lowSugar?: BoolFilter<"Preferences"> | boolean
+    lowSalt?: BoolFilter<"Preferences"> | boolean
+    lowFat?: BoolFilter<"Preferences"> | boolean
+    highProtein?: BoolFilter<"Preferences"> | boolean
+    rawFood?: BoolFilter<"Preferences"> | boolean
+    whole30?: BoolFilter<"Preferences"> | boolean
+    diabeticFriendly?: BoolFilter<"Preferences"> | boolean
+    customPreferences?: StringFilter<"Preferences"> | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type PreferencesOrderByWithRelationInput = {
     id?: SortOrder
     userCognitoId?: SortOrder
     vegetarianOnly?: SortOrder
@@ -4614,10 +6228,6 @@ export namespace Prisma {
     pescatarian?: SortOrder
     flexitarian?: SortOrder
     meatOnly?: SortOrder
-    kosher?: SortOrder
-    halal?: SortOrder
-    jain?: SortOrder
-    buddhist?: SortOrder
     glutenFree?: SortOrder
     lactoseFree?: SortOrder
     dairyFree?: SortOrder
@@ -4638,60 +6248,46 @@ export namespace Prisma {
     rawFood?: SortOrder
     whole30?: SortOrder
     diabeticFriendly?: SortOrder
-    intermittentFasting?: SortOrder
-    organicOnly?: SortOrder
-    locallySourced?: SortOrder
-    processedFree?: SortOrder
-    fastFoodAvoider?: SortOrder
     customPreferences?: SortOrder
     user?: UserOrderByWithRelationInput
   }
 
-  export type UserPreferencesWhereUniqueInput = Prisma.AtLeast<{
+  export type PreferencesWhereUniqueInput = Prisma.AtLeast<{
     id?: number
     userCognitoId?: string
-    AND?: UserPreferencesWhereInput | UserPreferencesWhereInput[]
-    OR?: UserPreferencesWhereInput[]
-    NOT?: UserPreferencesWhereInput | UserPreferencesWhereInput[]
-    vegetarianOnly?: BoolFilter<"UserPreferences"> | boolean
-    vegan?: BoolFilter<"UserPreferences"> | boolean
-    pescatarian?: BoolFilter<"UserPreferences"> | boolean
-    flexitarian?: BoolFilter<"UserPreferences"> | boolean
-    meatOnly?: BoolFilter<"UserPreferences"> | boolean
-    kosher?: BoolFilter<"UserPreferences"> | boolean
-    halal?: BoolFilter<"UserPreferences"> | boolean
-    jain?: BoolFilter<"UserPreferences"> | boolean
-    buddhist?: BoolFilter<"UserPreferences"> | boolean
-    glutenFree?: BoolFilter<"UserPreferences"> | boolean
-    lactoseFree?: BoolFilter<"UserPreferences"> | boolean
-    dairyFree?: BoolFilter<"UserPreferences"> | boolean
-    nutFree?: BoolFilter<"UserPreferences"> | boolean
-    peanutFree?: BoolFilter<"UserPreferences"> | boolean
-    shellfishFree?: BoolFilter<"UserPreferences"> | boolean
-    eggFree?: BoolFilter<"UserPreferences"> | boolean
-    soyFree?: BoolFilter<"UserPreferences"> | boolean
-    fishFree?: BoolFilter<"UserPreferences"> | boolean
-    nightshadeFree?: BoolFilter<"UserPreferences"> | boolean
-    lowCarb?: BoolFilter<"UserPreferences"> | boolean
-    keto?: BoolFilter<"UserPreferences"> | boolean
-    paleo?: BoolFilter<"UserPreferences"> | boolean
-    lowSugar?: BoolFilter<"UserPreferences"> | boolean
-    lowSalt?: BoolFilter<"UserPreferences"> | boolean
-    lowFat?: BoolFilter<"UserPreferences"> | boolean
-    highProtein?: BoolFilter<"UserPreferences"> | boolean
-    rawFood?: BoolFilter<"UserPreferences"> | boolean
-    whole30?: BoolFilter<"UserPreferences"> | boolean
-    diabeticFriendly?: BoolFilter<"UserPreferences"> | boolean
-    intermittentFasting?: BoolFilter<"UserPreferences"> | boolean
-    organicOnly?: BoolFilter<"UserPreferences"> | boolean
-    locallySourced?: BoolFilter<"UserPreferences"> | boolean
-    processedFree?: BoolFilter<"UserPreferences"> | boolean
-    fastFoodAvoider?: BoolFilter<"UserPreferences"> | boolean
-    customPreferences?: StringFilter<"UserPreferences"> | string
-    user?: XOR<UserRelationFilter, UserWhereInput>
+    AND?: PreferencesWhereInput | PreferencesWhereInput[]
+    OR?: PreferencesWhereInput[]
+    NOT?: PreferencesWhereInput | PreferencesWhereInput[]
+    vegetarianOnly?: BoolFilter<"Preferences"> | boolean
+    vegan?: BoolFilter<"Preferences"> | boolean
+    pescatarian?: BoolFilter<"Preferences"> | boolean
+    flexitarian?: BoolFilter<"Preferences"> | boolean
+    meatOnly?: BoolFilter<"Preferences"> | boolean
+    glutenFree?: BoolFilter<"Preferences"> | boolean
+    lactoseFree?: BoolFilter<"Preferences"> | boolean
+    dairyFree?: BoolFilter<"Preferences"> | boolean
+    nutFree?: BoolFilter<"Preferences"> | boolean
+    peanutFree?: BoolFilter<"Preferences"> | boolean
+    shellfishFree?: BoolFilter<"Preferences"> | boolean
+    eggFree?: BoolFilter<"Preferences"> | boolean
+    soyFree?: BoolFilter<"Preferences"> | boolean
+    fishFree?: BoolFilter<"Preferences"> | boolean
+    nightshadeFree?: BoolFilter<"Preferences"> | boolean
+    lowCarb?: BoolFilter<"Preferences"> | boolean
+    keto?: BoolFilter<"Preferences"> | boolean
+    paleo?: BoolFilter<"Preferences"> | boolean
+    lowSugar?: BoolFilter<"Preferences"> | boolean
+    lowSalt?: BoolFilter<"Preferences"> | boolean
+    lowFat?: BoolFilter<"Preferences"> | boolean
+    highProtein?: BoolFilter<"Preferences"> | boolean
+    rawFood?: BoolFilter<"Preferences"> | boolean
+    whole30?: BoolFilter<"Preferences"> | boolean
+    diabeticFriendly?: BoolFilter<"Preferences"> | boolean
+    customPreferences?: StringFilter<"Preferences"> | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "id" | "userCognitoId">
 
-  export type UserPreferencesOrderByWithAggregationInput = {
+  export type PreferencesOrderByWithAggregationInput = {
     id?: SortOrder
     userCognitoId?: SortOrder
     vegetarianOnly?: SortOrder
@@ -4699,10 +6295,6 @@ export namespace Prisma {
     pescatarian?: SortOrder
     flexitarian?: SortOrder
     meatOnly?: SortOrder
-    kosher?: SortOrder
-    halal?: SortOrder
-    jain?: SortOrder
-    buddhist?: SortOrder
     glutenFree?: SortOrder
     lactoseFree?: SortOrder
     dairyFree?: SortOrder
@@ -4723,60 +6315,46 @@ export namespace Prisma {
     rawFood?: SortOrder
     whole30?: SortOrder
     diabeticFriendly?: SortOrder
-    intermittentFasting?: SortOrder
-    organicOnly?: SortOrder
-    locallySourced?: SortOrder
-    processedFree?: SortOrder
-    fastFoodAvoider?: SortOrder
     customPreferences?: SortOrder
-    _count?: UserPreferencesCountOrderByAggregateInput
-    _avg?: UserPreferencesAvgOrderByAggregateInput
-    _max?: UserPreferencesMaxOrderByAggregateInput
-    _min?: UserPreferencesMinOrderByAggregateInput
-    _sum?: UserPreferencesSumOrderByAggregateInput
+    _count?: PreferencesCountOrderByAggregateInput
+    _avg?: PreferencesAvgOrderByAggregateInput
+    _max?: PreferencesMaxOrderByAggregateInput
+    _min?: PreferencesMinOrderByAggregateInput
+    _sum?: PreferencesSumOrderByAggregateInput
   }
 
-  export type UserPreferencesScalarWhereWithAggregatesInput = {
-    AND?: UserPreferencesScalarWhereWithAggregatesInput | UserPreferencesScalarWhereWithAggregatesInput[]
-    OR?: UserPreferencesScalarWhereWithAggregatesInput[]
-    NOT?: UserPreferencesScalarWhereWithAggregatesInput | UserPreferencesScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"UserPreferences"> | number
-    userCognitoId?: StringWithAggregatesFilter<"UserPreferences"> | string
-    vegetarianOnly?: BoolWithAggregatesFilter<"UserPreferences"> | boolean
-    vegan?: BoolWithAggregatesFilter<"UserPreferences"> | boolean
-    pescatarian?: BoolWithAggregatesFilter<"UserPreferences"> | boolean
-    flexitarian?: BoolWithAggregatesFilter<"UserPreferences"> | boolean
-    meatOnly?: BoolWithAggregatesFilter<"UserPreferences"> | boolean
-    kosher?: BoolWithAggregatesFilter<"UserPreferences"> | boolean
-    halal?: BoolWithAggregatesFilter<"UserPreferences"> | boolean
-    jain?: BoolWithAggregatesFilter<"UserPreferences"> | boolean
-    buddhist?: BoolWithAggregatesFilter<"UserPreferences"> | boolean
-    glutenFree?: BoolWithAggregatesFilter<"UserPreferences"> | boolean
-    lactoseFree?: BoolWithAggregatesFilter<"UserPreferences"> | boolean
-    dairyFree?: BoolWithAggregatesFilter<"UserPreferences"> | boolean
-    nutFree?: BoolWithAggregatesFilter<"UserPreferences"> | boolean
-    peanutFree?: BoolWithAggregatesFilter<"UserPreferences"> | boolean
-    shellfishFree?: BoolWithAggregatesFilter<"UserPreferences"> | boolean
-    eggFree?: BoolWithAggregatesFilter<"UserPreferences"> | boolean
-    soyFree?: BoolWithAggregatesFilter<"UserPreferences"> | boolean
-    fishFree?: BoolWithAggregatesFilter<"UserPreferences"> | boolean
-    nightshadeFree?: BoolWithAggregatesFilter<"UserPreferences"> | boolean
-    lowCarb?: BoolWithAggregatesFilter<"UserPreferences"> | boolean
-    keto?: BoolWithAggregatesFilter<"UserPreferences"> | boolean
-    paleo?: BoolWithAggregatesFilter<"UserPreferences"> | boolean
-    lowSugar?: BoolWithAggregatesFilter<"UserPreferences"> | boolean
-    lowSalt?: BoolWithAggregatesFilter<"UserPreferences"> | boolean
-    lowFat?: BoolWithAggregatesFilter<"UserPreferences"> | boolean
-    highProtein?: BoolWithAggregatesFilter<"UserPreferences"> | boolean
-    rawFood?: BoolWithAggregatesFilter<"UserPreferences"> | boolean
-    whole30?: BoolWithAggregatesFilter<"UserPreferences"> | boolean
-    diabeticFriendly?: BoolWithAggregatesFilter<"UserPreferences"> | boolean
-    intermittentFasting?: BoolWithAggregatesFilter<"UserPreferences"> | boolean
-    organicOnly?: BoolWithAggregatesFilter<"UserPreferences"> | boolean
-    locallySourced?: BoolWithAggregatesFilter<"UserPreferences"> | boolean
-    processedFree?: BoolWithAggregatesFilter<"UserPreferences"> | boolean
-    fastFoodAvoider?: BoolWithAggregatesFilter<"UserPreferences"> | boolean
-    customPreferences?: StringWithAggregatesFilter<"UserPreferences"> | string
+  export type PreferencesScalarWhereWithAggregatesInput = {
+    AND?: PreferencesScalarWhereWithAggregatesInput | PreferencesScalarWhereWithAggregatesInput[]
+    OR?: PreferencesScalarWhereWithAggregatesInput[]
+    NOT?: PreferencesScalarWhereWithAggregatesInput | PreferencesScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"Preferences"> | number
+    userCognitoId?: StringWithAggregatesFilter<"Preferences"> | string
+    vegetarianOnly?: BoolWithAggregatesFilter<"Preferences"> | boolean
+    vegan?: BoolWithAggregatesFilter<"Preferences"> | boolean
+    pescatarian?: BoolWithAggregatesFilter<"Preferences"> | boolean
+    flexitarian?: BoolWithAggregatesFilter<"Preferences"> | boolean
+    meatOnly?: BoolWithAggregatesFilter<"Preferences"> | boolean
+    glutenFree?: BoolWithAggregatesFilter<"Preferences"> | boolean
+    lactoseFree?: BoolWithAggregatesFilter<"Preferences"> | boolean
+    dairyFree?: BoolWithAggregatesFilter<"Preferences"> | boolean
+    nutFree?: BoolWithAggregatesFilter<"Preferences"> | boolean
+    peanutFree?: BoolWithAggregatesFilter<"Preferences"> | boolean
+    shellfishFree?: BoolWithAggregatesFilter<"Preferences"> | boolean
+    eggFree?: BoolWithAggregatesFilter<"Preferences"> | boolean
+    soyFree?: BoolWithAggregatesFilter<"Preferences"> | boolean
+    fishFree?: BoolWithAggregatesFilter<"Preferences"> | boolean
+    nightshadeFree?: BoolWithAggregatesFilter<"Preferences"> | boolean
+    lowCarb?: BoolWithAggregatesFilter<"Preferences"> | boolean
+    keto?: BoolWithAggregatesFilter<"Preferences"> | boolean
+    paleo?: BoolWithAggregatesFilter<"Preferences"> | boolean
+    lowSugar?: BoolWithAggregatesFilter<"Preferences"> | boolean
+    lowSalt?: BoolWithAggregatesFilter<"Preferences"> | boolean
+    lowFat?: BoolWithAggregatesFilter<"Preferences"> | boolean
+    highProtein?: BoolWithAggregatesFilter<"Preferences"> | boolean
+    rawFood?: BoolWithAggregatesFilter<"Preferences"> | boolean
+    whole30?: BoolWithAggregatesFilter<"Preferences"> | boolean
+    diabeticFriendly?: BoolWithAggregatesFilter<"Preferences"> | boolean
+    customPreferences?: StringWithAggregatesFilter<"Preferences"> | string
   }
 
   export type FavoriteRecipesWhereInput = {
@@ -4787,7 +6365,7 @@ export namespace Prisma {
     imageUrl?: StringFilter<"FavoriteRecipes"> | string
     content?: StringFilter<"FavoriteRecipes"> | string
     userCognitoId?: StringFilter<"FavoriteRecipes"> | string
-    user?: XOR<UserRelationFilter, UserWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
 
   export type FavoriteRecipesOrderByWithRelationInput = {
@@ -4806,7 +6384,7 @@ export namespace Prisma {
     imageUrl?: StringFilter<"FavoriteRecipes"> | string
     content?: StringFilter<"FavoriteRecipes"> | string
     userCognitoId?: StringFilter<"FavoriteRecipes"> | string
-    user?: XOR<UserRelationFilter, UserWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "id">
 
   export type FavoriteRecipesOrderByWithAggregationInput = {
@@ -4835,7 +6413,8 @@ export namespace Prisma {
     cognitoId: string
     email: string
     favoriteRecipes?: FavoriteRecipesCreateNestedManyWithoutUserInput
-    userPreferances?: UserPreferencesCreateNestedOneWithoutUserInput
+    preferences?: PreferencesCreateNestedOneWithoutUserInput
+    location?: LocationCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -4843,14 +6422,16 @@ export namespace Prisma {
     cognitoId: string
     email: string
     favoriteRecipes?: FavoriteRecipesUncheckedCreateNestedManyWithoutUserInput
-    userPreferances?: UserPreferencesUncheckedCreateNestedOneWithoutUserInput
+    preferences?: PreferencesUncheckedCreateNestedOneWithoutUserInput
+    location?: LocationUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserUpdateInput = {
     cognitoId?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     favoriteRecipes?: FavoriteRecipesUpdateManyWithoutUserNestedInput
-    userPreferances?: UserPreferencesUpdateOneWithoutUserNestedInput
+    preferences?: PreferencesUpdateOneWithoutUserNestedInput
+    location?: LocationUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -4858,7 +6439,8 @@ export namespace Prisma {
     cognitoId?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     favoriteRecipes?: FavoriteRecipesUncheckedUpdateManyWithoutUserNestedInput
-    userPreferances?: UserPreferencesUncheckedUpdateOneWithoutUserNestedInput
+    preferences?: PreferencesUncheckedUpdateOneWithoutUserNestedInput
+    location?: LocationUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -4878,16 +6460,85 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
   }
 
-  export type UserPreferencesCreateInput = {
+  export type LocationCreateInput = {
+    country: string
+    city: string
+    address: string
+    radius: string
+    latitude: Decimal | DecimalJsLike | number | string
+    longitude: Decimal | DecimalJsLike | number | string
+    user: UserCreateNestedOneWithoutLocationInput
+  }
+
+  export type LocationUncheckedCreateInput = {
+    id?: number
+    userCognitoId: string
+    country: string
+    city: string
+    address: string
+    radius: string
+    latitude: Decimal | DecimalJsLike | number | string
+    longitude: Decimal | DecimalJsLike | number | string
+  }
+
+  export type LocationUpdateInput = {
+    country?: StringFieldUpdateOperationsInput | string
+    city?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    radius?: StringFieldUpdateOperationsInput | string
+    latitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    longitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    user?: UserUpdateOneRequiredWithoutLocationNestedInput
+  }
+
+  export type LocationUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userCognitoId?: StringFieldUpdateOperationsInput | string
+    country?: StringFieldUpdateOperationsInput | string
+    city?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    radius?: StringFieldUpdateOperationsInput | string
+    latitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    longitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+  }
+
+  export type LocationCreateManyInput = {
+    id?: number
+    userCognitoId: string
+    country: string
+    city: string
+    address: string
+    radius: string
+    latitude: Decimal | DecimalJsLike | number | string
+    longitude: Decimal | DecimalJsLike | number | string
+  }
+
+  export type LocationUpdateManyMutationInput = {
+    country?: StringFieldUpdateOperationsInput | string
+    city?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    radius?: StringFieldUpdateOperationsInput | string
+    latitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    longitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+  }
+
+  export type LocationUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userCognitoId?: StringFieldUpdateOperationsInput | string
+    country?: StringFieldUpdateOperationsInput | string
+    city?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    radius?: StringFieldUpdateOperationsInput | string
+    latitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    longitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+  }
+
+  export type PreferencesCreateInput = {
     vegetarianOnly?: boolean
     vegan?: boolean
     pescatarian?: boolean
     flexitarian?: boolean
     meatOnly?: boolean
-    kosher?: boolean
-    halal?: boolean
-    jain?: boolean
-    buddhist?: boolean
     glutenFree?: boolean
     lactoseFree?: boolean
     dairyFree?: boolean
@@ -4908,16 +6559,11 @@ export namespace Prisma {
     rawFood?: boolean
     whole30?: boolean
     diabeticFriendly?: boolean
-    intermittentFasting?: boolean
-    organicOnly?: boolean
-    locallySourced?: boolean
-    processedFree?: boolean
-    fastFoodAvoider?: boolean
     customPreferences: string
-    user: UserCreateNestedOneWithoutUserPreferancesInput
+    user: UserCreateNestedOneWithoutPreferencesInput
   }
 
-  export type UserPreferencesUncheckedCreateInput = {
+  export type PreferencesUncheckedCreateInput = {
     id?: number
     userCognitoId: string
     vegetarianOnly?: boolean
@@ -4925,10 +6571,6 @@ export namespace Prisma {
     pescatarian?: boolean
     flexitarian?: boolean
     meatOnly?: boolean
-    kosher?: boolean
-    halal?: boolean
-    jain?: boolean
-    buddhist?: boolean
     glutenFree?: boolean
     lactoseFree?: boolean
     dairyFree?: boolean
@@ -4949,24 +6591,15 @@ export namespace Prisma {
     rawFood?: boolean
     whole30?: boolean
     diabeticFriendly?: boolean
-    intermittentFasting?: boolean
-    organicOnly?: boolean
-    locallySourced?: boolean
-    processedFree?: boolean
-    fastFoodAvoider?: boolean
     customPreferences: string
   }
 
-  export type UserPreferencesUpdateInput = {
+  export type PreferencesUpdateInput = {
     vegetarianOnly?: BoolFieldUpdateOperationsInput | boolean
     vegan?: BoolFieldUpdateOperationsInput | boolean
     pescatarian?: BoolFieldUpdateOperationsInput | boolean
     flexitarian?: BoolFieldUpdateOperationsInput | boolean
     meatOnly?: BoolFieldUpdateOperationsInput | boolean
-    kosher?: BoolFieldUpdateOperationsInput | boolean
-    halal?: BoolFieldUpdateOperationsInput | boolean
-    jain?: BoolFieldUpdateOperationsInput | boolean
-    buddhist?: BoolFieldUpdateOperationsInput | boolean
     glutenFree?: BoolFieldUpdateOperationsInput | boolean
     lactoseFree?: BoolFieldUpdateOperationsInput | boolean
     dairyFree?: BoolFieldUpdateOperationsInput | boolean
@@ -4987,16 +6620,11 @@ export namespace Prisma {
     rawFood?: BoolFieldUpdateOperationsInput | boolean
     whole30?: BoolFieldUpdateOperationsInput | boolean
     diabeticFriendly?: BoolFieldUpdateOperationsInput | boolean
-    intermittentFasting?: BoolFieldUpdateOperationsInput | boolean
-    organicOnly?: BoolFieldUpdateOperationsInput | boolean
-    locallySourced?: BoolFieldUpdateOperationsInput | boolean
-    processedFree?: BoolFieldUpdateOperationsInput | boolean
-    fastFoodAvoider?: BoolFieldUpdateOperationsInput | boolean
     customPreferences?: StringFieldUpdateOperationsInput | string
-    user?: UserUpdateOneRequiredWithoutUserPreferancesNestedInput
+    user?: UserUpdateOneRequiredWithoutPreferencesNestedInput
   }
 
-  export type UserPreferencesUncheckedUpdateInput = {
+  export type PreferencesUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     userCognitoId?: StringFieldUpdateOperationsInput | string
     vegetarianOnly?: BoolFieldUpdateOperationsInput | boolean
@@ -5004,10 +6632,6 @@ export namespace Prisma {
     pescatarian?: BoolFieldUpdateOperationsInput | boolean
     flexitarian?: BoolFieldUpdateOperationsInput | boolean
     meatOnly?: BoolFieldUpdateOperationsInput | boolean
-    kosher?: BoolFieldUpdateOperationsInput | boolean
-    halal?: BoolFieldUpdateOperationsInput | boolean
-    jain?: BoolFieldUpdateOperationsInput | boolean
-    buddhist?: BoolFieldUpdateOperationsInput | boolean
     glutenFree?: BoolFieldUpdateOperationsInput | boolean
     lactoseFree?: BoolFieldUpdateOperationsInput | boolean
     dairyFree?: BoolFieldUpdateOperationsInput | boolean
@@ -5028,15 +6652,10 @@ export namespace Prisma {
     rawFood?: BoolFieldUpdateOperationsInput | boolean
     whole30?: BoolFieldUpdateOperationsInput | boolean
     diabeticFriendly?: BoolFieldUpdateOperationsInput | boolean
-    intermittentFasting?: BoolFieldUpdateOperationsInput | boolean
-    organicOnly?: BoolFieldUpdateOperationsInput | boolean
-    locallySourced?: BoolFieldUpdateOperationsInput | boolean
-    processedFree?: BoolFieldUpdateOperationsInput | boolean
-    fastFoodAvoider?: BoolFieldUpdateOperationsInput | boolean
     customPreferences?: StringFieldUpdateOperationsInput | string
   }
 
-  export type UserPreferencesCreateManyInput = {
+  export type PreferencesCreateManyInput = {
     id?: number
     userCognitoId: string
     vegetarianOnly?: boolean
@@ -5044,10 +6663,6 @@ export namespace Prisma {
     pescatarian?: boolean
     flexitarian?: boolean
     meatOnly?: boolean
-    kosher?: boolean
-    halal?: boolean
-    jain?: boolean
-    buddhist?: boolean
     glutenFree?: boolean
     lactoseFree?: boolean
     dairyFree?: boolean
@@ -5068,24 +6683,15 @@ export namespace Prisma {
     rawFood?: boolean
     whole30?: boolean
     diabeticFriendly?: boolean
-    intermittentFasting?: boolean
-    organicOnly?: boolean
-    locallySourced?: boolean
-    processedFree?: boolean
-    fastFoodAvoider?: boolean
     customPreferences: string
   }
 
-  export type UserPreferencesUpdateManyMutationInput = {
+  export type PreferencesUpdateManyMutationInput = {
     vegetarianOnly?: BoolFieldUpdateOperationsInput | boolean
     vegan?: BoolFieldUpdateOperationsInput | boolean
     pescatarian?: BoolFieldUpdateOperationsInput | boolean
     flexitarian?: BoolFieldUpdateOperationsInput | boolean
     meatOnly?: BoolFieldUpdateOperationsInput | boolean
-    kosher?: BoolFieldUpdateOperationsInput | boolean
-    halal?: BoolFieldUpdateOperationsInput | boolean
-    jain?: BoolFieldUpdateOperationsInput | boolean
-    buddhist?: BoolFieldUpdateOperationsInput | boolean
     glutenFree?: BoolFieldUpdateOperationsInput | boolean
     lactoseFree?: BoolFieldUpdateOperationsInput | boolean
     dairyFree?: BoolFieldUpdateOperationsInput | boolean
@@ -5106,15 +6712,10 @@ export namespace Prisma {
     rawFood?: BoolFieldUpdateOperationsInput | boolean
     whole30?: BoolFieldUpdateOperationsInput | boolean
     diabeticFriendly?: BoolFieldUpdateOperationsInput | boolean
-    intermittentFasting?: BoolFieldUpdateOperationsInput | boolean
-    organicOnly?: BoolFieldUpdateOperationsInput | boolean
-    locallySourced?: BoolFieldUpdateOperationsInput | boolean
-    processedFree?: BoolFieldUpdateOperationsInput | boolean
-    fastFoodAvoider?: BoolFieldUpdateOperationsInput | boolean
     customPreferences?: StringFieldUpdateOperationsInput | string
   }
 
-  export type UserPreferencesUncheckedUpdateManyInput = {
+  export type PreferencesUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     userCognitoId?: StringFieldUpdateOperationsInput | string
     vegetarianOnly?: BoolFieldUpdateOperationsInput | boolean
@@ -5122,10 +6723,6 @@ export namespace Prisma {
     pescatarian?: BoolFieldUpdateOperationsInput | boolean
     flexitarian?: BoolFieldUpdateOperationsInput | boolean
     meatOnly?: BoolFieldUpdateOperationsInput | boolean
-    kosher?: BoolFieldUpdateOperationsInput | boolean
-    halal?: BoolFieldUpdateOperationsInput | boolean
-    jain?: BoolFieldUpdateOperationsInput | boolean
-    buddhist?: BoolFieldUpdateOperationsInput | boolean
     glutenFree?: BoolFieldUpdateOperationsInput | boolean
     lactoseFree?: BoolFieldUpdateOperationsInput | boolean
     dairyFree?: BoolFieldUpdateOperationsInput | boolean
@@ -5146,11 +6743,6 @@ export namespace Prisma {
     rawFood?: BoolFieldUpdateOperationsInput | boolean
     whole30?: BoolFieldUpdateOperationsInput | boolean
     diabeticFriendly?: BoolFieldUpdateOperationsInput | boolean
-    intermittentFasting?: BoolFieldUpdateOperationsInput | boolean
-    organicOnly?: BoolFieldUpdateOperationsInput | boolean
-    locallySourced?: BoolFieldUpdateOperationsInput | boolean
-    processedFree?: BoolFieldUpdateOperationsInput | boolean
-    fastFoodAvoider?: BoolFieldUpdateOperationsInput | boolean
     customPreferences?: StringFieldUpdateOperationsInput | string
   }
 
@@ -5231,9 +6823,14 @@ export namespace Prisma {
     none?: FavoriteRecipesWhereInput
   }
 
-  export type UserPreferencesNullableRelationFilter = {
-    is?: UserPreferencesWhereInput | null
-    isNot?: UserPreferencesWhereInput | null
+  export type PreferencesNullableScalarRelationFilter = {
+    is?: PreferencesWhereInput | null
+    isNot?: PreferencesWhereInput | null
+  }
+
+  export type LocationNullableScalarRelationFilter = {
+    is?: LocationWhereInput | null
+    isNot?: LocationWhereInput | null
   }
 
   export type FavoriteRecipesOrderByRelationAggregateInput = {
@@ -5300,17 +6897,89 @@ export namespace Prisma {
     _max?: NestedStringFilter<$PrismaModel>
   }
 
+  export type DecimalFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+  }
+
+  export type UserScalarRelationFilter = {
+    is?: UserWhereInput
+    isNot?: UserWhereInput
+  }
+
+  export type LocationCountOrderByAggregateInput = {
+    id?: SortOrder
+    userCognitoId?: SortOrder
+    country?: SortOrder
+    city?: SortOrder
+    address?: SortOrder
+    radius?: SortOrder
+    latitude?: SortOrder
+    longitude?: SortOrder
+  }
+
+  export type LocationAvgOrderByAggregateInput = {
+    id?: SortOrder
+    latitude?: SortOrder
+    longitude?: SortOrder
+  }
+
+  export type LocationMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userCognitoId?: SortOrder
+    country?: SortOrder
+    city?: SortOrder
+    address?: SortOrder
+    radius?: SortOrder
+    latitude?: SortOrder
+    longitude?: SortOrder
+  }
+
+  export type LocationMinOrderByAggregateInput = {
+    id?: SortOrder
+    userCognitoId?: SortOrder
+    country?: SortOrder
+    city?: SortOrder
+    address?: SortOrder
+    radius?: SortOrder
+    latitude?: SortOrder
+    longitude?: SortOrder
+  }
+
+  export type LocationSumOrderByAggregateInput = {
+    id?: SortOrder
+    latitude?: SortOrder
+    longitude?: SortOrder
+  }
+
+  export type DecimalWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedDecimalFilter<$PrismaModel>
+    _sum?: NestedDecimalFilter<$PrismaModel>
+    _min?: NestedDecimalFilter<$PrismaModel>
+    _max?: NestedDecimalFilter<$PrismaModel>
+  }
+
   export type BoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
-  export type UserRelationFilter = {
-    is?: UserWhereInput
-    isNot?: UserWhereInput
-  }
-
-  export type UserPreferencesCountOrderByAggregateInput = {
+  export type PreferencesCountOrderByAggregateInput = {
     id?: SortOrder
     userCognitoId?: SortOrder
     vegetarianOnly?: SortOrder
@@ -5318,10 +6987,6 @@ export namespace Prisma {
     pescatarian?: SortOrder
     flexitarian?: SortOrder
     meatOnly?: SortOrder
-    kosher?: SortOrder
-    halal?: SortOrder
-    jain?: SortOrder
-    buddhist?: SortOrder
     glutenFree?: SortOrder
     lactoseFree?: SortOrder
     dairyFree?: SortOrder
@@ -5342,19 +7007,14 @@ export namespace Prisma {
     rawFood?: SortOrder
     whole30?: SortOrder
     diabeticFriendly?: SortOrder
-    intermittentFasting?: SortOrder
-    organicOnly?: SortOrder
-    locallySourced?: SortOrder
-    processedFree?: SortOrder
-    fastFoodAvoider?: SortOrder
     customPreferences?: SortOrder
   }
 
-  export type UserPreferencesAvgOrderByAggregateInput = {
+  export type PreferencesAvgOrderByAggregateInput = {
     id?: SortOrder
   }
 
-  export type UserPreferencesMaxOrderByAggregateInput = {
+  export type PreferencesMaxOrderByAggregateInput = {
     id?: SortOrder
     userCognitoId?: SortOrder
     vegetarianOnly?: SortOrder
@@ -5362,10 +7022,6 @@ export namespace Prisma {
     pescatarian?: SortOrder
     flexitarian?: SortOrder
     meatOnly?: SortOrder
-    kosher?: SortOrder
-    halal?: SortOrder
-    jain?: SortOrder
-    buddhist?: SortOrder
     glutenFree?: SortOrder
     lactoseFree?: SortOrder
     dairyFree?: SortOrder
@@ -5386,15 +7042,10 @@ export namespace Prisma {
     rawFood?: SortOrder
     whole30?: SortOrder
     diabeticFriendly?: SortOrder
-    intermittentFasting?: SortOrder
-    organicOnly?: SortOrder
-    locallySourced?: SortOrder
-    processedFree?: SortOrder
-    fastFoodAvoider?: SortOrder
     customPreferences?: SortOrder
   }
 
-  export type UserPreferencesMinOrderByAggregateInput = {
+  export type PreferencesMinOrderByAggregateInput = {
     id?: SortOrder
     userCognitoId?: SortOrder
     vegetarianOnly?: SortOrder
@@ -5402,10 +7053,6 @@ export namespace Prisma {
     pescatarian?: SortOrder
     flexitarian?: SortOrder
     meatOnly?: SortOrder
-    kosher?: SortOrder
-    halal?: SortOrder
-    jain?: SortOrder
-    buddhist?: SortOrder
     glutenFree?: SortOrder
     lactoseFree?: SortOrder
     dairyFree?: SortOrder
@@ -5426,15 +7073,10 @@ export namespace Prisma {
     rawFood?: SortOrder
     whole30?: SortOrder
     diabeticFriendly?: SortOrder
-    intermittentFasting?: SortOrder
-    organicOnly?: SortOrder
-    locallySourced?: SortOrder
-    processedFree?: SortOrder
-    fastFoodAvoider?: SortOrder
     customPreferences?: SortOrder
   }
 
-  export type UserPreferencesSumOrderByAggregateInput = {
+  export type PreferencesSumOrderByAggregateInput = {
     id?: SortOrder
   }
 
@@ -5482,10 +7124,16 @@ export namespace Prisma {
     connect?: FavoriteRecipesWhereUniqueInput | FavoriteRecipesWhereUniqueInput[]
   }
 
-  export type UserPreferencesCreateNestedOneWithoutUserInput = {
-    create?: XOR<UserPreferencesCreateWithoutUserInput, UserPreferencesUncheckedCreateWithoutUserInput>
-    connectOrCreate?: UserPreferencesCreateOrConnectWithoutUserInput
-    connect?: UserPreferencesWhereUniqueInput
+  export type PreferencesCreateNestedOneWithoutUserInput = {
+    create?: XOR<PreferencesCreateWithoutUserInput, PreferencesUncheckedCreateWithoutUserInput>
+    connectOrCreate?: PreferencesCreateOrConnectWithoutUserInput
+    connect?: PreferencesWhereUniqueInput
+  }
+
+  export type LocationCreateNestedOneWithoutUserInput = {
+    create?: XOR<LocationCreateWithoutUserInput, LocationUncheckedCreateWithoutUserInput>
+    connectOrCreate?: LocationCreateOrConnectWithoutUserInput
+    connect?: LocationWhereUniqueInput
   }
 
   export type FavoriteRecipesUncheckedCreateNestedManyWithoutUserInput = {
@@ -5495,10 +7143,16 @@ export namespace Prisma {
     connect?: FavoriteRecipesWhereUniqueInput | FavoriteRecipesWhereUniqueInput[]
   }
 
-  export type UserPreferencesUncheckedCreateNestedOneWithoutUserInput = {
-    create?: XOR<UserPreferencesCreateWithoutUserInput, UserPreferencesUncheckedCreateWithoutUserInput>
-    connectOrCreate?: UserPreferencesCreateOrConnectWithoutUserInput
-    connect?: UserPreferencesWhereUniqueInput
+  export type PreferencesUncheckedCreateNestedOneWithoutUserInput = {
+    create?: XOR<PreferencesCreateWithoutUserInput, PreferencesUncheckedCreateWithoutUserInput>
+    connectOrCreate?: PreferencesCreateOrConnectWithoutUserInput
+    connect?: PreferencesWhereUniqueInput
+  }
+
+  export type LocationUncheckedCreateNestedOneWithoutUserInput = {
+    create?: XOR<LocationCreateWithoutUserInput, LocationUncheckedCreateWithoutUserInput>
+    connectOrCreate?: LocationCreateOrConnectWithoutUserInput
+    connect?: LocationWhereUniqueInput
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -5519,14 +7173,24 @@ export namespace Prisma {
     deleteMany?: FavoriteRecipesScalarWhereInput | FavoriteRecipesScalarWhereInput[]
   }
 
-  export type UserPreferencesUpdateOneWithoutUserNestedInput = {
-    create?: XOR<UserPreferencesCreateWithoutUserInput, UserPreferencesUncheckedCreateWithoutUserInput>
-    connectOrCreate?: UserPreferencesCreateOrConnectWithoutUserInput
-    upsert?: UserPreferencesUpsertWithoutUserInput
-    disconnect?: UserPreferencesWhereInput | boolean
-    delete?: UserPreferencesWhereInput | boolean
-    connect?: UserPreferencesWhereUniqueInput
-    update?: XOR<XOR<UserPreferencesUpdateToOneWithWhereWithoutUserInput, UserPreferencesUpdateWithoutUserInput>, UserPreferencesUncheckedUpdateWithoutUserInput>
+  export type PreferencesUpdateOneWithoutUserNestedInput = {
+    create?: XOR<PreferencesCreateWithoutUserInput, PreferencesUncheckedCreateWithoutUserInput>
+    connectOrCreate?: PreferencesCreateOrConnectWithoutUserInput
+    upsert?: PreferencesUpsertWithoutUserInput
+    disconnect?: PreferencesWhereInput | boolean
+    delete?: PreferencesWhereInput | boolean
+    connect?: PreferencesWhereUniqueInput
+    update?: XOR<XOR<PreferencesUpdateToOneWithWhereWithoutUserInput, PreferencesUpdateWithoutUserInput>, PreferencesUncheckedUpdateWithoutUserInput>
+  }
+
+  export type LocationUpdateOneWithoutUserNestedInput = {
+    create?: XOR<LocationCreateWithoutUserInput, LocationUncheckedCreateWithoutUserInput>
+    connectOrCreate?: LocationCreateOrConnectWithoutUserInput
+    upsert?: LocationUpsertWithoutUserInput
+    disconnect?: LocationWhereInput | boolean
+    delete?: LocationWhereInput | boolean
+    connect?: LocationWhereUniqueInput
+    update?: XOR<XOR<LocationUpdateToOneWithWhereWithoutUserInput, LocationUpdateWithoutUserInput>, LocationUncheckedUpdateWithoutUserInput>
   }
 
   export type IntFieldUpdateOperationsInput = {
@@ -5551,19 +7215,51 @@ export namespace Prisma {
     deleteMany?: FavoriteRecipesScalarWhereInput | FavoriteRecipesScalarWhereInput[]
   }
 
-  export type UserPreferencesUncheckedUpdateOneWithoutUserNestedInput = {
-    create?: XOR<UserPreferencesCreateWithoutUserInput, UserPreferencesUncheckedCreateWithoutUserInput>
-    connectOrCreate?: UserPreferencesCreateOrConnectWithoutUserInput
-    upsert?: UserPreferencesUpsertWithoutUserInput
-    disconnect?: UserPreferencesWhereInput | boolean
-    delete?: UserPreferencesWhereInput | boolean
-    connect?: UserPreferencesWhereUniqueInput
-    update?: XOR<XOR<UserPreferencesUpdateToOneWithWhereWithoutUserInput, UserPreferencesUpdateWithoutUserInput>, UserPreferencesUncheckedUpdateWithoutUserInput>
+  export type PreferencesUncheckedUpdateOneWithoutUserNestedInput = {
+    create?: XOR<PreferencesCreateWithoutUserInput, PreferencesUncheckedCreateWithoutUserInput>
+    connectOrCreate?: PreferencesCreateOrConnectWithoutUserInput
+    upsert?: PreferencesUpsertWithoutUserInput
+    disconnect?: PreferencesWhereInput | boolean
+    delete?: PreferencesWhereInput | boolean
+    connect?: PreferencesWhereUniqueInput
+    update?: XOR<XOR<PreferencesUpdateToOneWithWhereWithoutUserInput, PreferencesUpdateWithoutUserInput>, PreferencesUncheckedUpdateWithoutUserInput>
   }
 
-  export type UserCreateNestedOneWithoutUserPreferancesInput = {
-    create?: XOR<UserCreateWithoutUserPreferancesInput, UserUncheckedCreateWithoutUserPreferancesInput>
-    connectOrCreate?: UserCreateOrConnectWithoutUserPreferancesInput
+  export type LocationUncheckedUpdateOneWithoutUserNestedInput = {
+    create?: XOR<LocationCreateWithoutUserInput, LocationUncheckedCreateWithoutUserInput>
+    connectOrCreate?: LocationCreateOrConnectWithoutUserInput
+    upsert?: LocationUpsertWithoutUserInput
+    disconnect?: LocationWhereInput | boolean
+    delete?: LocationWhereInput | boolean
+    connect?: LocationWhereUniqueInput
+    update?: XOR<XOR<LocationUpdateToOneWithWhereWithoutUserInput, LocationUpdateWithoutUserInput>, LocationUncheckedUpdateWithoutUserInput>
+  }
+
+  export type UserCreateNestedOneWithoutLocationInput = {
+    create?: XOR<UserCreateWithoutLocationInput, UserUncheckedCreateWithoutLocationInput>
+    connectOrCreate?: UserCreateOrConnectWithoutLocationInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type DecimalFieldUpdateOperationsInput = {
+    set?: Decimal | DecimalJsLike | number | string
+    increment?: Decimal | DecimalJsLike | number | string
+    decrement?: Decimal | DecimalJsLike | number | string
+    multiply?: Decimal | DecimalJsLike | number | string
+    divide?: Decimal | DecimalJsLike | number | string
+  }
+
+  export type UserUpdateOneRequiredWithoutLocationNestedInput = {
+    create?: XOR<UserCreateWithoutLocationInput, UserUncheckedCreateWithoutLocationInput>
+    connectOrCreate?: UserCreateOrConnectWithoutLocationInput
+    upsert?: UserUpsertWithoutLocationInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutLocationInput, UserUpdateWithoutLocationInput>, UserUncheckedUpdateWithoutLocationInput>
+  }
+
+  export type UserCreateNestedOneWithoutPreferencesInput = {
+    create?: XOR<UserCreateWithoutPreferencesInput, UserUncheckedCreateWithoutPreferencesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPreferencesInput
     connect?: UserWhereUniqueInput
   }
 
@@ -5571,12 +7267,12 @@ export namespace Prisma {
     set?: boolean
   }
 
-  export type UserUpdateOneRequiredWithoutUserPreferancesNestedInput = {
-    create?: XOR<UserCreateWithoutUserPreferancesInput, UserUncheckedCreateWithoutUserPreferancesInput>
-    connectOrCreate?: UserCreateOrConnectWithoutUserPreferancesInput
-    upsert?: UserUpsertWithoutUserPreferancesInput
+  export type UserUpdateOneRequiredWithoutPreferencesNestedInput = {
+    create?: XOR<UserCreateWithoutPreferencesInput, UserUncheckedCreateWithoutPreferencesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPreferencesInput
+    upsert?: UserUpsertWithoutPreferencesInput
     connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutUserPreferancesInput, UserUpdateWithoutUserPreferancesInput>, UserUncheckedUpdateWithoutUserPreferancesInput>
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutPreferencesInput, UserUpdateWithoutPreferencesInput>, UserUncheckedUpdateWithoutPreferencesInput>
   }
 
   export type UserCreateNestedOneWithoutFavoriteRecipesInput = {
@@ -5662,6 +7358,33 @@ export namespace Prisma {
     _max?: NestedStringFilter<$PrismaModel>
   }
 
+  export type NestedDecimalFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+  }
+
+  export type NestedDecimalWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedDecimalFilter<$PrismaModel>
+    _sum?: NestedDecimalFilter<$PrismaModel>
+    _min?: NestedDecimalFilter<$PrismaModel>
+    _max?: NestedDecimalFilter<$PrismaModel>
+  }
+
   export type NestedBoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolFilter<$PrismaModel> | boolean
@@ -5696,16 +7419,12 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type UserPreferencesCreateWithoutUserInput = {
+  export type PreferencesCreateWithoutUserInput = {
     vegetarianOnly?: boolean
     vegan?: boolean
     pescatarian?: boolean
     flexitarian?: boolean
     meatOnly?: boolean
-    kosher?: boolean
-    halal?: boolean
-    jain?: boolean
-    buddhist?: boolean
     glutenFree?: boolean
     lactoseFree?: boolean
     dairyFree?: boolean
@@ -5726,25 +7445,16 @@ export namespace Prisma {
     rawFood?: boolean
     whole30?: boolean
     diabeticFriendly?: boolean
-    intermittentFasting?: boolean
-    organicOnly?: boolean
-    locallySourced?: boolean
-    processedFree?: boolean
-    fastFoodAvoider?: boolean
     customPreferences: string
   }
 
-  export type UserPreferencesUncheckedCreateWithoutUserInput = {
+  export type PreferencesUncheckedCreateWithoutUserInput = {
     id?: number
     vegetarianOnly?: boolean
     vegan?: boolean
     pescatarian?: boolean
     flexitarian?: boolean
     meatOnly?: boolean
-    kosher?: boolean
-    halal?: boolean
-    jain?: boolean
-    buddhist?: boolean
     glutenFree?: boolean
     lactoseFree?: boolean
     dairyFree?: boolean
@@ -5765,17 +7475,36 @@ export namespace Prisma {
     rawFood?: boolean
     whole30?: boolean
     diabeticFriendly?: boolean
-    intermittentFasting?: boolean
-    organicOnly?: boolean
-    locallySourced?: boolean
-    processedFree?: boolean
-    fastFoodAvoider?: boolean
     customPreferences: string
   }
 
-  export type UserPreferencesCreateOrConnectWithoutUserInput = {
-    where: UserPreferencesWhereUniqueInput
-    create: XOR<UserPreferencesCreateWithoutUserInput, UserPreferencesUncheckedCreateWithoutUserInput>
+  export type PreferencesCreateOrConnectWithoutUserInput = {
+    where: PreferencesWhereUniqueInput
+    create: XOR<PreferencesCreateWithoutUserInput, PreferencesUncheckedCreateWithoutUserInput>
+  }
+
+  export type LocationCreateWithoutUserInput = {
+    country: string
+    city: string
+    address: string
+    radius: string
+    latitude: Decimal | DecimalJsLike | number | string
+    longitude: Decimal | DecimalJsLike | number | string
+  }
+
+  export type LocationUncheckedCreateWithoutUserInput = {
+    id?: number
+    country: string
+    city: string
+    address: string
+    radius: string
+    latitude: Decimal | DecimalJsLike | number | string
+    longitude: Decimal | DecimalJsLike | number | string
+  }
+
+  export type LocationCreateOrConnectWithoutUserInput = {
+    where: LocationWhereUniqueInput
+    create: XOR<LocationCreateWithoutUserInput, LocationUncheckedCreateWithoutUserInput>
   }
 
   export type FavoriteRecipesUpsertWithWhereUniqueWithoutUserInput = {
@@ -5804,27 +7533,23 @@ export namespace Prisma {
     userCognitoId?: StringFilter<"FavoriteRecipes"> | string
   }
 
-  export type UserPreferencesUpsertWithoutUserInput = {
-    update: XOR<UserPreferencesUpdateWithoutUserInput, UserPreferencesUncheckedUpdateWithoutUserInput>
-    create: XOR<UserPreferencesCreateWithoutUserInput, UserPreferencesUncheckedCreateWithoutUserInput>
-    where?: UserPreferencesWhereInput
+  export type PreferencesUpsertWithoutUserInput = {
+    update: XOR<PreferencesUpdateWithoutUserInput, PreferencesUncheckedUpdateWithoutUserInput>
+    create: XOR<PreferencesCreateWithoutUserInput, PreferencesUncheckedCreateWithoutUserInput>
+    where?: PreferencesWhereInput
   }
 
-  export type UserPreferencesUpdateToOneWithWhereWithoutUserInput = {
-    where?: UserPreferencesWhereInput
-    data: XOR<UserPreferencesUpdateWithoutUserInput, UserPreferencesUncheckedUpdateWithoutUserInput>
+  export type PreferencesUpdateToOneWithWhereWithoutUserInput = {
+    where?: PreferencesWhereInput
+    data: XOR<PreferencesUpdateWithoutUserInput, PreferencesUncheckedUpdateWithoutUserInput>
   }
 
-  export type UserPreferencesUpdateWithoutUserInput = {
+  export type PreferencesUpdateWithoutUserInput = {
     vegetarianOnly?: BoolFieldUpdateOperationsInput | boolean
     vegan?: BoolFieldUpdateOperationsInput | boolean
     pescatarian?: BoolFieldUpdateOperationsInput | boolean
     flexitarian?: BoolFieldUpdateOperationsInput | boolean
     meatOnly?: BoolFieldUpdateOperationsInput | boolean
-    kosher?: BoolFieldUpdateOperationsInput | boolean
-    halal?: BoolFieldUpdateOperationsInput | boolean
-    jain?: BoolFieldUpdateOperationsInput | boolean
-    buddhist?: BoolFieldUpdateOperationsInput | boolean
     glutenFree?: BoolFieldUpdateOperationsInput | boolean
     lactoseFree?: BoolFieldUpdateOperationsInput | boolean
     dairyFree?: BoolFieldUpdateOperationsInput | boolean
@@ -5845,25 +7570,16 @@ export namespace Prisma {
     rawFood?: BoolFieldUpdateOperationsInput | boolean
     whole30?: BoolFieldUpdateOperationsInput | boolean
     diabeticFriendly?: BoolFieldUpdateOperationsInput | boolean
-    intermittentFasting?: BoolFieldUpdateOperationsInput | boolean
-    organicOnly?: BoolFieldUpdateOperationsInput | boolean
-    locallySourced?: BoolFieldUpdateOperationsInput | boolean
-    processedFree?: BoolFieldUpdateOperationsInput | boolean
-    fastFoodAvoider?: BoolFieldUpdateOperationsInput | boolean
     customPreferences?: StringFieldUpdateOperationsInput | string
   }
 
-  export type UserPreferencesUncheckedUpdateWithoutUserInput = {
+  export type PreferencesUncheckedUpdateWithoutUserInput = {
     id?: IntFieldUpdateOperationsInput | number
     vegetarianOnly?: BoolFieldUpdateOperationsInput | boolean
     vegan?: BoolFieldUpdateOperationsInput | boolean
     pescatarian?: BoolFieldUpdateOperationsInput | boolean
     flexitarian?: BoolFieldUpdateOperationsInput | boolean
     meatOnly?: BoolFieldUpdateOperationsInput | boolean
-    kosher?: BoolFieldUpdateOperationsInput | boolean
-    halal?: BoolFieldUpdateOperationsInput | boolean
-    jain?: BoolFieldUpdateOperationsInput | boolean
-    buddhist?: BoolFieldUpdateOperationsInput | boolean
     glutenFree?: BoolFieldUpdateOperationsInput | boolean
     lactoseFree?: BoolFieldUpdateOperationsInput | boolean
     dairyFree?: BoolFieldUpdateOperationsInput | boolean
@@ -5884,67 +7600,144 @@ export namespace Prisma {
     rawFood?: BoolFieldUpdateOperationsInput | boolean
     whole30?: BoolFieldUpdateOperationsInput | boolean
     diabeticFriendly?: BoolFieldUpdateOperationsInput | boolean
-    intermittentFasting?: BoolFieldUpdateOperationsInput | boolean
-    organicOnly?: BoolFieldUpdateOperationsInput | boolean
-    locallySourced?: BoolFieldUpdateOperationsInput | boolean
-    processedFree?: BoolFieldUpdateOperationsInput | boolean
-    fastFoodAvoider?: BoolFieldUpdateOperationsInput | boolean
     customPreferences?: StringFieldUpdateOperationsInput | string
   }
 
-  export type UserCreateWithoutUserPreferancesInput = {
+  export type LocationUpsertWithoutUserInput = {
+    update: XOR<LocationUpdateWithoutUserInput, LocationUncheckedUpdateWithoutUserInput>
+    create: XOR<LocationCreateWithoutUserInput, LocationUncheckedCreateWithoutUserInput>
+    where?: LocationWhereInput
+  }
+
+  export type LocationUpdateToOneWithWhereWithoutUserInput = {
+    where?: LocationWhereInput
+    data: XOR<LocationUpdateWithoutUserInput, LocationUncheckedUpdateWithoutUserInput>
+  }
+
+  export type LocationUpdateWithoutUserInput = {
+    country?: StringFieldUpdateOperationsInput | string
+    city?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    radius?: StringFieldUpdateOperationsInput | string
+    latitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    longitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+  }
+
+  export type LocationUncheckedUpdateWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    country?: StringFieldUpdateOperationsInput | string
+    city?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    radius?: StringFieldUpdateOperationsInput | string
+    latitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    longitude?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+  }
+
+  export type UserCreateWithoutLocationInput = {
     cognitoId: string
     email: string
     favoriteRecipes?: FavoriteRecipesCreateNestedManyWithoutUserInput
+    preferences?: PreferencesCreateNestedOneWithoutUserInput
   }
 
-  export type UserUncheckedCreateWithoutUserPreferancesInput = {
+  export type UserUncheckedCreateWithoutLocationInput = {
     id?: number
     cognitoId: string
     email: string
     favoriteRecipes?: FavoriteRecipesUncheckedCreateNestedManyWithoutUserInput
+    preferences?: PreferencesUncheckedCreateNestedOneWithoutUserInput
   }
 
-  export type UserCreateOrConnectWithoutUserPreferancesInput = {
+  export type UserCreateOrConnectWithoutLocationInput = {
     where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutUserPreferancesInput, UserUncheckedCreateWithoutUserPreferancesInput>
+    create: XOR<UserCreateWithoutLocationInput, UserUncheckedCreateWithoutLocationInput>
   }
 
-  export type UserUpsertWithoutUserPreferancesInput = {
-    update: XOR<UserUpdateWithoutUserPreferancesInput, UserUncheckedUpdateWithoutUserPreferancesInput>
-    create: XOR<UserCreateWithoutUserPreferancesInput, UserUncheckedCreateWithoutUserPreferancesInput>
+  export type UserUpsertWithoutLocationInput = {
+    update: XOR<UserUpdateWithoutLocationInput, UserUncheckedUpdateWithoutLocationInput>
+    create: XOR<UserCreateWithoutLocationInput, UserUncheckedCreateWithoutLocationInput>
     where?: UserWhereInput
   }
 
-  export type UserUpdateToOneWithWhereWithoutUserPreferancesInput = {
+  export type UserUpdateToOneWithWhereWithoutLocationInput = {
     where?: UserWhereInput
-    data: XOR<UserUpdateWithoutUserPreferancesInput, UserUncheckedUpdateWithoutUserPreferancesInput>
+    data: XOR<UserUpdateWithoutLocationInput, UserUncheckedUpdateWithoutLocationInput>
   }
 
-  export type UserUpdateWithoutUserPreferancesInput = {
+  export type UserUpdateWithoutLocationInput = {
     cognitoId?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     favoriteRecipes?: FavoriteRecipesUpdateManyWithoutUserNestedInput
+    preferences?: PreferencesUpdateOneWithoutUserNestedInput
   }
 
-  export type UserUncheckedUpdateWithoutUserPreferancesInput = {
+  export type UserUncheckedUpdateWithoutLocationInput = {
     id?: IntFieldUpdateOperationsInput | number
     cognitoId?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     favoriteRecipes?: FavoriteRecipesUncheckedUpdateManyWithoutUserNestedInput
+    preferences?: PreferencesUncheckedUpdateOneWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutPreferencesInput = {
+    cognitoId: string
+    email: string
+    favoriteRecipes?: FavoriteRecipesCreateNestedManyWithoutUserInput
+    location?: LocationCreateNestedOneWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutPreferencesInput = {
+    id?: number
+    cognitoId: string
+    email: string
+    favoriteRecipes?: FavoriteRecipesUncheckedCreateNestedManyWithoutUserInput
+    location?: LocationUncheckedCreateNestedOneWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutPreferencesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutPreferencesInput, UserUncheckedCreateWithoutPreferencesInput>
+  }
+
+  export type UserUpsertWithoutPreferencesInput = {
+    update: XOR<UserUpdateWithoutPreferencesInput, UserUncheckedUpdateWithoutPreferencesInput>
+    create: XOR<UserCreateWithoutPreferencesInput, UserUncheckedCreateWithoutPreferencesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutPreferencesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutPreferencesInput, UserUncheckedUpdateWithoutPreferencesInput>
+  }
+
+  export type UserUpdateWithoutPreferencesInput = {
+    cognitoId?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    favoriteRecipes?: FavoriteRecipesUpdateManyWithoutUserNestedInput
+    location?: LocationUpdateOneWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutPreferencesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    cognitoId?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    favoriteRecipes?: FavoriteRecipesUncheckedUpdateManyWithoutUserNestedInput
+    location?: LocationUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type UserCreateWithoutFavoriteRecipesInput = {
     cognitoId: string
     email: string
-    userPreferances?: UserPreferencesCreateNestedOneWithoutUserInput
+    preferences?: PreferencesCreateNestedOneWithoutUserInput
+    location?: LocationCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutFavoriteRecipesInput = {
     id?: number
     cognitoId: string
     email: string
-    userPreferances?: UserPreferencesUncheckedCreateNestedOneWithoutUserInput
+    preferences?: PreferencesUncheckedCreateNestedOneWithoutUserInput
+    location?: LocationUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutFavoriteRecipesInput = {
@@ -5966,14 +7759,16 @@ export namespace Prisma {
   export type UserUpdateWithoutFavoriteRecipesInput = {
     cognitoId?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    userPreferances?: UserPreferencesUpdateOneWithoutUserNestedInput
+    preferences?: PreferencesUpdateOneWithoutUserNestedInput
+    location?: LocationUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFavoriteRecipesInput = {
     id?: IntFieldUpdateOperationsInput | number
     cognitoId?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    userPreferances?: UserPreferencesUncheckedUpdateOneWithoutUserNestedInput
+    preferences?: PreferencesUncheckedUpdateOneWithoutUserNestedInput
+    location?: LocationUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type FavoriteRecipesCreateManyUserInput = {
@@ -6000,26 +7795,6 @@ export namespace Prisma {
   }
 
 
-
-  /**
-   * Aliases for legacy arg types
-   */
-    /**
-     * @deprecated Use UserCountOutputTypeDefaultArgs instead
-     */
-    export type UserCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = UserCountOutputTypeDefaultArgs<ExtArgs>
-    /**
-     * @deprecated Use UserDefaultArgs instead
-     */
-    export type UserArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = UserDefaultArgs<ExtArgs>
-    /**
-     * @deprecated Use UserPreferencesDefaultArgs instead
-     */
-    export type UserPreferencesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = UserPreferencesDefaultArgs<ExtArgs>
-    /**
-     * @deprecated Use FavoriteRecipesDefaultArgs instead
-     */
-    export type FavoriteRecipesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = FavoriteRecipesDefaultArgs<ExtArgs>
 
   /**
    * Batch Payload for updateMany & deleteMany & createMany

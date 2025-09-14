@@ -1,0 +1,20 @@
+Prisma schema loaded from schema.prisma
+Datasource "db": PostgreSQL database "cerey", schema "public" at "localhost:5432"
+
+Applying migration `20250829150702_added`
+
+The following migration(s) have been created and applied from new schema changes:
+
+migrations/
+  └─ 20250829150702_added/
+    └─ migration.sql
+
+Your database is now in sync with your schema.
+
+Running generate... (Use --skip-generate to skip the generators)
+[2K[1A[2K[GRunning generate... - Prisma Client
+[2K[1A[2K[GENOENT: no such file or directory, open '/Users/edouardbelair/Desktop/cerey/node
+_modules/.pnpm/@prisma+client@5.17.0_prisma@6.14.0_typescript@5.8.3_/node_module
+s/@prisma/client/runtime/wasm-engine-edge.js'
+
+

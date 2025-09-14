@@ -19,10 +19,10 @@ model User {
   cognitoId       String            @unique
   email           String            @unique
   favoriteRecipes FavoriteRecipes[]
-  userPreferances UserPreferences?
+  preferences     Preferences?
 }
 
-model UserPreferences {
+model Preferences {
   id            Int    @id @default(autoincrement())
   userCognitoId String @unique
   user          User   @relation(fields: [userCognitoId], references: [cognitoId])

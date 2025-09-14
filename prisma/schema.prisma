@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
   output   = "./generated"
@@ -22,11 +16,25 @@ model User {
   cognitoId String @unique
   email String  @unique
   favoriteRecipes FavoriteRecipes[]
-  userPreferances UserPreferences? 
+  preferences Preferences? 
+  location Location?
 
 }
 
-model UserPreferences {
+model Location {
+  id Int @id @default(autoincrement())
+  userCognitoId String @unique
+  country String
+  city String
+  address String
+  radius String
+  latitude  Decimal  @db.Decimal(10, 7)
+  longitude Decimal  @db.Decimal(10, 7) 
+
+  user User @relation(fields: [userCognitoId], references: [cognitoId])
+}
+
+model Preferences {
   id                 Int     @id @default(autoincrement())
   userCognitoId String @unique
   user User @relation(fields: [userCognitoId], references: [cognitoId])
@@ -38,12 +46,6 @@ model UserPreferences {
   pescatarian        Boolean @default(false)
   flexitarian        Boolean @default(false)
   meatOnly           Boolean @default(false)
-  
-  // Religious / cultural diets
-  kosher             Boolean @default(false)
-  halal              Boolean @default(false)
-  jain               Boolean @default(false)
-  buddhist           Boolean @default(false)
   
   // Allergies / intolerances
   glutenFree         Boolean @default(false)
@@ -69,13 +71,6 @@ model UserPreferences {
   whole30            Boolean @default(false)
   diabeticFriendly   Boolean @default(false)
   
-  // Eating habits
-  intermittentFasting Boolean @default(false)
-  organicOnly        Boolean @default(false)
-  locallySourced      Boolean @default(false)
-  processedFree       Boolean @default(false)
-  fastFoodAvoider     Boolean @default(false)
-
   customPreferences String
 }
 

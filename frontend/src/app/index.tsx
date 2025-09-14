@@ -4,8 +4,6 @@ import { Box } from "components/ui/box";
 import { Button } from "components/ui/button";
 import { useRouter } from "expo-router";
 
-
-
 export default function LandingPage() {
   
   const router = useRouter();
@@ -32,7 +30,7 @@ export default function LandingPage() {
       {/* Sign In / Sign Up Buttons */}
       <Box className="flex-row justify-center mb-10">
         <Button
-          onPress={() => router.push("SignIn")}
+          onPress={() => router.push("/Signin")}
           className="bg-orange-500 px-10 py-5 rounded-full shadow-lg flex items-center justify-center min-w-[130px] min-h-[60px] mr-6"
         >
           <Text className="text-white font-bold text-xl text-center">
@@ -40,7 +38,7 @@ export default function LandingPage() {
           </Text>
         </Button>
         <Button
-          onPress={() => router.push("SignUp")}
+          onPress={() => router.push("/Signup")}
           className="bg-green-700 px-10 py-5 rounded-full shadow-lg flex items-center justify-center min-w-[130px] min-h-[60px] ml-6"
         >
           <Text className="text-white font-bold text-xl text-center">

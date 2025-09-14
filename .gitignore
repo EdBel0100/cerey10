@@ -44,13 +44,11 @@ frontend/secrets.json
 
 # =================================
 # Backend (NestJS / Prisma)
-# =================================
 backend/dist/
 backend/node_modules/
-backend/.nestjs/
-backend/prisma/migrations/
-backend/prisma/dev.db
 backend/.vscode/
+# Keep the lockfile
+!backend/pnpm-lock.yaml
 
 # =================================
 # Infrastructure (AWS CDK)

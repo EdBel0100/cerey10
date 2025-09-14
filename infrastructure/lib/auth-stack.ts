@@ -57,9 +57,9 @@ export class AuthStack extends cdk.Stack {
     const amplifyApp = new amplify.App(this, 'CereyFrontend', {
       sourceCodeProvider: new amplify.GitHubSourceCodeProvider({
         owner: 'EdBel0100',
-        repository: 'cerey10', // repo name only
-        oauthToken: SecretValue.unsafePlainText('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'), // name of secret in Secrets Manager
-      }), // point to the Expo app folder
+        repository: 'cerey10',
+        oauthToken: SecretValue.unsafePlainText('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'),
+      }), 
       buildSpec: codebuild.BuildSpec.fromObjectToYaml({
         version: '1.0',
         applications:{

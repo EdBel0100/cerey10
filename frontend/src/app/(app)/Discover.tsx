@@ -8,9 +8,8 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
-import { PanGestureHandler, State, GestureHandlerRootView } from 'react-native-gesture-handler';
+import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler';
 import Animated, {
-  useAnimatedGestureHandler,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
@@ -72,15 +71,16 @@ const RecipeSwipeCard = () => {
     runOnJS(fetchNewRecipe)();
   };
 
-  const gestureHandler = useAnimatedGestureHandler({
-    onStart: () => {
+  // Updated gesture using the new Gesture API
+  const panGesture = Gesture.Pan()
+    .onStart(() => {
       scale.value = withSpring(1.05);
-    },
-    onActive: (event) => {
+    })
+    .onUpdate((event) => {
       translateX.value = event.translationX;
       translateY.value = event.translationY;
-    },
-    onEnd: (event) => {
+    })
+    .onEnd((event) => {
       const shouldSwipe = 
         Math.abs(event.translationX) > SWIPE_THRESHOLD || 
         Math.abs(event.velocityX) > 500;
@@ -93,8 +93,7 @@ const RecipeSwipeCard = () => {
         translateY.value = withSpring(0);
         scale.value = withSpring(1);
       }
-    },
-  });
+    });
 
   const handleLike = () => {
     translateX.value = withTiming(screenWidth * 1.5, { duration: 300 });
@@ -193,7 +192,7 @@ const RecipeSwipeCard = () => {
         )}
 
         <View className="flex-1 justify-center items-center">
-          <PanGestureHandler onGestureEvent={gestureHandler}>
+          <GestureDetector gesture={panGesture}>
             <Animated.View style={cardAnimatedStyle}>
               <View 
                 className="bg-white rounded-3xl shadow-xl mx-5 overflow-hidden"
@@ -281,7 +280,7 @@ const RecipeSwipeCard = () => {
                 </Animated.View>
               </View>
             </Animated.View>
-          </PanGestureHandler>
+          </GestureDetector>
           
           {/* Action Buttons */}
           <View className="flex-row justify-center items-center mt-8 space-x-16">

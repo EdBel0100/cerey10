@@ -1,22 +1,25 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put, UseGuards } from '@nestjs/common';
 import { PreferencesService } from './preferences.service';
+import { AuthGuard } from 'src/auth/auth.guard';
+import { CurrentUser } from 'src/auth/auth-curent-user.decorator';
 
 @Controller('preferences')
 export class PreferencesController {
   constructor(private readonly preferencesService: PreferencesService) {}
 
-  @Put(':userCognitoId')
+  @UseGuards(AuthGuard)
+  @Put()
   async updatePreferences(
-    @Param('userCognitoId') userCognitoId: string,
+    @CurrentUser() user: { cognitoId: string},
     @Body() body: any,
   ) {
-    return this.preferencesService.updatePreferences(body, userCognitoId);
+    return this.preferencesService.updatePreferences(body, user.cognitoId);
   }
-
-  @Get(':userCognitoId')
+  @UseGuards(AuthGuard)
+  @Get()
   async getPreferences(
-    @Param('userCognitoId') userCognitoId: string,
+    @CurrentUser() user: { cognitoId: string},
   ) {
-    return this.preferencesService.getPreferences(userCognitoId);
+    return this.preferencesService.getPreferences(user.cognitoId);
   }
 }

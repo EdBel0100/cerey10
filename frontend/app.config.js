@@ -5,6 +5,7 @@ export default {
     name: "frontend",
     slug: "frontend",
     plugins: [
+      "expo-secure-store",
       [
         "expo-router",
         {

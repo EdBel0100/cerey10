@@ -62,11 +62,10 @@ const preferenceKeys = [
 ];
 
 export default function Home() {
-  const router = useRouter();
-  const userCognitoId = "user-12345"; // TODO: replace with real auth context
+  const router = useRouter(); // TODO: replace with real auth context
 
   // RTK Query hooks
-  const { data: preferences, isLoading, refetch } = useGetPreferencesQuery(userCognitoId);
+  const { data: preferences, isLoading, refetch } = useGetPreferencesQuery();
   const [updatePreferences] = useUpdatePreferencesMutation();
 
   // local state
@@ -150,11 +149,11 @@ export default function Home() {
       });
       body.customPreferences = customPreferences;
 
-      await updatePreferences({ userCognitoId, body }).unwrap();
+      await updatePreferences({ body }).unwrap();
       refetch()
 
       Alert.alert("Success", "Your preferences have been saved.", [
-        { text: "OK", onPress: () => router.back() },
+        { text: "OK", onPress: () => router.push("/Discover")},
       ]);
     } catch (err) {
       console.error(err);
@@ -245,9 +244,6 @@ export default function Home() {
       {/* Header */}
       <View className="bg-white px-6 py-4 border-b border-gray-200">
         <View className="flex-row items-center justify-between">
-          <TouchableOpacity onPress={() => router.back()}>
-            <Icon name="arrow-back" size={24} color="#374151" />
-          </TouchableOpacity>
           <View className="flex-1 ml-4">
             <Text className="text-xl font-bold text-gray-900">Dietary Preferences</Text>
             <Text className="text-sm text-gray-500 mt-1">
@@ -284,20 +280,13 @@ export default function Home() {
 
       {/* Save Button */}
       {/* Save Button */}
-<View className="bg-white border-t border-gray-200 px-6 py-6">
+<View className="bg-white border-t border-gray-200 px-6 py-2 ">
   <View className="space-y-3">
     <TouchableOpacity
       onPress={handleSave}
-      className="bg-red-500 py-4 rounded-xl items-center"
+      className="bg-red-500 py-4 rounded-xl items-center mb-6"
     >
       <Text className="text-white text-lg font-semibold">Save Preferences</Text>
-    </TouchableOpacity>
-
-    <TouchableOpacity
-      onPress={() => router.back()}
-      className="py-4 items-center"
-    >
-      <Text className="text-gray-500 text-lg">Skip for now</Text>
     </TouchableOpacity>
   </View>
 </View>

@@ -1,39 +1,44 @@
-"use client";
-
-import { useEffect, useState } from "react";
+// providers/AuthProvider.tsx
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { useRouter } from "expo-router";
-import { CognitoUserPool } from "amazon-cognito-identity-js";
-import Constants from "expo-constants";
-const { awsCognitoUserPoolId, awsCognitoClientId } = Constants.expoConfig?.extra || {};
+import { useToken } from "./TokenProvider";
 
-const poolData = {
-  UserPoolId: awsCognitoUserPoolId,
-  ClientId: awsCognitoClientId,
+type AuthContextType = {
+  isSignedIn: boolean;
+  loading: boolean;
 };
 
-const userPool = new CognitoUserPool(poolData);
+const AuthContext = createContext<AuthContextType>({
+  isSignedIn: false,
+  loading: true,
+});
 
-export default function AuthProvider({ children }: { children: React.ReactNode }) {
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+  const { getAccessToken } = useToken();
+  const [isSignedIn, setIsSignedIn] = useState(false);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const [checking, setChecking] = useState(true);
 
   useEffect(() => {
-    const user = userPool.getCurrentUser();
+    const checkTokens = async () => {
+      const token = await getAccessToken();
+      if (token) {
+        setIsSignedIn(true);
+        router.replace("/Home");
+      } else {
+        setIsSignedIn(false);
+        router.replace("/Signin");
+      }
+      setLoading(false);
+    };
+    checkTokens();
+  }, []);
 
-    if (!user) {
-      router.push("/signin");
-    } else {
-      user.getSession((err: any, session: any) => {
-        if (err || !session?.isValid()) {
-          router.push("/signin");
-        } else {
-          setChecking(false);
-        }
-      });
-    }
-  }, [router]);
+  return (
+    <AuthContext.Provider value={{ isSignedIn, loading }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
 
-  if (checking) return null;
-
-  return <>{children}</>;
-}
+export const useAuth = () => useContext(AuthContext);

@@ -4,7 +4,8 @@ import { View, Text, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
 import { Ionicons, FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import { Slot } from "expo-router";
-import AuthProvider from "../../providers/AuthProvider";
+import { AuthProvider } from "@Providers/AuthProvider";
+import { TokenProvider } from "@Providers/TokenProvider";
 
 interface NavItem {
   name: string;
@@ -44,6 +45,7 @@ export default function BottomNav() {
   return (
     <>
       <AuthProvider>
+
 
       {/* Slot content wrapper with bottom padding */}
       <View className="flex-1 pb-20">

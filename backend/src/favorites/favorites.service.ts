@@ -14,4 +14,8 @@ export class FavoritesService {
     this.prisma.favoriteRecipes.delete({where:{id}})
   }
   
+  getFavoriteRecipes(cognitoId:string){
+    this.prisma.favoriteRecipes.findMany({where:{userCognitoId:cognitoId}})
+  }
+  
 }

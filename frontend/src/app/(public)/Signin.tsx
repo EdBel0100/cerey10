@@ -1,49 +1,40 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import { useRouter } from "expo-router";
-import Constants from "expo-constants";
-import {
-  CognitoUserPool,
-  CognitoUser,
-  AuthenticationDetails,
-} from "amazon-cognito-identity-js";
+import { useSignInMutation } from "@/redux/services/api";
+import * as SecureStore from "expo-secure-store"
+import { useToken } from "@Providers/TokenProvider";
 
-const { awsCognitoUserPoolId, awsCognitoClientId } = Constants.expoConfig?.extra || {};
-
-const poolData = {
-  UserPoolId: awsCognitoUserPoolId,
-  ClientId: awsCognitoClientId,
-};
-const userPool = new CognitoUserPool(poolData);
 
 function SignIn() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [signInRequest, { isLoading }] = useSignInMutation();
+  const auth = useToken();
 
-  const handleSignIn = () => {
+  const handleSignIn = async () => {
     if (!email || !password) {
       Alert.alert("Error", "Please enter both email and password.");
       return;
     }
 
-    const user = new CognitoUser({ Username: email, Pool: userPool });
-    const authDetails = new AuthenticationDetails({ Username: email, Password: password });
+    try {
+      const result = await signInRequest({ email, password }).unwrap();
+      console.log(result)
 
-    user.authenticateUser(authDetails, {
-      onSuccess: (result) => {
-        console.log("Signed in:", result);
-        Alert.alert("Success", "Signed in successfully!");
-        router.push("/Home"); // go to app
-      },
-      onFailure: (err) => {
-        console.error("Sign in error:", err);
-        Alert.alert("Sign In Error", err.message || "Something went wrong");
-      },
-      newPasswordRequired: () => {
-        Alert.alert("New Password Required", "Please reset your password.");
-      },
-    });
+      if (result.success) {
+        await auth.signInFromCredentials(result.tokens.accessToken, result.tokens.idToken, result.tokens.refreshToken, result.user.username);
+        await SecureStore.setItemAsync('accessToken', result.tokens.accessToken);
+        await SecureStore.setItemAsync('idToken', result.tokens.idToken);
+        await SecureStore.setItemAsync('refreshToken', result.tokens.refreshToken);
+
+        router.push("/Home");
+      }
+    } catch (error: any) {
+      console.error("Sign in error:", error);
+      Alert.alert("Sign In Error", error?.data?.message || "Something went wrong");
+    }
   };
 
   return (
@@ -73,9 +64,14 @@ function SignIn() {
 
           <TouchableOpacity
             onPress={handleSignIn}
-            className="w-full rounded-xl bg-orange-500 py-3 mt-2"
+            className={`w-full rounded-xl py-3 mt-2 ${
+              isLoading ? "bg-orange-300" : "bg-orange-500"
+            }`}
+            disabled={isLoading}
           >
-            <Text className="text-center text-white font-semibold">Sign In</Text>
+            <Text className="text-center text-white font-semibold">
+              {isLoading ? "Signing In..." : "Sign In"}
+            </Text>
           </TouchableOpacity>
         </View>
 

@@ -8,9 +8,10 @@ import { PrismaModule } from './prisma/prisma.module';
 import { PreferencesModule } from './preferences/preferences.module';
 import { GroceriesModule } from './groceries/groceries.module';
 import { FavoritesModule } from './favorites/favorites.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
-  imports: [OpenaiModule, GoogleMapsModule, UserModule, PrismaModule, PreferencesModule, GroceriesModule, FavoritesModule],
+  imports: [OpenaiModule, GoogleMapsModule, UserModule, PrismaModule, PreferencesModule, GroceriesModule, FavoritesModule, AuthModule],
   controllers: [AppController],
   providers: [AppService],
 })

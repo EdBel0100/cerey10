@@ -2,12 +2,11 @@
 import React, { createContext, useContext } from "react";
 import * as SecureStore from "expo-secure-store";
 import { jwtDecode } from "jwt-decode";
-import { useRefreshMutation } from "@/redux/services/api";
 
 type DecodedJwt = { exp: number };
 
 type TokenContextType = {
-  getAccessToken: () => Promise<string | null>;
+getAccessToken: () => Promise<string | null>;
   signInFromCredentials: (
     accessToken: string,
     idToken: string,
@@ -24,7 +23,7 @@ const TokenContext = createContext<TokenContextType>({
 });
 
 export const TokenProvider = ({ children }: { children: React.ReactNode }) => {
-  const [refresh] = useRefreshMutation();
+  //const [refresh] = useRefreshMutation();
 
   // Check if token is valid
   const isTokenValid = (token: string) => {
@@ -37,21 +36,21 @@ export const TokenProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   // Refresh
-  const refreshAccessToken = async (username: string, refreshToken: string) => {
-    try {
-      const result = await refresh({ username, refreshToken }).unwrap();
-      console.log(result)
-      await SecureStore.setItemAsync("accessToken", result.tokens.accessToken);
-      await SecureStore.setItemAsync("idToken", result.tokens.idToken);
-      if (result.tokens.refreshToken) {
-        await SecureStore.setItemAsync("refreshToken", result.tokens.refreshToken);
-      }
-      return result.tokens.accessToken;
-    } catch (err) {
-      console.error("Error refreshing access token:", err);
-      return null;
-    }
-  };
+//   const refreshAccessToken = async (username: string, refreshToken: string) => {
+//     try {
+//       const result = await refresh({ username, refreshToken }).unwrap();
+//       console.log(result)
+//       await SecureStore.setItemAsync("accessToken", result.tokens.accessToken);
+//       await SecureStore.setItemAsync("idToken", result.tokens.idToken);
+//       if (result.tokens.refreshToken) {
+//         await SecureStore.setItemAsync("refreshToken", result.tokens.refreshToken);
+//       }
+//       return result.tokens.accessToken;
+//     } catch (err) {
+//       console.error("Error refreshing access token:", err);
+//       return null;
+//     }
+//   };
 
   // Get access token
   const getAccessToken = async () => {
@@ -62,7 +61,6 @@ export const TokenProvider = ({ children }: { children: React.ReactNode }) => {
     const username = await SecureStore.getItemAsync("username");
     if (!refreshToken || !username) return null;
 
-    return await refreshAccessToken(username, refreshToken);
   };
 
   // Save tokens on login
@@ -88,7 +86,7 @@ export const TokenProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <TokenContext.Provider
-      value={{ getAccessToken, signInFromCredentials, signOut }}
+      value={{getAccessToken, signInFromCredentials, signOut }}
     >
       {children}
     </TokenContext.Provider>

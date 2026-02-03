@@ -1,20 +1,21 @@
 import "../global.css";
 import "@/src/global.css";
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
-import { Slot } from "expo-router";
+import { Slot, useRouter, usePathname } from "expo-router";
 import { Provider } from "react-redux";
 import { store } from "@/redux/store";
 import { TokenProvider } from "@Providers/TokenProvider";
 
 
 export default function Layout() {
+
   return (
-  <GluestackUIProvider mode="light">
+    <GluestackUIProvider mode="light">
       <Provider store={store}>
         <TokenProvider>
-         <Slot />
+          <Slot/>
         </TokenProvider>
-        </Provider>
+      </Provider>
     </GluestackUIProvider>
-  )
+  );
 }

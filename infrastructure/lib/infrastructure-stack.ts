@@ -15,6 +15,7 @@ export class InfrastructureStack extends cdk.Stack {
       bucketName: `cerey-image-bucket`,
     });
 
+
     //The vpc is my isolated network 
     const vpc = new ec2.Vpc(this, 'TheVPC', {
       ipAddresses: ec2.IpAddresses.cidr('10.0.0.0/16'),
@@ -74,16 +75,6 @@ export class InfrastructureStack extends cdk.Stack {
       });
 
     
-
-    
-
-    
-
-    
-
-
-
-
 
 
   }

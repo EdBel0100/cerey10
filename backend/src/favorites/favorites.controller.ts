@@ -3,25 +3,26 @@ import { FavoritesService } from './favorites.service';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { UseGuards } from '@nestjs/common';
 import { CurrentUser } from 'src/auth/auth-curent-user.decorator';
+import { Logger } from '@nestjs/common';
 
-@Controller('favorites')
+@Controller('/favorites')
 export class FavoritesController {
   constructor(private readonly favoritesService: FavoritesService) {}
 
   @UseGuards(AuthGuard)
   @Get()
   getFavoriteRecipes(
-    @CurrentUser() user: {cognitoId: string},
+    @CurrentUser() user: { cognitoId: string},
   ){
-    this.favoritesService.getFavoriteRecipes(user.cognitoId)
+    return this.favoritesService.getFavoriteRecipes("04e8c4b8-b0f1-701a-297a-b221c446abb9")
   }
 
   @UseGuards(AuthGuard)
   @Post()
   createFavoriteRecipe(
-    @CurrentUser() user: {cognitoId: string},
+   @Body() createFavoriteRecipeDto: any
   ){
-    this.favoritesService.createFavoriteRecipe(user.cognitoId)
+    this.favoritesService.createFavoriteRecipe(createFavoriteRecipeDto)
   }
 
   @UseGuards(AuthGuard)

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, Alert, SafeAreaView } from "react-native";
 import { useRouter } from "expo-router";
 import Constants from "expo-constants";
 const { awsCognitoUserPoolId, awsCognitoClientId } = Constants.expoConfig?.extra || {};
@@ -7,7 +7,6 @@ import {
   CognitoUserPool,
   CognitoUserAttribute,
 } from "amazon-cognito-identity-js";
-
 
 function SignUp() {
   const router = useRouter();
@@ -52,15 +51,11 @@ function SignUp() {
       password,
       confirmPassword,
       (result) => {
-        // Cognito user created successfully
         const cognitoUserId = result?.userSub;
         console.log("Cognito ID:", cognitoUserId);
 
-        // TODO: Send cognitoUserId + email to your backend to create DB entry
-        // await fetch("/api/tenant", { method: "POST", body: JSON.stringify({ cognitoId: cognitoUserId, email }) });
-
         Alert.alert("Success", "Account created successfully!");
-        router.push("/VerifyEmail"); // Navigate to sign in page
+        router.push("/VerifyEmail");
       },
       (err) => {
         console.error("Signup error:", err);
@@ -70,57 +65,70 @@ function SignUp() {
   };
 
   return (
-    <View className="flex-1 items-center justify-center bg-orange-100 px-6">
-      <View className="bg-white w-full max-w-md rounded-2xl shadow-xl p-6">
-        <View className="items-center mb-6">
-          <Text className="text-2xl font-bold text-orange-600">
-            Create your account
-          </Text>
-          <Text className="text-gray-500 text-sm mt-2">
-            Sign up to explore tasty recipes
-          </Text>
-        </View>
+    <SafeAreaView className="flex-1 bg-gray-50">
+      <View className="flex-1 items-center justify-center px-6">
+        <View className="bg-white w-full max-w-md rounded-2xl shadow-lg p-8 border border-gray-200">
+          <View className="items-center mb-8">
+            <View className="flex-row items-center mb-2">
+              <Text className="text-3xl font-bold text-red-500">CER</Text>
+              <Text className="text-3xl font-bold text-green-600">EY</Text>
+            </View>
+            <Text className="text-xl font-bold text-gray-900 mt-2">Create your account</Text>
+            <Text className="text-gray-500 text-sm mt-1">
+              Sign up to explore tasty recipes
+            </Text>
+          </View>
 
-        <View className="flex flex-col gap-4">
-          <TextInput
-            placeholder="Email"
-            className="rounded-xl border border-gray-300 p-3"
-            onChangeText={setEmail}
-            value={email}
-            keyboardType="email-address"
-            autoCapitalize="none"
-          />
-          <TextInput
-            placeholder="Password"
-            secureTextEntry
-            className="rounded-xl border border-gray-300 p-3"
-            onChangeText={setPassword}
-            value={password}
-          />
-          <TextInput
-            placeholder="Confirm Password"
-            secureTextEntry
-            className="rounded-xl border border-gray-300 p-3"
-            onChangeText={setConfirmPassword}
-            value={confirmPassword}
-          />
+          <View className="mb-4">
+            <Text className="text-sm font-medium text-gray-700 mb-2">Email</Text>
+            <TextInput
+              placeholder="Enter your email"
+              className="rounded-xl border-2 border-gray-200 p-4 bg-gray-50"
+              onChangeText={setEmail}
+              value={email}
+              keyboardType="email-address"
+              autoCapitalize="none"
+            />
+          </View>
+
+          <View className="mb-4">
+            <Text className="text-sm font-medium text-gray-700 mb-2">Password</Text>
+            <TextInput
+              placeholder="Enter your password"
+              secureTextEntry
+              className="rounded-xl border-2 border-gray-200 p-4 bg-gray-50"
+              onChangeText={setPassword}
+              value={password}
+            />
+          </View>
+
+          <View className="mb-6">
+            <Text className="text-sm font-medium text-gray-700 mb-2">Confirm Password</Text>
+            <TextInput
+              placeholder="Confirm your password"
+              secureTextEntry
+              className="rounded-xl border-2 border-gray-200 p-4 bg-gray-50"
+              onChangeText={setConfirmPassword}
+              value={confirmPassword}
+            />
+          </View>
 
           <TouchableOpacity
             onPress={handleSignUp}
-            className="w-full rounded-xl bg-orange-500 py-3 mt-2"
+            className="w-full rounded-xl bg-green-600 py-4"
           >
-            <Text className="text-center text-white font-semibold">Sign Up</Text>
+            <Text className="text-center text-white font-bold text-lg">Sign Up</Text>
           </TouchableOpacity>
-        </View>
 
-        <View className="items-center mt-4">
-          <Text className="text-sm text-gray-500">Already have an account?</Text>
-          <TouchableOpacity onPress={() => router.push("/Signin")}>
-            <Text className="text-orange-600 font-semibold mt-1">Sign in</Text>
-          </TouchableOpacity>
+          <View className="items-center mt-6">
+            <Text className="text-sm text-gray-600">Already have an account?</Text>
+            <TouchableOpacity onPress={() => router.push("/Signin")}>
+              <Text className="text-green-600 font-semibold mt-1 text-base">Sign in</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 

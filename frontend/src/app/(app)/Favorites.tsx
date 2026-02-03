@@ -1,31 +1,38 @@
 import React from "react";
-import { View, Text, FlatList } from "react-native";
+import { View, Text, FlatList, TouchableOpacity } from "react-native";
 import RecipeCard from "@/components/oui/RecipeCards"; // <-- card component
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useGetFavoritesQuery } from "@/redux/services/api";
 
 // Fake data for now, replace with API data later
-const favorites = [
-  {
-    id: "1",
-    title: "Spaghetti Carbonara",
-    image: "https://picsum.photos/200/200?random=1",
-  },
-  {
-    id: "2",
-    title: "Vegan Buddha Bowl",
-    image: "https://picsum.photos/200/200?random=2",
-  },
-  {
-    id: "3",
-    title: "Grilled Salmon",
-    image: "https://picsum.photos/200/200?random=3",
-  },
-];
+// const favorites = [
+//   {
+//     id: "1",
+//     title: "Spaghetti Carbonara",
+//     image: "https://picsum.photos/200/200?random=1",
+//   },
+//   {
+//     id: "2",
+//     title: "Vegan Buddha Bowl",
+//     image: "https://picsum.photos/200/200?random=2",
+//   },
+//   {
+//     id: "3",
+//     title: "Grilled Salmon",
+//     image: "https://picsum.photos/200/200?random=3",
+//   },
+// ];
 
 export default function Favorites() {
+  const favorites = useGetFavoritesQuery()
+  const handleClick= () => {
+    console.log(`data: ${favorites}`)
+  }
+
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <View className="flex-1 p-4">
+      <TouchableOpacity onPress={handleClick}><Text>click me</Text></TouchableOpacity>
+      {/* <View className="flex-1 p-4">
         <Text className="text-2xl font-bold mb-4">❤️ Favorite Recipes</Text>
 
         {favorites.length === 0 ? (
@@ -40,7 +47,7 @@ export default function Favorites() {
             contentContainerStyle={{ paddingBottom: 20 }}
           />
         )}
-      </View>
+      </View> */}
     </SafeAreaView>
   );
 }

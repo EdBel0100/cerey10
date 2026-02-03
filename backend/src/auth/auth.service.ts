@@ -43,12 +43,12 @@ export class AuthService {
     }
 
     const username = userRecord.cognitoId;
-    Logger.log(username)
 
     const user = new CognitoUser({
       Username: username,
       Pool: this.userPool,
     });
+
 
     const authDetails = new AuthenticationDetails({
       Username: username,

@@ -62,9 +62,6 @@ export default function SettingsPage() {
       {/* Header */}
       <View className="bg-white px-6 py-4 border-b border-gray-200">
         <View className="flex-row items-center justify-between">
-          <TouchableOpacity onPress={() => router.back()}>
-            <Icon name="arrow-back" size={24} color="#374151" />
-          </TouchableOpacity>
           <View className="flex-1 ml-4">
             <Text className="text-xl font-bold text-gray-900">Settings</Text>
             <Text className="text-sm text-gray-500 mt-1">

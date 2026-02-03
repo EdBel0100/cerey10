@@ -99,6 +99,7 @@ const RecipeSwipeCard = () => {
     translateX.value = withTiming(screenWidth * 1.5, { duration: 300 });
     scale.value = withTiming(0.8, { duration: 300 });
     setTimeout(fetchNewRecipe, 300);
+    
   };
 
   const handleDislike = () => {

@@ -75,7 +75,7 @@ export default function BottomNav() {
           })}
         </View>
       </SafeAreaView>
-      </AuthProvider>
+      </AuthProvider> 
     </>
   );
 }

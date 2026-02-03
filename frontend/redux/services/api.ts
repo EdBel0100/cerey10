@@ -55,20 +55,33 @@ export const Api = createApi({
         body: credentials,
       }),
     }),
+    getFavorites: builder.query<any, void>({
+      query: () => ({
+        url: "/favorites",
+        method: "GET"
+      }),
+    }),
+
+    createRecipe: builder.mutation<void, any>({
+      query: (body) => ({
+        url:"/favorites",
+        method:"POST",
+        body: body
+      }),
+    }),
+
+    deleteRecipe: builder.mutation<void, void>({
+      query: () =>({
+        url:"/favorites",
+        method:"DELETE"
+      }),
+    }),
+
+    
 
 
 
-    refresh: builder.mutation<
-  { tokens: { accessToken: string; idToken: string; refreshToken: string }}, { username: string; refreshToken: string }>({
-  query: (body) => {
-    console.log("[RTK refresh mutation] sending body: ", body);
-    return {
-      url: "/auth/refresh",
-      method: "POST",
-      body,
-    };
-  },
-}),
+
 
 
   }),
@@ -80,5 +93,6 @@ export const {
   useGetPreferencesQuery, 
   useCreateUserMutation,
   useSignInMutation,
-  useRefreshMutation
+  useGetFavoritesQuery
+
 } = Api;

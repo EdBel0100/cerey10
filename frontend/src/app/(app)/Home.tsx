@@ -150,6 +150,7 @@ export default function Home() {
       body.customPreferences = customPreferences;
 
       await updatePreferences({ body }).unwrap();
+      console.log(preferences)
       refetch()
 
       Alert.alert("Success", "Your preferences have been saved.", [
@@ -277,9 +278,6 @@ export default function Home() {
           />
         </View>
       </ScrollView>
-
-      {/* Save Button */}
-      {/* Save Button */}
 <View className="bg-white border-t border-gray-200 px-6 py-2 ">
   <View className="space-y-3">
     <TouchableOpacity

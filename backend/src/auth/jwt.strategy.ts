@@ -25,10 +25,12 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: any) {
-    this.logger.log(`Validated token for user: sub=${payload.sub}, email=${payload.email}`);
+    this.logger.log(`Validated token for user: sub=${payload.sub}`);
     return {
       cognitoId: payload.sub,
-      email: payload.email,
+      email: payload.email,         
+      username: payload.username,   
+      groups: payload['cognito:groups'] ?? [],
     };
   }
 }

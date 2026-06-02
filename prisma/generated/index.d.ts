@@ -4835,6 +4835,7 @@ export namespace Prisma {
 
   export type FavoriteRecipesMinAggregateOutputType = {
     id: number | null
+    title: string | null
     imageUrl: string | null
     content: string | null
     userCognitoId: string | null
@@ -4842,6 +4843,7 @@ export namespace Prisma {
 
   export type FavoriteRecipesMaxAggregateOutputType = {
     id: number | null
+    title: string | null
     imageUrl: string | null
     content: string | null
     userCognitoId: string | null
@@ -4849,6 +4851,7 @@ export namespace Prisma {
 
   export type FavoriteRecipesCountAggregateOutputType = {
     id: number
+    title: number
     imageUrl: number
     content: number
     userCognitoId: number
@@ -4866,6 +4869,7 @@ export namespace Prisma {
 
   export type FavoriteRecipesMinAggregateInputType = {
     id?: true
+    title?: true
     imageUrl?: true
     content?: true
     userCognitoId?: true
@@ -4873,6 +4877,7 @@ export namespace Prisma {
 
   export type FavoriteRecipesMaxAggregateInputType = {
     id?: true
+    title?: true
     imageUrl?: true
     content?: true
     userCognitoId?: true
@@ -4880,6 +4885,7 @@ export namespace Prisma {
 
   export type FavoriteRecipesCountAggregateInputType = {
     id?: true
+    title?: true
     imageUrl?: true
     content?: true
     userCognitoId?: true
@@ -4974,6 +4980,7 @@ export namespace Prisma {
 
   export type FavoriteRecipesGroupByOutputType = {
     id: number
+    title: string
     imageUrl: string
     content: string
     userCognitoId: string
@@ -5000,6 +5007,7 @@ export namespace Prisma {
 
   export type FavoriteRecipesSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    title?: boolean
     imageUrl?: boolean
     content?: boolean
     userCognitoId?: boolean
@@ -5008,6 +5016,7 @@ export namespace Prisma {
 
   export type FavoriteRecipesSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    title?: boolean
     imageUrl?: boolean
     content?: boolean
     userCognitoId?: boolean
@@ -5016,6 +5025,7 @@ export namespace Prisma {
 
   export type FavoriteRecipesSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    title?: boolean
     imageUrl?: boolean
     content?: boolean
     userCognitoId?: boolean
@@ -5024,12 +5034,13 @@ export namespace Prisma {
 
   export type FavoriteRecipesSelectScalar = {
     id?: boolean
+    title?: boolean
     imageUrl?: boolean
     content?: boolean
     userCognitoId?: boolean
   }
 
-  export type FavoriteRecipesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "imageUrl" | "content" | "userCognitoId", ExtArgs["result"]["favoriteRecipes"]>
+  export type FavoriteRecipesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "imageUrl" | "content" | "userCognitoId", ExtArgs["result"]["favoriteRecipes"]>
   export type FavoriteRecipesInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -5047,6 +5058,7 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
+      title: string
       imageUrl: string
       content: string
       userCognitoId: string
@@ -5475,6 +5487,7 @@ export namespace Prisma {
    */
   interface FavoriteRecipesFieldRefs {
     readonly id: FieldRef<"FavoriteRecipes", 'Int'>
+    readonly title: FieldRef<"FavoriteRecipes", 'String'>
     readonly imageUrl: FieldRef<"FavoriteRecipes", 'String'>
     readonly content: FieldRef<"FavoriteRecipes", 'String'>
     readonly userCognitoId: FieldRef<"FavoriteRecipes", 'String'>
@@ -5965,6 +5978,7 @@ export namespace Prisma {
 
   export const FavoriteRecipesScalarFieldEnum: {
     id: 'id',
+    title: 'title',
     imageUrl: 'imageUrl',
     content: 'content',
     userCognitoId: 'userCognitoId'
@@ -6362,6 +6376,7 @@ export namespace Prisma {
     OR?: FavoriteRecipesWhereInput[]
     NOT?: FavoriteRecipesWhereInput | FavoriteRecipesWhereInput[]
     id?: IntFilter<"FavoriteRecipes"> | number
+    title?: StringFilter<"FavoriteRecipes"> | string
     imageUrl?: StringFilter<"FavoriteRecipes"> | string
     content?: StringFilter<"FavoriteRecipes"> | string
     userCognitoId?: StringFilter<"FavoriteRecipes"> | string
@@ -6370,6 +6385,7 @@ export namespace Prisma {
 
   export type FavoriteRecipesOrderByWithRelationInput = {
     id?: SortOrder
+    title?: SortOrder
     imageUrl?: SortOrder
     content?: SortOrder
     userCognitoId?: SortOrder
@@ -6381,6 +6397,7 @@ export namespace Prisma {
     AND?: FavoriteRecipesWhereInput | FavoriteRecipesWhereInput[]
     OR?: FavoriteRecipesWhereInput[]
     NOT?: FavoriteRecipesWhereInput | FavoriteRecipesWhereInput[]
+    title?: StringFilter<"FavoriteRecipes"> | string
     imageUrl?: StringFilter<"FavoriteRecipes"> | string
     content?: StringFilter<"FavoriteRecipes"> | string
     userCognitoId?: StringFilter<"FavoriteRecipes"> | string
@@ -6389,6 +6406,7 @@ export namespace Prisma {
 
   export type FavoriteRecipesOrderByWithAggregationInput = {
     id?: SortOrder
+    title?: SortOrder
     imageUrl?: SortOrder
     content?: SortOrder
     userCognitoId?: SortOrder
@@ -6404,6 +6422,7 @@ export namespace Prisma {
     OR?: FavoriteRecipesScalarWhereWithAggregatesInput[]
     NOT?: FavoriteRecipesScalarWhereWithAggregatesInput | FavoriteRecipesScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"FavoriteRecipes"> | number
+    title?: StringWithAggregatesFilter<"FavoriteRecipes"> | string
     imageUrl?: StringWithAggregatesFilter<"FavoriteRecipes"> | string
     content?: StringWithAggregatesFilter<"FavoriteRecipes"> | string
     userCognitoId?: StringWithAggregatesFilter<"FavoriteRecipes"> | string
@@ -6747,6 +6766,7 @@ export namespace Prisma {
   }
 
   export type FavoriteRecipesCreateInput = {
+    title: string
     imageUrl: string
     content: string
     user: UserCreateNestedOneWithoutFavoriteRecipesInput
@@ -6754,12 +6774,14 @@ export namespace Prisma {
 
   export type FavoriteRecipesUncheckedCreateInput = {
     id?: number
+    title: string
     imageUrl: string
     content: string
     userCognitoId: string
   }
 
   export type FavoriteRecipesUpdateInput = {
+    title?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     user?: UserUpdateOneRequiredWithoutFavoriteRecipesNestedInput
@@ -6767,6 +6789,7 @@ export namespace Prisma {
 
   export type FavoriteRecipesUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     userCognitoId?: StringFieldUpdateOperationsInput | string
@@ -6774,18 +6797,21 @@ export namespace Prisma {
 
   export type FavoriteRecipesCreateManyInput = {
     id?: number
+    title: string
     imageUrl: string
     content: string
     userCognitoId: string
   }
 
   export type FavoriteRecipesUpdateManyMutationInput = {
+    title?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
   }
 
   export type FavoriteRecipesUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     userCognitoId?: StringFieldUpdateOperationsInput | string
@@ -7090,6 +7116,7 @@ export namespace Prisma {
 
   export type FavoriteRecipesCountOrderByAggregateInput = {
     id?: SortOrder
+    title?: SortOrder
     imageUrl?: SortOrder
     content?: SortOrder
     userCognitoId?: SortOrder
@@ -7101,6 +7128,7 @@ export namespace Prisma {
 
   export type FavoriteRecipesMaxOrderByAggregateInput = {
     id?: SortOrder
+    title?: SortOrder
     imageUrl?: SortOrder
     content?: SortOrder
     userCognitoId?: SortOrder
@@ -7108,6 +7136,7 @@ export namespace Prisma {
 
   export type FavoriteRecipesMinOrderByAggregateInput = {
     id?: SortOrder
+    title?: SortOrder
     imageUrl?: SortOrder
     content?: SortOrder
     userCognitoId?: SortOrder
@@ -7399,12 +7428,14 @@ export namespace Prisma {
   }
 
   export type FavoriteRecipesCreateWithoutUserInput = {
+    title: string
     imageUrl: string
     content: string
   }
 
   export type FavoriteRecipesUncheckedCreateWithoutUserInput = {
     id?: number
+    title: string
     imageUrl: string
     content: string
   }
@@ -7528,6 +7559,7 @@ export namespace Prisma {
     OR?: FavoriteRecipesScalarWhereInput[]
     NOT?: FavoriteRecipesScalarWhereInput | FavoriteRecipesScalarWhereInput[]
     id?: IntFilter<"FavoriteRecipes"> | number
+    title?: StringFilter<"FavoriteRecipes"> | string
     imageUrl?: StringFilter<"FavoriteRecipes"> | string
     content?: StringFilter<"FavoriteRecipes"> | string
     userCognitoId?: StringFilter<"FavoriteRecipes"> | string
@@ -7773,23 +7805,27 @@ export namespace Prisma {
 
   export type FavoriteRecipesCreateManyUserInput = {
     id?: number
+    title: string
     imageUrl: string
     content: string
   }
 
   export type FavoriteRecipesUpdateWithoutUserInput = {
+    title?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
   }
 
   export type FavoriteRecipesUncheckedUpdateWithoutUserInput = {
     id?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
   }
 
   export type FavoriteRecipesUncheckedUpdateManyWithoutUserInput = {
     id?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
   }

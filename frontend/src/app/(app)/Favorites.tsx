@@ -24,19 +24,15 @@ import { useGetFavoritesQuery } from "@/redux/services/api";
 // ];
 
 export default function Favorites() {
-  const favorites = useGetFavoritesQuery()
-  const handleClick= () => {
-    console.log(`data: ${favorites}`)
-  }
+  const {data: favorites = []} = useGetFavoritesQuery()
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <TouchableOpacity onPress={handleClick}><Text>click me</Text></TouchableOpacity>
-      {/* <View className="flex-1 p-4">
-        <Text className="text-2xl font-bold mb-4">❤️ Favorite Recipes</Text>
+      <View className="flex-1 p-4">
+        <Text className="text-2xl text-black font-bold mb-4">❤️ Favorite Recipes</Text>
 
         {favorites.length === 0 ? (
-          <Text className="text-lg text-gray-500 text-center mt-8">
+          <Text className="text-lg text-black text-center mt-8">
             No favorites yet. Like some recipes to see them here!
           </Text>
         ) : (
@@ -47,7 +43,7 @@ export default function Favorites() {
             contentContainerStyle={{ paddingBottom: 20 }}
           />
         )}
-      </View> */}
+      </View>
     </SafeAreaView>
   );
 }

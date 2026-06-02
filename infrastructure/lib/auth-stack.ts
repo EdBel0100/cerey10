@@ -3,28 +3,27 @@ import { Construct } from "constructs";
 import * as cognito from "aws-cdk-lib/aws-cognito";
 
 export class AuthStack extends cdk.Stack {
+  public readonly userPool: cognito.UserPool;
+  public readonly userPoolClient: cognito.UserPoolClient;
+
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    const userPool = new cognito.UserPool(this, "CereyUserPool", {
+    this.userPool = new cognito.UserPool(this, "CereyUserPool", {
       userPoolName: "Cerey-UserPool",
       selfSignUpEnabled: true,
       signInAliases: {
         email: true,
-        phone: true,
+        username: false,  
+        phone: false,     
       },
       autoVerify: {
         email: true,
-        phone: true, 
       },
       standardAttributes: {
         email: {
           required: true,
           mutable: false,
-        },
-        phoneNumber: {
-          required: false,
-          mutable: true,
         },
       },
       customAttributes: {
@@ -38,19 +37,28 @@ export class AuthStack extends cdk.Stack {
         requireDigits: true,
         requireSymbols: false,
       },
-      accountRecovery: cognito.AccountRecovery.EMAIL_AND_PHONE_WITHOUT_MFA,
+      mfa: cognito.Mfa.OFF,  // explicitly disable MFA
+      accountRecovery: cognito.AccountRecovery.EMAIL_ONLY,  // email recovery only, no phone
     });
 
-    const userPoolClient = new cognito.UserPoolClient(this, "UserPoolClient", {
-      userPool,
+    this.userPoolClient = new cognito.UserPoolClient(this, "UserPoolClient", {
+      userPool: this.userPool,
       generateSecret: false,
       authFlows: {
         userPassword: true,
         userSrp: true,
+        adminUserPassword: false,  // disable admin flow unless needed
+        custom: false,
       },
+      preventUserExistenceErrors: true,  // security: don't leak whether email exists
     });
 
-
-    
+    // Outputs so you can grab these values easily after deploy
+    new cdk.CfnOutput(this, "UserPoolId", {
+      value: this.userPool.userPoolId,
+    });
+    new cdk.CfnOutput(this, "UserPoolClientId", {
+      value: this.userPoolClient.userPoolClientId,
+    });
   }
 }

@@ -1,17 +1,75 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from 'src/Dtos/User-Dtos/create-user.dto';
+import { CognitoUser, CognitoUserPool } from 'amazon-cognito-identity-js';
+import { CognitoIdentityProviderClient, AdminDeleteUserCommand } from '@aws-sdk/client-cognito-identity-provider';
+import { ConfigService } from '@nestjs/config';
 
 
 @Injectable()
 export class UserService {
-  constructor(private readonly prisma:PrismaService){}
+  private readonly cognitoClient: CognitoIdentityProviderClient;
+
+  constructor(
+    private configService: ConfigService,
+    private readonly prisma: PrismaService,
+  ) {
+    this.cognitoClient = new CognitoIdentityProviderClient({
+      region: this.configService.get('AWS_REGION'),
+    });
+  }
+
+  
 
   //this should create the user, initialize the preferences, initialize location, and send their credentials to cognito
-  initializeUser(body:CreateUserDto){
-    return this.prisma.user.create({data:body})
+  // users.service.ts
+async create(dto: CreateUserDto) {
+  return this.prisma.user.create({
+    data: {
+      cognitoId: dto.cognitoId,
+      email: dto.email,
+      preferences: {
+        create: {
+          // General diets
+          vegetarianOnly:   false,
+          vegan:            false,
+          pescatarian:      false,
+          flexitarian:      false,
+          meatOnly:         false,
 
-  }
+          // Allergies / intolerances
+          glutenFree:       false,
+          lactoseFree:      false,
+          dairyFree:        false,
+          nutFree:          false,
+          peanutFree:       false,
+          shellfishFree:    false,
+          eggFree:          false,
+          soyFree:          false,
+          fishFree:         false,
+          nightshadeFree:   false,
+
+          // Health / lifestyle diets
+          lowCarb:          false,
+          keto:             false,
+          paleo:            false,
+          lowSugar:         false,
+          lowSalt:          false,
+          lowFat:           false,
+          highProtein:      false,
+          rawFood:          false,
+          whole30:          false,
+          diabeticFriendly: false,
+
+          customPreferences: '',
+        },
+      },
+    },
+    include: {
+      preferences: true,
+    },
+  });
+}
   
   //this should be used only to change the user info, email, password ect
   async modifyUser(body: any, userCognitoId: string) {
@@ -24,9 +82,16 @@ export class UserService {
 
   //used to delete user, should cascade and delete preferences and location
   //this should get the cognito id from the token and delete it from cognito
-  async deleteUser(userCognitoId: string) {
+  async delete(userCognitoId: string) {
+
+
+    await this.cognitoClient.send(new AdminDeleteUserCommand({
+      UserPoolId: this.configService.get('AWS_COGNITO_USER_POOL_ID'),
+      Username: userCognitoId,
+    }));
+
     return this.prisma.user.delete({
-      where: { cognitoId:userCognitoId },
+      where: { cognitoId:userCognitoId}
     });
   }
 

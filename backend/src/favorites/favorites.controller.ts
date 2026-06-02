@@ -14,7 +14,7 @@ export class FavoritesController {
   getFavoriteRecipes(
     @CurrentUser() user: { cognitoId: string},
   ){
-    return this.favoritesService.getFavoriteRecipes("04e8c4b8-b0f1-701a-297a-b221c446abb9")
+    return this.favoritesService.getFavoriteRecipes(user.cognitoId)
   }
 
   @UseGuards(AuthGuard)

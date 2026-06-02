@@ -170,6 +170,7 @@ exports.Prisma.PreferencesScalarFieldEnum = {
 
 exports.Prisma.FavoriteRecipesScalarFieldEnum = {
   id: 'id',
+  title: 'title',
   imageUrl: 'imageUrl',
   content: 'content',
   userCognitoId: 'userCognitoId'

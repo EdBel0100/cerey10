@@ -3,3 +3,8 @@ packages:
   - "prisma"
   - "frontend"
   - "infrastructure"
+allowBuilds:
+  '@nestjs/core': false
+  '@prisma/client': false
+  '@prisma/engines': false
+  prisma: false

@@ -2,17 +2,20 @@ import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Alert, SafeAreaView } from "react-native";
 import { useRouter } from "expo-router";
 import Constants from "expo-constants";
+import { CreateUserDto } from "@backend-Dtos/User-Dtos/create-user.dto";
 const { awsCognitoUserPoolId, awsCognitoClientId } = Constants.expoConfig?.extra || {};
 import {
   CognitoUserPool,
   CognitoUserAttribute,
 } from "amazon-cognito-identity-js";
+import { useCreateUserMutation } from "@/redux/services/api";
 
 function SignUp() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [createUser] = useCreateUserMutation()
 
   const poolData = {
     UserPoolId: awsCognitoUserPoolId,
@@ -53,9 +56,12 @@ function SignUp() {
       (result) => {
         const cognitoUserId = result?.userSub;
         console.log("Cognito ID:", cognitoUserId);
+        const UserData:CreateUserDto = {cognitoId:cognitoUserId, email:email}
+        createUser(UserData)
+        
 
         Alert.alert("Success", "Account created successfully!");
-        router.push("/VerifyEmail");
+        router.push("/Signin");
       },
       (err) => {
         console.error("Signup error:", err);

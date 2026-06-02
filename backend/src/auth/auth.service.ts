@@ -45,6 +45,7 @@ export class AuthService {
     const username = userRecord.cognitoId;
 
     const user = new CognitoUser({
+      //username is cognito sub
       Username: username,
       Pool: this.userPool,
     });

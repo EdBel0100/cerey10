@@ -48,6 +48,12 @@ export const Api = createApi({
         body
       }),
     }),
+    deleteUser: builder.mutation<void, void>({
+      query: ()=>({
+        url:"/user",
+        method: "DELETE"
+      })
+    }),
     signIn: builder.mutation<SignInResponseDto, SignInDto>({
       query: (credentials) => ({
         url: "/auth/signin",
@@ -93,6 +99,8 @@ export const {
   useGetPreferencesQuery, 
   useCreateUserMutation,
   useSignInMutation,
-  useGetFavoritesQuery
+  useGetFavoritesQuery,
+  useDeleteUserMutation
 
+  
 } = Api;

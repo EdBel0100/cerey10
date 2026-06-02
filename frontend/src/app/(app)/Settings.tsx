@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   View,
   Text,
@@ -7,10 +7,11 @@ import {
   ScrollView,
   Switch,
   Alert,
-} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useRouter } from 'expo-router';
+} from "react-native";
+import Icon from "react-native-vector-icons/MaterialIcons";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { useRouter } from "expo-router";
+import { useDeleteUserMutation } from "@/redux/services/api";
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -18,12 +19,42 @@ export default function SettingsPage() {
   // Example local state
   const [notificationsEnabled, setNotificationsEnabled] = React.useState(true);
   const [darkMode, setDarkMode] = React.useState(false);
+  const [deleteAccount] = useDeleteUserMutation();
 
   const handleLogout = () => {
-    Alert.alert('Log Out', 'Are you sure you want to log out?', [
-      { text: 'Cancel', style: 'cancel' },
-      { text: 'Log Out', style: 'destructive', onPress: () => router.replace('/') },
+    Alert.alert("Log Out", "Are you sure you want to log out?", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Log Out",
+        style: "destructive",
+        onPress: () => router.replace("/"),
+      },
     ]);
+  };
+
+  const handleDeleteAccount = () => {
+    Alert.alert(
+      "Delete Account",
+      "This will permanently delete your account and all your data. This action cannot be undone.",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              await deleteAccount();
+              router.replace("/Signup");
+            } catch (err) {
+              Alert.alert(
+                "Error",
+                "Failed to delete account. Please try again."
+              );
+            }
+          },
+        },
+      ]
+    );
   };
 
   const renderItem = (
@@ -44,7 +75,9 @@ export default function SettingsPage() {
             <MaterialCommunityIcons name={icon} size={22} color="#DC2626" />
           </View>
           <View className="flex-1">
-            <Text className="text-base font-semibold text-gray-900">{title}</Text>
+            <Text className="text-base font-semibold text-gray-900">
+              {title}
+            </Text>
             {description ? (
               <Text className="text-sm text-gray-500">{description}</Text>
             ) : null}
@@ -78,11 +111,17 @@ export default function SettingsPage() {
           <Text className="px-6 mb-2 text-sm font-semibold text-gray-500">
             Account
           </Text>
-          {renderItem('account-circle', 'Profile', 'View and edit your profile', () =>
-            router.push('/profile')
+          {renderItem(
+            "account-circle",
+            "Profile",
+            "View and edit your profile",
+            () => router.push("/Profile")
           )}
-          {renderItem('lock', 'Change Password', 'Update your account password', () =>
-            router.push('/change-password')
+          {renderItem(
+            "lock",
+            "Change Password",
+            "Update your account password",
+            () => router.push("/change-password")
           )}
         </View>
 
@@ -92,9 +131,9 @@ export default function SettingsPage() {
             Preferences
           </Text>
           {renderItem(
-            'bell',
-            'Notifications',
-            'Push and email alerts',
+            "bell",
+            "Notifications",
+            "Push and email alerts",
             undefined,
             <Switch
               value={notificationsEnabled}
@@ -102,17 +141,17 @@ export default function SettingsPage() {
             />
           )}
           {renderItem(
-            'theme-light-dark',
-            'Dark Mode',
-            'Toggle app theme',
+            "theme-light-dark",
+            "Dark Mode",
+            "Toggle app theme",
             undefined,
             <Switch value={darkMode} onValueChange={setDarkMode} />
           )}
           {renderItem(
-            'food',
-            'Dietary Preferences',
-            'Manage dietary needs',
-            () => router.push('/dietary-preferences')
+            "food",
+            "Dietary Preferences",
+            "Manage dietary needs",
+            () => router.push("/Preferences")
           )}
         </View>
 
@@ -121,11 +160,11 @@ export default function SettingsPage() {
           <Text className="px-6 mb-2 text-sm font-semibold text-gray-500">
             Privacy & Security
           </Text>
-          {renderItem('shield-lock', 'Privacy Policy', '', () =>
-            router.push('/privacy')
+          {renderItem("shield-lock", "Privacy Policy", "", () =>
+            router.push("/privacy")
           )}
-          {renderItem('file-document', 'Terms of Service', '', () =>
-            router.push('/terms')
+          {renderItem("file-document", "Terms of Service", "", () =>
+            router.push("/terms")
           )}
         </View>
 
@@ -134,7 +173,29 @@ export default function SettingsPage() {
           <Text className="px-6 mb-2 text-sm font-semibold text-gray-500">
             Danger Zone
           </Text>
-          {renderItem('logout', 'Log Out', '', handleLogout)}
+          {renderItem("logout", "Log Out", "", handleLogout)}
+          <TouchableOpacity
+            onPress={handleDeleteAccount}
+            className="bg-white px-6 py-4"
+          >
+            <View className="flex-row items-center">
+              <View className="w-10 h-10 rounded-full bg-red-50 items-center justify-center mr-4">
+                <MaterialCommunityIcons
+                  name="delete-outline"
+                  size={22}
+                  color="#DC2626"
+                />
+              </View>
+              <View>
+                <Text className="text-base font-semibold text-red-600">
+                  Delete Account
+                </Text>
+                <Text className="text-sm text-gray-500">
+                  Permanently remove your account
+                </Text>
+              </View>
+            </View>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>

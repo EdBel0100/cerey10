@@ -1,20 +1,11 @@
-# Expo Router and Tailwind CSS
+## Frontend
 
-Use [Expo Router](https://docs.expo.dev/router/introduction/) with [Nativewind](https://www.nativewind.dev/v4/overview/) styling.
+This is the frontend and it is powered by expo/react native. The design is inspired by tinder.
 
-## Launch your own
 
-[![Launch with Expo](https://github.com/expo/examples/blob/master/.gh-assets/launch.svg?raw=true)](https://launch.expo.dev/?github=https://github.com/expo/examples/tree/master/with-tailwindcss)
+## Tech Stack
 
-## 🚀 How to use
-
-```sh
-npx create-expo-app -e with-tailwindcss
-```
-
-## Deploy
-
-Deploy on all platforms with Expo Application Services (EAS).
-
-- Deploy the website: `npx eas-cli deploy` — [Learn more](https://docs.expo.dev/eas/hosting/get-started/)
-- Deploy on iOS and Android using: `npx eas-cli build` — [Learn more](https://expo.dev/eas)
+- **Expo & React Native** - Mobile application development
+- **RTK Query & Redux** — State management and communication with the backend API
+- **Tailwind CSS & NativeWind** — Styling and UI development
+- **AWS Cognito** — Authentication and user session management

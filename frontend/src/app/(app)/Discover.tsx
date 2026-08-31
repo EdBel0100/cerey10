@@ -18,45 +18,48 @@ import Animated, {
   runOnJS,
 } from 'react-native-reanimated';
 import { usePostOpenAiMutation } from "@Redux/services/api";
+import { useRouter } from "expo-router";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 const SWIPE_THRESHOLD = screenWidth * 0.25;
 
 const RecipeSwipeCard = () => {
+  const router = useRouter();
   const [postOpenAi, { isLoading }] = usePostOpenAiMutation();
   const [currentRecipe, setCurrentRecipe] = useState<any>(null);
   const [isInitialized, setIsInitialized] = useState(false);
   const [isRefetching, setIsRefetching] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   
-  // Reanimated shared values
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
   const scale = useSharedValue(1);
 
-  // Fetch new recipe
   const fetchNewRecipe = async () => {
     try {
       setIsRefetching(true);
-      
+      setErrorMessage(null);
+
       const response = await postOpenAi({
         description: "generate a beef stew with onions"
       }).unwrap();
-      
+
       setCurrentRecipe(response);
-      
-      // Reset animations
+
       translateX.value = 0;
       translateY.value = 0;
       scale.value = 1;
-      
-    } catch (error) {
+
+    } catch (error: any) {
       console.error('Error fetching recipe:', error);
+      setErrorMessage(
+        error?.data?.message || "Couldn't generate a recipe. Please try again."
+      );
     } finally {
       setIsRefetching(false);
     }
   };
 
-  // Initialize with first recipe
   React.useEffect(() => {
     if (!isInitialized) {
       fetchNewRecipe();
@@ -71,7 +74,6 @@ const RecipeSwipeCard = () => {
     runOnJS(fetchNewRecipe)();
   };
 
-  // Updated gesture using the new Gesture API
   const panGesture = Gesture.Pan()
     .onStart(() => {
       scale.value = withSpring(1.05);
@@ -150,12 +152,38 @@ const RecipeSwipeCard = () => {
   if (isLoading && !currentRecipe) {
     return (
       <GestureHandlerRootView className="flex-1">
-        <View className="flex-1 bg-gray-50 justify-center items-center">
+        <View className="flex-1 bg-gray-50 dark:bg-gray-900 justify-center items-center">
           <View className="items-center space-y-4">
             <ActivityIndicator size="large" color="#10b981" />
-            <Text className="text-lg text-gray-600 font-medium">
+            <Text className="text-lg text-gray-600 dark:text-gray-400 font-medium">
               Loading delicious recipe...
             </Text>
+          </View>
+        </View>
+      </GestureHandlerRootView>
+    );
+  }
+
+  if (errorMessage) {
+    return (
+      <GestureHandlerRootView className="flex-1">
+        <View className="flex-1 bg-gray-50 dark:bg-gray-900 justify-center items-center px-8">
+          <Text className="text-lg text-gray-800 dark:text-gray-100 font-semibold text-center">
+            {errorMessage}
+          </Text>
+          <View className="flex-row mt-6" style={{ gap: 12 }}>
+            <TouchableOpacity
+              onPress={fetchNewRecipe}
+              className="bg-green-600 px-5 py-3 rounded-xl"
+            >
+              <Text className="text-white font-semibold">Try again</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => router.push("/Preferences")}
+              className="bg-gray-200 px-5 py-3 rounded-xl dark:bg-gray-700"
+            >
+              <Text className="text-gray-800 dark:text-gray-100 font-semibold">Set preferences</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </GestureHandlerRootView>
@@ -165,8 +193,8 @@ const RecipeSwipeCard = () => {
   if (!currentRecipe) {
     return (
       <GestureHandlerRootView className="flex-1">
-        <View className="flex-1 bg-gray-50 justify-center items-center">
-          <Text className="text-lg text-gray-600 font-medium">
+        <View className="flex-1 bg-gray-50 dark:bg-gray-900 justify-center items-center">
+          <Text className="text-lg text-gray-600 dark:text-gray-400 font-medium">
             No recipe available
           </Text>
         </View>
@@ -176,16 +204,14 @@ const RecipeSwipeCard = () => {
 
   return (
     <GestureHandlerRootView className="flex-1">
-      <View className="flex-1 bg-gray-50 pt-12 pb-24">
-        {/* Loading Overlay */}
+      <View className="flex-1 bg-gray-50 dark:bg-gray-900 pt-12 pb-24">
         {isRefetching && (
           <View 
-            className="absolute inset-0 bg-gray-50/90 justify-center items-center z-50"
-            style={{ backgroundColor: 'rgba(249, 250, 251, 0.9)' }}
+            className="absolute inset-0 bg-gray-50/90 dark:bg-gray-900/90 justify-center items-center z-50"
           >
-            <View className="bg-white rounded-2xl p-6 items-center shadow-lg">
+            <View className="bg-white rounded-2xl p-6 items-center shadow-lg dark:bg-gray-800">
               <ActivityIndicator size="large" color="#10b981" />
-              <Text className="text-lg text-gray-600 font-medium mt-4">
+              <Text className="text-lg text-gray-600 font-medium mt-4 dark:text-gray-400">
                 Finding your next recipe...
               </Text>
             </View>
@@ -196,7 +222,7 @@ const RecipeSwipeCard = () => {
           <GestureDetector gesture={panGesture}>
             <Animated.View style={cardAnimatedStyle}>
               <View 
-                className="bg-white rounded-3xl shadow-xl mx-5 overflow-hidden"
+                className="bg-white rounded-3xl shadow-xl mx-5 overflow-hidden dark:bg-gray-800"
                 style={{ 
                   width: screenWidth - 40, 
                   height: screenHeight * 0.7,
@@ -207,7 +233,6 @@ const RecipeSwipeCard = () => {
                   elevation: 8,
                 }}
               >
-                {/* Recipe Image */}
                 <Image 
                   source={{ uri: currentRecipe.image }}
                   className="w-full"
@@ -215,18 +240,60 @@ const RecipeSwipeCard = () => {
                   resizeMode="cover"
                 />
                 
-                {/* Scrollable Recipe Content */}
                 <ScrollView 
                   className="flex-1 p-5" 
                   showsVerticalScrollIndicator={false}
                   contentContainerStyle={{ paddingBottom: 20 }}
                 >
-                  <Text className="text-base leading-6 text-gray-800 font-normal">
-                    {currentRecipe.text}
+                  <Text className="text-2xl font-bold text-gray-900 mb-1 dark:text-gray-100">
+                    {currentRecipe.title}
                   </Text>
+
+                  {!!currentRecipe.description && (
+                    <Text className="text-sm text-gray-500 italic mb-5 leading-5 dark:text-gray-400">
+                      {currentRecipe.description}
+                    </Text>
+                  )}
+
+                  {!!currentRecipe.ingredients?.length && (
+                    <View className="mb-5">
+                      <Text className="text-base font-bold text-gray-900 mb-2 dark:text-gray-100">
+                        Ingredients
+                      </Text>
+                      {currentRecipe.ingredients.map((ingredient: string, index: number) => (
+                        <View key={index} className="flex-row mb-1.5 pr-2">
+                          <Text className="text-base text-green-600 mr-2">
+                            {"\u2022"}
+                          </Text>
+                          <Text className="flex-1 text-base leading-6 text-gray-800 dark:text-gray-300">
+                            {ingredient}
+                          </Text>
+                        </View>
+                      ))}
+                    </View>
+                  )}
+
+                  {!!currentRecipe.steps?.length && (
+                    <View>
+                      <Text className="text-base font-bold text-gray-900 mb-2 dark:text-gray-100">
+                        Directions
+                      </Text>
+                      {currentRecipe.steps.map((step: string, index: number) => (
+                        <View key={index} className="flex-row mb-3 pr-2">
+                          <View className="w-6 h-6 rounded-full bg-green-100 justify-center items-center mr-2 mt-0.5 dark:bg-green-900">
+                            <Text className="text-xs font-bold text-green-700 dark:text-green-300">
+                              {index + 1}
+                            </Text>
+                          </View>
+                          <Text className="flex-1 text-base leading-6 text-gray-800 dark:text-gray-300">
+                            {step}
+                          </Text>
+                        </View>
+                      ))}
+                    </View>
+                  )}
                 </ScrollView>
                 
-                {/* Like Indicator */}
                 <Animated.View
                   style={[
                     {
@@ -253,7 +320,6 @@ const RecipeSwipeCard = () => {
                   </Text>
                 </Animated.View>
                 
-                {/* Dislike Indicator */}
                 <Animated.View
                   style={[
                     {
@@ -283,7 +349,6 @@ const RecipeSwipeCard = () => {
             </Animated.View>
           </GestureDetector>
           
-          {/* Action Buttons */}
           <View className="flex-row justify-center items-center mt-8 space-x-16">
             <TouchableOpacity 
               onPress={handleDislike}

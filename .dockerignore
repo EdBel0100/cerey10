@@ -1,0 +1,47 @@
+# dependencies (reinstalled fresh in the build stage)
+**/node_modules
+
+# build output (rebuilt by `pnpm build` inside the image)
+**/dist
+**/build
+**/.turbo
+**/.next
+**/out
+
+# version control
+.git
+.gitignore
+
+# env / secrets — never bake these into an image
+#.env
+#.env.*
+#!.env.example
+
+# logs
+**/*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# tests / coverage
+**/coverage
+**/*.test.ts
+**/*.spec.ts
+**/__tests__
+
+# editor / OS cruft
+.vscode
+.idea
+.DS_Store
+
+# docs (rarely needed inside the image)
+**/*.md
+!README.md
+
+# infra / unrelated workspaces you don't want leaking into context
+# (optional — speeds up the COPY, doesn't affect correctness since
+# you filter by package anyway, but shrinks build context size)
+infrastructures/.terraform
+infrastructures/*.tfstate*
+
+# playwright/puppeteer caches if anything ever ran locally
+**/.cache/ms-playwright

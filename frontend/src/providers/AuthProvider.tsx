@@ -1,4 +1,3 @@
-// providers/AuthProvider.tsx
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import { useToken } from "./TokenProvider";

@@ -5,19 +5,6 @@ export class GoogleMapsService {
   private readonly apiKey = process.env.GOOGLE_MAPS_KEY;
   private readonly logger = new Logger(GoogleMapsService.name);
 
-
-
-
-  /*{
-  "includedTypes": ["supermarket"],
-  "maxResultCount": 10,
-  "locationRestriction": {
-    "circle": {
-      "center": { "latitude": 43.65107, "longitude": -74.268437 },
-      "radius": 20000
-    }
-  }
-}*/
   async searchPlaces(body: any) {
     const url = 'https://places.googleapis.com/v1/places:searchNearby';
 

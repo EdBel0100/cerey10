@@ -46,16 +46,13 @@ export default function BottomNav() {
     <>
       <AuthProvider>
 
-
-      {/* Slot content wrapper with bottom padding */}
       <View className="flex-1 pb-20">
         <Slot />
       </View>
 
-      {/* Bottom nav */}
       <SafeAreaView
         edges={["bottom"]}
-        className="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200"
+        className="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800"
       >
         <View className="flex-row justify-between items-center px-4 py-2">
           {navItems.map((item) => {

@@ -1,11 +1,9 @@
-// auth.controller.ts
 import { Controller, Post, Body, HttpException, HttpStatus, Logger, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignInResponseDto } from 'src/Dtos/Auth-Dtos/signin-response-dto';
 import { SignInDto } from 'src/Dtos/Auth-Dtos/signin-dto';
 import { AuthGuard } from './auth.guard';
 import { CurrentUser } from './auth-curent-user.decorator';
-
 
 @Controller('/auth')
 export class AuthController {
@@ -29,7 +27,7 @@ export class AuthController {
       if (error instanceof HttpException) {
         throw error;
       }
-      
+
       throw new HttpException(
         error.message || 'Authentication failed',
         HttpStatus.UNAUTHORIZED,
@@ -37,12 +35,4 @@ export class AuthController {
     }
   }
 
-  // @Post('/refresh')
-  // async refresh(
-  //   @Body() body: { username: string; refreshToken: string },
-  // ): Promise<SignInResponseDto> {
-  //   Logger.log(body.username)
-  //   Logger.log(body.refreshToken)
-  //   return this.authService.refresh(body.username, body.refreshToken);
-  // }
 }

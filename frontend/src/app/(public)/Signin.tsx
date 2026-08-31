@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Alert, SafeAreaView } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { useSignInMutation } from "@/redux/services/api";
 import * as SecureStore from "expo-secure-store";
@@ -42,23 +43,23 @@ function SignIn() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-50">
+    <SafeAreaView className="flex-1 bg-gray-50 dark:bg-gray-900">
       <View className="flex-1 items-center justify-center px-6">
-        <View className="bg-white w-full max-w-md rounded-2xl shadow-lg p-8 border border-gray-200">
+        <View className="bg-white w-full max-w-md rounded-2xl shadow-lg p-8 border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
           <View className="items-center mb-8">
             <View className="flex-row items-center mb-2">
               <Text className="text-3xl font-bold text-red-500">CER</Text>
               <Text className="text-3xl font-bold text-green-600">EY</Text>
             </View>
-            <Text className="text-xl font-bold text-gray-900 mt-2">Welcome back</Text>
-            <Text className="text-gray-500 text-sm mt-1">Sign in to continue</Text>
+            <Text className="text-xl font-bold text-gray-900 mt-2 dark:text-gray-50">Welcome back</Text>
+            <Text className="text-gray-500 text-sm mt-1 dark:text-gray-400">Sign in to continue</Text>
           </View>
 
           <View className="mb-4">
-            <Text className="text-sm font-medium text-gray-700 mb-2">Email</Text>
+            <Text className="text-sm font-medium text-gray-700 mb-2 dark:text-gray-300">Email</Text>
             <TextInput
               placeholder="Enter your email"
-              className="rounded-xl border-2 border-gray-200 p-4 bg-gray-50"
+              className="rounded-xl border-2 border-gray-200 p-4 bg-gray-50 text-gray-900 placeholder:text-gray-400 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder:text-gray-500"
               onChangeText={setEmail}
               value={email}
               keyboardType="email-address"
@@ -67,11 +68,11 @@ function SignIn() {
           </View>
 
           <View className="mb-6">
-            <Text className="text-sm font-medium text-gray-700 mb-2">Password</Text>
+            <Text className="text-sm font-medium text-gray-700 mb-2 dark:text-gray-300">Password</Text>
             <TextInput
               placeholder="Enter your password"
               secureTextEntry
-              className="rounded-xl border-2 border-gray-200 p-4 bg-gray-50"
+              className="rounded-xl border-2 border-gray-200 p-4 bg-gray-50 text-gray-900 placeholder:text-gray-400 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder:text-gray-500"
               onChangeText={setPassword}
               value={password}
             />
@@ -90,7 +91,7 @@ function SignIn() {
           </TouchableOpacity>
 
           <View className="items-center mt-6">
-            <Text className="text-sm text-gray-600">Don't have an account?</Text>
+            <Text className="text-sm text-gray-600 dark:text-gray-400">Don't have an account?</Text>
             <TouchableOpacity onPress={() => router.push("/Signup")}>
               <Text className="text-red-500 font-semibold mt-1 text-base">Sign up</Text>
             </TouchableOpacity>

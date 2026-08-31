@@ -5,7 +5,6 @@ import { CognitoUser, CognitoUserPool } from 'amazon-cognito-identity-js';
 import { CognitoIdentityProviderClient, AdminDeleteUserCommand } from '@aws-sdk/client-cognito-identity-provider';
 import { ConfigService } from '@nestjs/config';
 
-
 @Injectable()
 export class UserService {
   private readonly cognitoClient: CognitoIdentityProviderClient;
@@ -21,8 +20,6 @@ export class UserService {
 
   
 
-  //this should create the user, initialize the preferences, initialize location, and send their credentials to cognito
-  // users.service.ts
 async create(dto: CreateUserDto) {
   return this.prisma.user.create({
     data: {
@@ -30,14 +27,12 @@ async create(dto: CreateUserDto) {
       email: dto.email,
       preferences: {
         create: {
-          // General diets
           vegetarianOnly:   false,
           vegan:            false,
           pescatarian:      false,
           flexitarian:      false,
           meatOnly:         false,
 
-          // Allergies / intolerances
           glutenFree:       false,
           lactoseFree:      false,
           dairyFree:        false,
@@ -49,7 +44,6 @@ async create(dto: CreateUserDto) {
           fishFree:         false,
           nightshadeFree:   false,
 
-          // Health / lifestyle diets
           lowCarb:          false,
           keto:             false,
           paleo:            false,
@@ -71,7 +65,6 @@ async create(dto: CreateUserDto) {
   });
 }
   
-  //this should be used only to change the user info, email, password ect
   async modifyUser(body: any, userCognitoId: string) {
     return this.prisma.user.update({
       where: { cognitoId:userCognitoId },
@@ -80,10 +73,7 @@ async create(dto: CreateUserDto) {
   }
   
 
-  //used to delete user, should cascade and delete preferences and location
-  //this should get the cognito id from the token and delete it from cognito
   async delete(userCognitoId: string) {
-
 
     await this.cognitoClient.send(new AdminDeleteUserCommand({
       UserPoolId: this.configService.get('AWS_COGNITO_USER_POOL_ID'),

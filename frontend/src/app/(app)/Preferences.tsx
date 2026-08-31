@@ -4,18 +4,19 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
-  SafeAreaView,
   Alert,
   TextInput,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useRouter } from 'expo-router';
+import { useColorScheme } from 'nativewind';
 import {
   useUpdatePreferencesMutation,
   useGetPreferencesQuery,
-} from '@Redux/services/api'; // <-- RTK Query hooks
+} from '@Redux/services/api'; 
 
 interface DietaryOption {
   id: string;
@@ -32,7 +33,6 @@ interface DietaryCategory {
   options: DietaryOption[];
 }
 
-// ✅ only include fields from Prisma schema
 const preferenceKeys = [
   "vegetarianOnly",
   "vegan",
@@ -62,31 +62,27 @@ const preferenceKeys = [
 ];
 
 export default function Home() {
-  const router = useRouter(); // TODO: replace with real auth context
+  const router = useRouter(); 
+  const { colorScheme } = useColorScheme();
+  const isDark = colorScheme === 'dark';
 
-  // RTK Query hooks
   const { data: preferences, isLoading, refetch } = useGetPreferencesQuery();
   const [updatePreferences] = useUpdatePreferencesMutation();
 
-  // local state
   const [selectedPreferences, setSelectedPreferences] = useState<string[]>([]);
   const [customPreferences, setCustomPreferences] = useState<string>('');
 
-  // sync fetched preferences into state
   useEffect(() => {
     if (preferences) {
-      // check all true fields
       const activePrefs = preferenceKeys.filter((key) => preferences[key]);
       setSelectedPreferences(activePrefs);
 
-      // load custom preferences if present
       if (preferences.customPreferences) {
         setCustomPreferences(preferences.customPreferences);
       }
     }
   }, [preferences]);
 
-  // categories (same as before)
   const dietaryCategories: DietaryCategory[] = [
     {
       title: 'General Diets',
@@ -183,7 +179,9 @@ export default function Home() {
       >
         <View
           className={`p-4 rounded-xl border-2 ${
-            isSelected ? 'border-red-500 bg-red-50' : 'border-gray-200 bg-white'
+            isSelected
+              ? 'border-red-500 bg-red-50 dark:bg-red-950'
+              : 'border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800'
           }`}
         >
           <View className="flex-row items-center justify-between">
@@ -197,13 +195,21 @@ export default function Home() {
               <View className="flex-1">
                 <Text
                   className="text-lg font-semibold mb-1"
-                  style={{ color: isSelected ? '#DC2626' : '#1F2937' }}
+                  style={{
+                    color: isSelected
+                      ? (isDark ? '#FCA5A5' : '#DC2626')
+                      : (isDark ? '#F3F4F6' : '#1F2937'),
+                  }}
                 >
                   {option.title}
                 </Text>
                 <Text
                   className="text-sm"
-                  style={{ color: isSelected ? '#991B1B' : '#6B7280' }}
+                  style={{
+                    color: isSelected
+                      ? (isDark ? '#FECACA' : '#991B1B')
+                      : (isDark ? '#9CA3AF' : '#6B7280'),
+                  }}
                 >
                   {option.description}
                 </Text>
@@ -211,7 +217,7 @@ export default function Home() {
             </View>
             <View
               className={`w-6 h-6 rounded-full border-2 items-center justify-center ${
-                isSelected ? 'border-red-500 bg-red-500' : 'border-gray-300'
+                isSelected ? 'border-red-500 bg-red-500' : 'border-gray-300 dark:border-gray-600'
               }`}
             >
               {isSelected && <Icon name="check" size={16} color="white" />}
@@ -225,8 +231,8 @@ export default function Home() {
   const renderCategory = (category: DietaryCategory) => (
     <View key={category.title} className="mb-8">
       <View className="mb-4">
-        <Text className="text-lg font-bold text-gray-900 mb-1">{category.title}</Text>
-        <Text className="text-sm text-gray-600">{category.description}</Text>
+        <Text className="text-lg font-bold text-gray-900 mb-1 dark:text-gray-100">{category.title}</Text>
+        <Text className="text-sm text-gray-600 dark:text-gray-400">{category.description}</Text>
       </View>
       {category.options.map(renderOption)}
     </View>
@@ -234,20 +240,19 @@ export default function Home() {
 
   if (isLoading) {
     return (
-      <SafeAreaView className="flex-1 items-center justify-center bg-gray-50">
-        <Text className="text-gray-600">Loading preferences...</Text>
+      <SafeAreaView className="flex-1 items-center justify-center bg-gray-50 dark:bg-gray-900">
+        <Text className="text-gray-600 dark:text-gray-400">Loading preferences...</Text>
       </SafeAreaView>
     );
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-50">
-      {/* Header */}
-      <View className="bg-white px-6 py-4 border-b border-gray-200">
+    <SafeAreaView className="flex-1 bg-gray-50 dark:bg-gray-900">
+      <View className="bg-white px-6 py-4 border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
         <View className="flex-row items-center justify-between">
           <View className="flex-1 ml-4">
-            <Text className="text-xl font-bold text-gray-900">Dietary Preferences</Text>
-            <Text className="text-sm text-gray-500 mt-1">
+            <Text className="text-xl font-bold text-gray-900 dark:text-gray-100">Dietary Preferences</Text>
+            <Text className="text-sm text-gray-500 mt-1 dark:text-gray-400">
               Select your dietary needs and lifestyle choices
             </Text>
           </View>
@@ -257,10 +262,9 @@ export default function Home() {
       <ScrollView className="flex-1 px-6 py-6">
         {dietaryCategories.map(renderCategory)}
 
-        {/* Custom Preferences Section */}
         <View className="mb-8">
-          <Text className="text-lg font-bold text-gray-900 mb-4">Custom Preferences</Text>
-          <Text className="text-sm text-gray-600 mb-3">
+          <Text className="text-lg font-bold text-gray-900 mb-4 dark:text-gray-100">Custom Preferences</Text>
+          <Text className="text-sm text-gray-600 mb-3 dark:text-gray-400">
             Add any specific dietary needs or preferences not listed above
           </Text>
           <TextInput
@@ -269,16 +273,14 @@ export default function Home() {
             placeholder="e.g., No artificial sweeteners, Mediterranean diet, specific allergies..."
             multiline
             numberOfLines={4}
-            className="bg-white border-2 border-gray-200 rounded-xl p-4 text-base"
+            className="bg-white border-2 border-gray-200 rounded-xl p-4 text-base text-gray-900 placeholder:text-gray-400 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100 dark:placeholder:text-gray-500"
             style={{
-              borderColor: '#E5E7EB',
-              backgroundColor: '#FFFFFF',
               textAlignVertical: 'top',
             }}
           />
         </View>
       </ScrollView>
-<View className="bg-white border-t border-gray-200 px-6 py-2 ">
+<View className="bg-white border-t border-gray-200 px-6 py-2 dark:bg-gray-800 dark:border-gray-700">
   <View className="space-y-3">
     <TouchableOpacity
       onPress={handleSave}

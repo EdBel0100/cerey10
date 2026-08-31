@@ -3,8 +3,11 @@ packages:
   - "prisma"
   - "frontend"
   - "infrastructure"
+  - "ingestion-scripts/*"
 allowBuilds:
   '@nestjs/core': false
   '@prisma/client': false
   '@prisma/engines': false
+  canvas: true
+  esbuild: true
   prisma: false

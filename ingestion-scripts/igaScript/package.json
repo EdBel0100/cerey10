@@ -1,0 +1,27 @@
+{
+  "name": "igaScript",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "scrape-iga": "tsx src/ingestion.ts",
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.1065.0",
+    "@sparticuz/chromium": "^149.0.0",
+    "dotenv": "^17.4.2",
+    "fast-xml-parser": "^5.8.0",
+    "playwright-core": "^1.61.1",
+    "playwright-extra": "^4.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
+    "tsx": "^4.22.4"
+  },
+  "devDependencies": {
+    "typescript": "^6.0.3"
+  },
+  "files": ["dist", "package.json"] 
+}

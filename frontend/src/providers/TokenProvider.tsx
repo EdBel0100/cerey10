@@ -1,4 +1,3 @@
-// providers/TokenProvider.tsx
 import React, { createContext, useContext } from "react";
 import * as SecureStore from "expo-secure-store";
 import { jwtDecode } from "jwt-decode";
@@ -23,9 +22,7 @@ const TokenContext = createContext<TokenContextType>({
 });
 
 export const TokenProvider = ({ children }: { children: React.ReactNode }) => {
-  //const [refresh] = useRefreshMutation();
 
-  // Check if token is valid
   const isTokenValid = (token: string) => {
     try {
       const decoded: DecodedJwt = jwtDecode<DecodedJwt>(token);
@@ -35,24 +32,6 @@ export const TokenProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  // Refresh
-//   const refreshAccessToken = async (username: string, refreshToken: string) => {
-//     try {
-//       const result = await refresh({ username, refreshToken }).unwrap();
-//       console.log(result)
-//       await SecureStore.setItemAsync("accessToken", result.tokens.accessToken);
-//       await SecureStore.setItemAsync("idToken", result.tokens.idToken);
-//       if (result.tokens.refreshToken) {
-//         await SecureStore.setItemAsync("refreshToken", result.tokens.refreshToken);
-//       }
-//       return result.tokens.accessToken;
-//     } catch (err) {
-//       console.error("Error refreshing access token:", err);
-//       return null;
-//     }
-//   };
-
-  // Get access token
   const getAccessToken = async () => {
     const accessToken = await SecureStore.getItemAsync("accessToken");
     if (accessToken && isTokenValid(accessToken)) return accessToken;
@@ -63,7 +42,6 @@ export const TokenProvider = ({ children }: { children: React.ReactNode }) => {
 
   };
 
-  // Save tokens on login
   const signInFromCredentials = async (
     accessToken: string,
     idToken: string,
@@ -76,7 +54,6 @@ export const TokenProvider = ({ children }: { children: React.ReactNode }) => {
     await SecureStore.setItemAsync("username", username);
   };
 
-  // Clear tokens
   const signOut = async () => {
     await SecureStore.deleteItemAsync("accessToken");
     await SecureStore.deleteItemAsync("idToken");

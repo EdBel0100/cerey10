@@ -1,4 +1,3 @@
-// auth.service.ts
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Logger } from '@nestjs/common';
@@ -33,8 +32,6 @@ export class AuthService {
     });
   }
 
-
-
   async signIn(email: string, password: string): Promise<SignInResponseDto> {
     const userRecord = await this.prisma.user.findFirst({ where: { email } });
 
@@ -45,18 +42,15 @@ export class AuthService {
     const username = userRecord.cognitoId;
 
     const user = new CognitoUser({
-      //username is cognito sub
       Username: username,
       Pool: this.userPool,
     });
-
 
     const authDetails = new AuthenticationDetails({
       Username: username,
       Password: password,
     });
 
-    // Wrap the callback API into a promise internally
     const session: CognitoUserSession = await new Promise((resolve, reject) => {
       user.authenticateUser(authDetails, {
         onSuccess: (result) => resolve(result),
@@ -89,44 +83,4 @@ export class AuthService {
 
 
 
-  
-  // async refresh(
-  //   username: string,
-  //   refreshToken: string,
-  // ): Promise<SignInResponseDto> {
-  //   Logger.log(`Refreshing tokens for ${username}`);
-
-  //   const user = new CognitoUser({
-  //     Username: username,
-  //     Pool: this.userPool,
-  //   });
-
-  //   const refreshTokenObj = new CognitoRefreshToken({ RefreshToken: refreshToken });
-
-  //   const session: any = await new Promise((resolve, reject) => {
-  //     user.refreshSession(refreshTokenObj, (err, session) => {
-  //       if (err) {
-  //         reject(
-  //           new HttpException('Refresh token invalid', HttpStatus.UNAUTHORIZED),
-  //         );
-  //       } else {
-  //         resolve(session);
-  //       }
-  //     });
-  //   });
-
-  //   return {
-  //     success: true,
-  //     message: 'Token refreshed successfully',
-  //     tokens: {
-  //       accessToken: session.getAccessToken().getJwtToken(),
-  //       idToken: session.getIdToken().getJwtToken(),
-  //       refreshToken, // reuse the same refresh token
-  //     },
-  //     user: {
-  //       username,
-  //       email: (session.getIdToken().decodePayload() as any).email,
-  //     },
-  //   };
-  // }
 }

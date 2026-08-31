@@ -14,8 +14,8 @@ export class AuthStack extends cdk.Stack {
       selfSignUpEnabled: true,
       signInAliases: {
         email: true,
-        username: false,  
-        phone: false,     
+        username: false,
+        phone: false,
       },
       autoVerify: {
         email: true,
@@ -37,8 +37,12 @@ export class AuthStack extends cdk.Stack {
         requireDigits: true,
         requireSymbols: false,
       },
-      mfa: cognito.Mfa.OFF,  // explicitly disable MFA
-      accountRecovery: cognito.AccountRecovery.EMAIL_ONLY,  // email recovery only, no phone
+      mfa: cognito.Mfa.OPTIONAL,
+      mfaSecondFactor: {
+        sms: false,
+        otp: true,
+      },
+      accountRecovery: cognito.AccountRecovery.EMAIL_ONLY,
     });
 
     this.userPoolClient = new cognito.UserPoolClient(this, "UserPoolClient", {
@@ -47,13 +51,12 @@ export class AuthStack extends cdk.Stack {
       authFlows: {
         userPassword: true,
         userSrp: true,
-        adminUserPassword: false,  // disable admin flow unless needed
+        adminUserPassword: false,
         custom: false,
       },
-      preventUserExistenceErrors: true,  // security: don't leak whether email exists
+      preventUserExistenceErrors: true,
     });
 
-    // Outputs so you can grab these values easily after deploy
     new cdk.CfnOutput(this, "UserPoolId", {
       value: this.userPool.userPoolId,
     });

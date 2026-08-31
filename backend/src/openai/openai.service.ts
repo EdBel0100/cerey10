@@ -1,8 +1,20 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import OpenAI from 'openai';
 import { PostOpenAiDto } from '../Dtos/OpenAi-Dtos/post-openai.dto';
 import { Logger } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+
+const RECIPE_SCHEMA = {
+  type: 'object',
+  properties: {
+    title: { type: 'string' },
+    description: { type: 'string' },
+    ingredients: { type: 'array', items: { type: 'string' } },
+    steps: { type: 'array', items: { type: 'string' } },
+  },
+  required: ['title', 'description', 'ingredients', 'steps'],
+  additionalProperties: false,
+};
 
 @Injectable()
 export class OpenAiService {
@@ -18,56 +30,76 @@ export class OpenAiService {
     const preferences = await this.prisma.preferences.findFirst({
       where: { userCognitoId },
     });
-  
+
     if (!preferences) {
-      throw new Error("Preferences not found");
+      throw new HttpException(
+        "Set your dietary preferences before generating a recipe",
+        HttpStatus.BAD_REQUEST,
+      );
     }
-  
-    // Properly stringify preferences
+
     const stringifiedPreferences = JSON.stringify(preferences, null, 2);
     Logger.log("Fetched preferences:", stringifiedPreferences);
-  
-    const prompt = `  
+
+    const prompt = `
       Generate a random meal based on these preferences
       ${stringifiedPreferences}
-  
+
+      Return the recipe title, a one-sentence description, a list of
+      ingredients (one per array item, including quantities), and a list
+      of numbered directions (one step per array item, no leading numbers
+      in the text itself).
+
+      Then generate a professional food photo of the meal you just created.
   `;
-  
+
     Logger.log("Prompt:", prompt);
-  
+
     try {
-      const textResponse = await this.openai.responses.create({
+      const response = await this.openai.responses.create({
         model: "gpt-5",
         input: prompt,
         reasoning: { effort: "low" },
-        text: { verbosity: "low" },
+        text: {
+          verbosity: "low",
+          format: {
+            type: "json_schema",
+            name: "recipe",
+            strict: true,
+            schema: RECIPE_SCHEMA,
+          },
+        },
+        tools: [{ type: "image_generation" }],
       });
-  
-      // Use proper field instead of .toString()
-      const generatedText = textResponse.output_text;
-  
-      const postTextGenPrompt = `Create a professional food photo of this meal: ${generatedText}`;
-  
-      const imageResponse = await this.openai.images.generate({
-        model: "dall-e-3",
-        prompt: postTextGenPrompt,
-        size: "1024x1024",
-        quality: "standard",
-      });
-  
-      if (!imageResponse.data) {
+
+      const recipe = JSON.parse(response.output_text);
+
+      const imageCall = response.output.find(
+        (output) => output.type === "image_generation_call",
+      );
+
+      if (!imageCall?.result) {
         throw new Error("Image generation failed");
       }
-  
-      const imageUrl = imageResponse.data[0]?.url ?? null;
-  
-      Logger.log("Generated text:", generatedText);
-  
-      return { image: imageUrl, text: generatedText };
+
+      const image = `data:image/png;base64,${imageCall.result}`;
+
+      Logger.log("Generated recipe:", recipe.title);
+
+      return {
+        image,
+        title: recipe.title,
+        description: recipe.description,
+        ingredients: recipe.ingredients,
+        steps: recipe.steps,
+      };
     } catch (error) {
       console.error("Error generating image and text:", error);
-      throw new Error("Failed to generate image and text");
+      throw new HttpException(
+        "Failed to generate image and text",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
-  
+
 }

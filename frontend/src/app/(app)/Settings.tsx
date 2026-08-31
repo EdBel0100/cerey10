@@ -3,22 +3,25 @@ import {
   View,
   Text,
   TouchableOpacity,
-  SafeAreaView,
   ScrollView,
   Switch,
   Alert,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useRouter } from "expo-router";
 import { useDeleteUserMutation } from "@/redux/services/api";
+import { useTheme } from "@Providers/ThemeProvider";
+import { useColorScheme } from "nativewind";
 
 export default function SettingsPage() {
   const router = useRouter();
 
-  // Example local state
   const [notificationsEnabled, setNotificationsEnabled] = React.useState(true);
-  const [darkMode, setDarkMode] = React.useState(false);
+  const { setThemePreference } = useTheme();
+  const { colorScheme } = useColorScheme();
+  const isDarkMode = colorScheme === "dark";
   const [deleteAccount] = useDeleteUserMutation();
 
   const handleLogout = () => {
@@ -67,19 +70,19 @@ export default function SettingsPage() {
     <TouchableOpacity
       onPress={onPress}
       disabled={!onPress}
-      className="bg-white px-6 py-4 border-b border-gray-200"
+      className="bg-white px-6 py-4 border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700"
     >
       <View className="flex-row items-center justify-between">
         <View className="flex-row items-center flex-1">
-          <View className="w-10 h-10 rounded-full bg-gray-100 items-center justify-center mr-4">
+          <View className="w-10 h-10 rounded-full bg-gray-100 items-center justify-center mr-4 dark:bg-gray-700">
             <MaterialCommunityIcons name={icon} size={22} color="#DC2626" />
           </View>
           <View className="flex-1">
-            <Text className="text-base font-semibold text-gray-900">
+            <Text className="text-base font-semibold text-gray-900 dark:text-gray-100">
               {title}
             </Text>
             {description ? (
-              <Text className="text-sm text-gray-500">{description}</Text>
+              <Text className="text-sm text-gray-500 dark:text-gray-400">{description}</Text>
             ) : null}
           </View>
         </View>
@@ -91,24 +94,21 @@ export default function SettingsPage() {
   );
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-50">
-      {/* Header */}
-      <View className="bg-white px-6 py-4 border-b border-gray-200">
+    <SafeAreaView className="flex-1 bg-gray-50 dark:bg-gray-900">
+      <View className="bg-white px-6 py-4 border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
         <View className="flex-row items-center justify-between">
           <View className="flex-1 ml-4">
-            <Text className="text-xl font-bold text-gray-900">Settings</Text>
-            <Text className="text-sm text-gray-500 mt-1">
+            <Text className="text-xl font-bold text-gray-900 dark:text-gray-100">Settings</Text>
+            <Text className="text-sm text-gray-500 mt-1 dark:text-gray-400">
               Manage your account and preferences
             </Text>
           </View>
         </View>
       </View>
 
-      {/* Content */}
       <ScrollView className="flex-1">
-        {/* Account Section */}
         <View className="mt-6 mb-2">
-          <Text className="px-6 mb-2 text-sm font-semibold text-gray-500">
+          <Text className="px-6 mb-2 text-sm font-semibold text-gray-500 dark:text-gray-400">
             Account
           </Text>
           {renderItem(
@@ -125,9 +125,8 @@ export default function SettingsPage() {
           )}
         </View>
 
-        {/* Preferences Section */}
         <View className="mt-6 mb-2">
-          <Text className="px-6 mb-2 text-sm font-semibold text-gray-500">
+          <Text className="px-6 mb-2 text-sm font-semibold text-gray-500 dark:text-gray-400">
             Preferences
           </Text>
           {renderItem(
@@ -145,7 +144,10 @@ export default function SettingsPage() {
             "Dark Mode",
             "Toggle app theme",
             undefined,
-            <Switch value={darkMode} onValueChange={setDarkMode} />
+            <Switch
+              value={isDarkMode}
+              onValueChange={(value) => setThemePreference(value ? "dark" : "light")}
+            />
           )}
           {renderItem(
             "food",
@@ -155,9 +157,8 @@ export default function SettingsPage() {
           )}
         </View>
 
-        {/* Privacy Section */}
         <View className="mt-6 mb-2">
-          <Text className="px-6 mb-2 text-sm font-semibold text-gray-500">
+          <Text className="px-6 mb-2 text-sm font-semibold text-gray-500 dark:text-gray-400">
             Privacy & Security
           </Text>
           {renderItem("shield-lock", "Privacy Policy", "", () =>
@@ -168,18 +169,17 @@ export default function SettingsPage() {
           )}
         </View>
 
-        {/* Danger Zone */}
         <View className="mt-6 mb-12">
-          <Text className="px-6 mb-2 text-sm font-semibold text-gray-500">
+          <Text className="px-6 mb-2 text-sm font-semibold text-gray-500 dark:text-gray-400">
             Danger Zone
           </Text>
           {renderItem("logout", "Log Out", "", handleLogout)}
           <TouchableOpacity
             onPress={handleDeleteAccount}
-            className="bg-white px-6 py-4"
+            className="bg-white px-6 py-4 dark:bg-gray-800"
           >
             <View className="flex-row items-center">
-              <View className="w-10 h-10 rounded-full bg-red-50 items-center justify-center mr-4">
+              <View className="w-10 h-10 rounded-full bg-red-50 items-center justify-center mr-4 dark:bg-red-950">
                 <MaterialCommunityIcons
                   name="delete-outline"
                   size={22}
@@ -190,7 +190,7 @@ export default function SettingsPage() {
                 <Text className="text-base font-semibold text-red-600">
                   Delete Account
                 </Text>
-                <Text className="text-sm text-gray-500">
+                <Text className="text-sm text-gray-500 dark:text-gray-400">
                   Permanently remove your account
                 </Text>
               </View>

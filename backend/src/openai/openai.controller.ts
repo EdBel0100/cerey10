@@ -6,8 +6,7 @@ import { AuthGuard } from 'src/auth/auth.guard';
 import { CurrentUser } from 'src/auth/auth-curent-user.decorator';
 
 
-//added a later so it is not reached for now
-@Controller('/openaio')
+@Controller('/openai')
 export class OpenAiController {
   constructor(private readonly OpenAiService: OpenAiService) {}
 

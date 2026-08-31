@@ -3,10 +3,10 @@ import {
     Text,
     TouchableOpacity,
     ScrollView,
-    SafeAreaView,
     Alert,
     TextInput,
   } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
   
 function Recipe() {
   return 
